@@ -1964,7 +1964,7 @@ class PlayState extends MusicBeatState {
 				bruhVal += note.swagWidth + (2 + Std.parseFloat(mania_gap[SONG.playerKeyCount - 1]));
 			}
 
-			noteBG.setGraphicSize(bruhVal, FlxG.height * 2);
+			noteBG.setGraphicSize(Std.int(playerStrums.members[playerStrums.members.length-1].x+playerStrums.members[playerStrums.members.length-1].width-playerStrums.members[0].x), FlxG.height * 2);
 			noteBG.updateHitbox();
 
 			noteBG.x = playerStrums.members[0].x;
