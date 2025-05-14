@@ -1,0 +1,56 @@
+-L lime
+-L openfl
+-L flixel
+-L hscript-improved
+-L flixel-addons
+-L hxNoise
+-L flixel-ui
+-L flxanimate
+-L scriptless-polymod 
+-L hxvlc
+-L funkin.vis
+-L grig.audio
+-L hxdiscord_rpc 
+-L linc_luajit
+-L fnf-modcharting-tools
+-L jsonpath
+-L jsonpatch
+-L thx.core
+-L thx.semver
+
+-cp source
+
+--define hscript
+--define hscriptPos
+--define polymod
+--define LUA_ALLOWED
+--define VIDEOS_ALLOWED
+--define MODDING_ALLOWED
+--define MODCHARTING_TOOLS
+--define HSCRIPT_ALLOWED
+--define CHECK_FOR_UPDATES
+--define DISCORD_ALLOWED
+--define LEATHER
+--define FLX_NO_HEALTH
+--define FLX_NO_DEBUG
+--define CUSTOM_CLASSES
+
+--macro lime._internal.macros.DefineMacro.run()
+--macro openfl.utils._internal.ExtraParamsMacro.include()
+--remap flash:openfl
+--macro flixel.system.macros.FlxDefines.run()
+
+
+--macro include('game')
+--macro include('hxvlc')
+--macro include('flixel', true, [ 'flixel.addons.editors.spine.*', 'flixel.addons.nape.*', 'flixel.addons.tile.FlxRayCastTilemap', 'flixel.system.macros.*' ])
+--macro keep('Main')
+
+--no-output
+
+-D doc-gen
+
+-xml docs/doc.xml
+--cpp docs-bin/
+
+-dce no
