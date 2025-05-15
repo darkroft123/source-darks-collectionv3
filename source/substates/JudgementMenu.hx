@@ -12,7 +12,7 @@ import flixel.FlxSprite;
 
 class JudgementMenu extends MusicBeatSubstate
 {
-    var judgements:Array<Int> = Options.getData("judgementTimings");
+    var judgements:Array<Int> = utilities.Options.getData("judgementTimings");
 
     var preset:String = "Leather Engine";
 
@@ -36,7 +36,7 @@ class JudgementMenu extends MusicBeatSubstate
         bg.scrollFactor.set();
         add(bg);
 
-        FlxTween.tween(bg, {alpha: 0.5}, 1, {ease: FlxEase.circOut, startDelay: 0});
+        FlxTween.tween(bg, {alpha: 0.75}, 1, {ease: FlxEase.circOut, startDelay: 0});
 
         update_Text();
         add(judgementText);
@@ -56,20 +56,20 @@ class JudgementMenu extends MusicBeatSubstate
 
         if(back)
         {
-            Options.setData(judgements, "judgementTimings");
+            utilities.Options.setData(judgements, "judgementTimings");
             FlxG.state.closeSubState();
         }
 
         if(downP || upP)
         {
             if(downP)
-                selected ++;
+                selected += 1;
             if(upP)
-                selected --;
+                selected -= 1;
 
             if(selected < 0)
                 selected = 3;
-            if(selected > (Options.getData("marvelousRatings") ? 4 : 3))
+            if(selected > (utilities.Options.getData("marvelousRatings") ? 4 : 3))
                 selected = 0;
         }
 
@@ -78,9 +78,9 @@ class JudgementMenu extends MusicBeatSubstate
             if(selected == 0)
             {
                 if(leftP)
-                    preset_Selected --;
+                    preset_Selected -= 1;
                 if(rightP)
-                    preset_Selected ++;
+                    preset_Selected += 1;
 
                 if(preset_Selected < 0)
                     preset_Selected = presets.length - 1;
@@ -96,9 +96,9 @@ class JudgementMenu extends MusicBeatSubstate
                 var ms_Select = selected - 1;
 
                 if(leftP)
-                    judgements[ms_Select] --;
+                    judgements[ms_Select] -= 1;
                 if(rightP)
-                    judgements[ms_Select] ++;
+                    judgements[ms_Select] += 1;
 
                 if(ms_Select > 0)
                 {
@@ -129,12 +129,27 @@ class JudgementMenu extends MusicBeatSubstate
 
     function update_Text()
     {
+
+        var judgementsTooHigh = [false,false,false,false];
+        var max = [25,50,90,135];
+        var judgementTooHigh = false;
+        for (j in 0...judgements.length)
+        {
+            if (judgements[j] > max[j])
+            {
+                judgementTooHigh = true;
+                judgementsTooHigh[j] = true;
+            }
+                
+        }
+
         judgementText.text = (
             "Preset: " + preset + (selected == 0 ? " <\n" : "\n") +
-            (Options.getData("marvelousRatings") ? "MARVELOUS: " + Std.string(judgements[0]) + "ms" + (selected == 1 ? " <\n" : "\n") : "") +
-            "SICK: " + Std.string(judgements[1]) + "ms" + (selected == (Options.getData("marvelousRatings") ? 2 : 1) ? " <\n" : "\n") +
-            "GOOD: " + Std.string(judgements[2]) + "ms" + (selected == (Options.getData("marvelousRatings") ? 3 : 2) ? " <\n" : "\n") +
-            "BAD: " + Std.string(judgements[3]) + "ms" + (selected == (Options.getData("marvelousRatings") ? 4 : 3) ? " <\n" : "\n") +
+            (utilities.Options.getData("marvelousRatings") ? "MARVELOUS: " + Std.string(judgements[0]) + "ms" + (selected == 1 ? " <" : "") + (judgementsTooHigh[0] ? " (Too High!!!)" : "") + "\n" : "") + 
+            "SICK: " + Std.string(judgements[1]) + "ms" + (selected == (utilities.Options.getData("marvelousRatings") ? 2 : 1) ? " <" : "") + (judgementsTooHigh[1] ? " (Too High!!!)" : "") + "\n" +
+            "GOOD: " + Std.string(judgements[2]) + "ms" + (selected == (utilities.Options.getData("marvelousRatings") ? 3 : 2) ? " <" : "") + (judgementsTooHigh[2] ? " (Too High!!!)" : "") + "\n" +
+            "BAD: " + Std.string(judgements[3]) + "ms" + (selected == (utilities.Options.getData("marvelousRatings") ? 4 : 3) ? " <" : "") + (judgementsTooHigh[3] ? " (Too High!!!)" : "") + "\n" +
+            (judgementTooHigh ? "(Scores won't be saved.)" : "") +
             "\n"
         );
 

@@ -496,6 +496,7 @@ class PlayState extends MusicBeatState {
 	 */
 	static var noDeathUsed:Bool = false;
 
+
 	/**
 		Current character you are playing as stored as an `Int`.
 
@@ -2179,6 +2180,7 @@ class PlayState extends MusicBeatState {
 
 			discordUpdateTimer = 0;
 		}
+		
 
 		/*if (!skipped && skipText != null && FlxG.keys.justPressed.SHIFT && FlxG.sound.music.time < skipToTime) {
                     
@@ -2742,8 +2744,8 @@ class PlayState extends MusicBeatState {
 
 			#if MODCHARTING_TOOLS
 			if (FlxG.keys.justPressed.NINE && !switchedStates && !inCutscene) {
-				PlayState.modchartingMode = true;
 				switchedStates = true;
+				PlayState.modchartingMode = true;
 				vocals.stop();
 				SONG.keyCount = ogKeyCount;
 				SONG.playerKeyCount = ogPlayerKeyCount;
@@ -3111,10 +3113,8 @@ class PlayState extends MusicBeatState {
 
 			SONG.keyCount = ogKeyCount;
 			SONG.playerKeyCount = ogPlayerKeyCount;
-
 			PlayState.chartingMode = false;
 			PlayState.modchartingMode = false;
-
 			FlxG.switchState(() -> new FreeplayState());
 		}
 	}

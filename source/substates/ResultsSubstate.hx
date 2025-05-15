@@ -11,6 +11,7 @@ import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import states.PlayState;
+
 /**
  * The substate for the results screen after a song or week is finished.
  */
@@ -48,6 +49,23 @@ class ResultsSubstate extends MusicBeatSubstate {
 		ratings.screenCenter(Y);
 		ratings.scrollFactor.set();
 		add(ratings);
+
+			var rawAccuracy = Std.int(PlayState.instance.accuracy * 10000); 
+			var accStr = Std.string(rawAccuracy);
+			if (accStr.length >= 3) {
+				accStr = accStr.substr(0, accStr.length - 2) + "." + accStr.substr(accStr.length - 2);
+			} else if (accStr.length == 2) {
+				accStr = "0." + accStr;
+			} else if (accStr.length == 1) {
+				accStr = "0.0" + accStr;
+			}
+
+			var accText:FlxText = new FlxText(0, 0, 0, "Accuracy: " + accStr + "%");
+			accText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.YELLOW, LEFT, OUTLINE, FlxColor.BLACK);
+			accText.y = ratings.y + ratings.height + 30;
+			accText.scrollFactor.set();
+			add(accText);
+
 
 		@:privateAccess
 		var bottomText:FlxText = new FlxText(FlxG.width, FlxG.height, 0,

@@ -108,7 +108,7 @@ class NoteTimer extends FlxTypedSpriteGroup<FlxSprite>
             skipText.alpha = 0;
             PlayState.instance.tweenManager.tween(skipText, {alpha: 1}, 1, {ease:FlxEase.cubeInOut, startDelay: Conductor.crochet*0.001*5, onComplete: function(twn)
             {
-                PlayState.instance.tweenManager.tween(skipText, {alpha: 0}, 1, {ease:FlxEase.cubeIn, startDelay: Conductor.crochet*0.001*5});
+                PlayState.instance.tweenManager.tween(skipText, {alpha: 0}, 1, {ease:FlxEase.linear, startDelay: Conductor.crochet*0.001*5});
             }});
         }
         else 
@@ -198,7 +198,7 @@ class NoteTimer extends FlxTypedSpriteGroup<FlxSprite>
                         if (!skipped)
                         {
                             if (Conductor.songPosition < firstNoteTime-1000)
-                                skipToTime(firstNoteTime-350);
+                                skipToTime(firstNoteTime-1000);
                         }
                     }
 

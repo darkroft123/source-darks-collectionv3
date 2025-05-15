@@ -237,7 +237,6 @@ class PauseSubState extends MusicBeatSubstate {
 					FlxG.cameras.remove(pauseCamera);
 					PlayState.chartingMode = false;
 					PlayState.modchartingMode = false;
-
 					if (PlayState.isStoryMode) {
 						FlxG.switchState(() -> new StoryMenuState());
 					} else {

@@ -12,6 +12,7 @@ import game.Conductor;
 import utilities.Options;
 import flixel.util.FlxTimer;
 import substates.ResetScoreSubstate;
+import substates.StarInfoSubState;
 import flixel.sound.FlxSound;
 import lime.app.Application;
 import flixel.tweens.FlxTween;
@@ -75,6 +76,10 @@ class FreeplayState extends MusicBeatState {
 		0xFFFF9900,
 		0xFF735EB0
 	];
+	var bestAccuracy:Float = 0;
+	var totalRoseStars = 0;
+	var totalBlueStars = 0;
+	var totalGoldStars = 0;
 
 	public var bg:FlxSprite;
 	public var selectedColor:Int = 0xFF7F1833;
@@ -543,6 +548,20 @@ class FreeplayState extends MusicBeatState {
 
 			}
 
+			if (FlxG.keys.justPressed.E) {
+				
+				var stars:Int = 0;
+
+				if (bestAccuracy >= 80) stars++;
+				if (bestAccuracy >= 90) stars++;
+				if (bestAccuracy >= 95) stars++;
+
+
+				openSubState(new StarInfoSubState(getTotalStars(songs), songs.length));
+
+
+			}
+
 			#if PRELOAD_ALL
 			if (FlxG.keys.justPressed.SPACE) {
 				destroyFreeplayVocals();
@@ -734,7 +753,7 @@ class FreeplayState extends MusicBeatState {
 	}
 	
 	function addStar(iconPath:String, posX:Float, posY:Float):FlxSprite {
-			var sprite:FlxSprite = null;
+		var sprite:FlxSprite = null;
 			if (Assets.exists(Paths.image(iconPath))) {
 				sprite = new FlxSprite(posX, posY);
 				sprite.loadGraphic(Paths.image(iconPath));
@@ -743,7 +762,53 @@ class FreeplayState extends MusicBeatState {
 				add(sprite);
 			}
 			return sprite;
+	}
+
+	function getTotalStars(songs:Array<Dynamic>):{ rose:Int, blue:Int, gold:Int, marks:Int } {
+			var totalRose = 0;
+			var totalBlue = 0;
+			var totalGold = 0;
+			var greenMarks = 0;
+
+			var difficulties = [
+				"voiid", "standard", "sported out", "corrupted", "god", "godly", "double god", "canon", "old", "easier",
+				"100%", "goodles 100%", "infinite", "voiid god", "nogod", "godly 6k", "godly 9k"
+			];
+			for (i in 1...22) difficulties.push(i + "k");
+			for (i in 1...22) difficulties.push("god " + i + "k");
+
+			for (song in songs) {
+				var hasScore = false;
+
+				for (diff in difficulties) {
+					var accuracy = Highscore.getSongAccuracy(song.songName, diff);
+					var score = Highscore.getScore(song.songName, diff);
+
+					if (!hasScore && score > 0) {
+						hasScore = true;
+					}
+
+					if (accuracy >= 95) {
+						totalGold++;
+						totalBlue++;
+						totalRose++;
+					} else if (accuracy >= 90) {
+						totalBlue++;
+						totalRose++;
+					} else if (accuracy >= 80) {
+						totalRose++;
+					}
+				}
+
+				if (hasScore)
+					greenMarks++;
+			}
+
+			return { rose: totalRose, blue: totalBlue, gold: totalGold, marks: greenMarks };
 		}
+
+
+
 
 	
 	function changeSelection(change:Int = 0) {
@@ -769,10 +834,6 @@ class FreeplayState extends MusicBeatState {
 			var songName = songs[curSelected].songName.toLowerCase();
 			godEffectDone.set(songName, false);
 		}
-
-
-		
-		
 		// Sounds
 
 		// Scroll Sound
@@ -790,25 +851,34 @@ class FreeplayState extends MusicBeatState {
 
 			var difficulties = ["voiid", "standard", "sported out", "corrupted", "god", "godly", "double god", "canon", "old", "easier", "100%", "goodles 100%", "infinite",
 			"voiid god", "nogod", "godly 6k", "godly 9k"];
-			
 			for (i in 1...22) {
 				difficulties.push(i + "k");
 			}
 			for (i in 1...22) {
 				difficulties.push("god " + i + "k");
 			}
-
 			var highestScore = 0;
 			var bestRank = "";
-				var bestAccuracy:Float = 0;
-
+				
 				for (diff in difficulties) {
 					var score = Highscore.getScore(songs[curSelected].songName, diff);
+					var accuracy = Highscore.getSongAccuracy(songs[curSelected].songName, diff);  
 
 					if (score > highestScore) {
 						highestScore = score;
 						bestRank = Highscore.getSongRank(songs[curSelected].songName, diff);
-						bestAccuracy = Highscore.getSongAccuracy(songs[curSelected].songName, diff);
+						bestAccuracy = accuracy;
+					}
+
+					if (accuracy >= 95) {
+						totalGoldStars++;
+						totalBlueStars++;
+						totalRoseStars++;
+					} else if (accuracy >= 90) {
+						totalBlueStars++;
+						totalRoseStars++;
+					} else if (accuracy >= 80) {
+						totalRoseStars++;
 					}
 				}
 
@@ -816,8 +886,6 @@ class FreeplayState extends MusicBeatState {
 				var starName = bestAccuracy >= 90 ? "blue star" : "black star";
 				var seconStar = bestAccuracy >= 95 ? "gold star" : "black star";
 				var tercerStar = bestAccuracy >= 80 ? "rose star" : "black star";
-
-			
 
 			if (currentSongIcon != null && members.contains(currentSongIcon)) {
 				remove(currentSongIcon);
@@ -833,29 +901,21 @@ class FreeplayState extends MusicBeatState {
 				add(currentSongIcon);
 			}
 
-						
 				if (currentStarIcon != null && members.contains(currentStarIcon)) {
 					remove(currentStarIcon);
 					currentStarIcon.destroy();
 					currentStarIcon = null;
 				}
-
 				if (secondStarIcon != null && members.contains(secondStarIcon)) {
 					remove(secondStarIcon);
 					secondStarIcon.destroy();
 					secondStarIcon = null;
 				}
-
-				// Crear las dos estrellas
 				tercerStarIcon = addStar(tercerStar, 805, -60);
-				currentStarIcon = addStar(starName, 880, -60); // Principal (azul o negra)
-				secondStarIcon = addStar(seconStar, 955, -60); // Segunda estrella fija o basada en alguna condición
+				currentStarIcon = addStar(starName, 880, -60); 
+				secondStarIcon = addStar(seconStar, 955, -60); 
 
 		}
-
-
-
-
 
 		if (songs.length != 0) {
 			curDiffArray = songs[curSelected].difficulties;
