@@ -482,6 +482,21 @@ class PlayState extends MusicBeatState {
 	static var chartingMode:Bool = false;
 
 	/**
+	 * Is the player modcharting?
+	 */
+	static var modchartingMode:Bool = false;
+
+	/**
+	 * Has the player enabled botplay?
+	 */
+	static var botUsed:Bool = false;
+	/**
+
+	 * Has the player enabled noDeath?
+	 */
+	static var noDeathUsed:Bool = false;
+
+	/**
 		Current character you are playing as stored as an `Int`.
 
 		Values:
@@ -578,11 +593,12 @@ class PlayState extends MusicBeatState {
 	 * Manages tweens in lua scripts to pause when game is
 	 */
 	var tweenManager:FlxTweenManager;
-	var skipText:FlxText;
+	
+	/*var skipText:FlxText;
 	var skipped:Bool = false;
 	var skipToTime:Float = 0;
 	var removeAtTime:Float = 11000;
-	var firstNoteTime:Float = -1;
+	var firstNoteTime:Float = -1;*/
 
 	override function create() {
 		// set instance because duh
@@ -629,8 +645,16 @@ class PlayState extends MusicBeatState {
 		}
 
 		// check for invalid settings
-		if (Options.getData("botplay") || Options.getData("noDeath") || characterPlayingAs != 0 || PlayState.chartingMode) {
+		if (Options.getData("botplay") || Options.getData("noDeath") || characterPlayingAs != 0 || PlayState.chartingMode || PlayState.modchartingMode) {
 			SONG.validScore = false;
+		}
+
+		if (Options.getData("botplay")) {
+			botUsed = true;
+		}
+
+		if (Options.getData("noDeath")) {
+			noDeathUsed = true;
 		}
 
 		// preload the miss sounds
@@ -1548,7 +1572,7 @@ class PlayState extends MusicBeatState {
 		#if desktop
 		Conductor.recalculateStuff(songMultiplier);
 
-			findFirstNoteTime();
+			/*findFirstNoteTime();
 
 			if (firstNoteTime > 10000) {
 				skipToTime = firstNoteTime - 2000;
@@ -1560,7 +1584,7 @@ class PlayState extends MusicBeatState {
 				skipText.y = 50;
 				skipText.cameras = [camHUD];
 				add(skipText);
-			}
+			}*/
 
 
 		switch (curSong)//smallicon
@@ -1743,6 +1767,9 @@ class PlayState extends MusicBeatState {
 		curSong = SONG.song;
 		if (SONG.needsVoices) {
 			for (character in ['player', 'opponent', boyfriend.curCharacter, dad.curCharacter]) {
+				if(vocals.members.length >= 2){
+					break;
+				}
 				var soundPath:String = Paths.voices(PlayState.SONG.song, SONG.specialAudioName ?? storyDifficultyStr.toLowerCase(), character,
 					boyfriend.curCharacter);
 				if (!addedVocals.contains(soundPath)) {
@@ -2152,28 +2179,15 @@ class PlayState extends MusicBeatState {
 
 			discordUpdateTimer = 0;
 		}
-		
 
-		if (!skipped && skipText != null && FlxG.keys.justPressed.SHIFT && FlxG.sound.music.time < skipToTime) {
-			skipped = true;
-
-
-			var totalSteps = Std.int(skipToTime / Conductor.stepCrochet);
-
-			for (i in 0...totalSteps) {
-				curStep = i;
-				stepHit();
-
-				if (i % 4 == 0) {
-					curBeat = Std.int(i / 4);
-					beatHit();
-				}
-			}
-
-
-			clearNotesBefore(skipToTime);
-			setSongTime(skipToTime - 350);
-			removeSkipText();
+		/*if (!skipped && skipText != null && FlxG.keys.justPressed.SHIFT && FlxG.sound.music.time < skipToTime) {
+                    
+            if (!skipped)
+            {
+            if (Conductor.songPosition < firstNoteTime-1000)
+                 skipToTime(firstNoteTime-350);
+            }
+                    
 		}
 
 		if (!skipped && skipText != null && FlxG.sound.music.time >= skipToTime) {
@@ -2183,7 +2197,7 @@ class PlayState extends MusicBeatState {
 
 		if (!skipped && skipText != null && FlxG.sound.music.time >= removeAtTime) {
 			fadeOutText();
-		}
+		}*/
 
 
 
@@ -2728,6 +2742,7 @@ class PlayState extends MusicBeatState {
 
 			#if MODCHARTING_TOOLS
 			if (FlxG.keys.justPressed.NINE && !switchedStates && !inCutscene) {
+				PlayState.modchartingMode = true;
 				switchedStates = true;
 				vocals.stop();
 				SONG.keyCount = ogKeyCount;
@@ -2825,20 +2840,55 @@ class PlayState extends MusicBeatState {
 		call("updatePost", [elapsed]);
 	}
 
-	function findFirstNoteTime() {
-			firstNoteTime = 999999;
+		/*function findFirstNoteTime() {
+				firstNoteTime = 999999;
 
-			for (section in SONG.notes) {
-				for (note in section.sectionNotes) {
-					var noteTime:Float = note[0];
-					if (noteTime < firstNoteTime) {
-						firstNoteTime = noteTime;
+				for (section in SONG.notes) {
+					for (note in section.sectionNotes) {
+						var noteTime:Float = note[0];
+						if (noteTime < firstNoteTime) {
+							firstNoteTime = noteTime;
+						}
 					}
 				}
-			}
 
-			if (firstNoteTime == 999999) firstNoteTime = -1;
-	}
+				if (firstNoteTime == 999999) firstNoteTime = -1;
+		}
+		    public function skipToTime(time:Float)
+				{
+					if (skipped)
+						return;
+					skipped = true;
+					var timeDiff = time-Conductor.songPosition;
+					var addedTime = Conductor.songPosition;
+
+					while(timeDiff > 0)
+					{
+						var timeToAdd = Conductor.stepCrochet;
+						var ending:Bool = false;
+						if (timeDiff <= timeToAdd)
+						{
+							timeToAdd = timeDiff; //less than a step left so just takeaway the rest
+							ending = true;
+						}
+						timeDiff -= timeToAdd;
+						//trace('time left: ' + timeDiff);
+						//trace('song pos: ' + Conductor.songPosition);
+						FlxG.state.update(timeToAdd*0.001); //advance time
+						
+						addedTime += timeToAdd; //need to do it like this because the songpos gets updated with FlxG.elapsed which wouldnt change
+						Conductor.songPosition = addedTime; //make sure it updates the step correctly
+						if (ending)
+						{
+							timeDiff = 0;
+							Conductor.songPosition = time;
+							FlxG.sound.music.time = time;
+							break;
+						}
+					}
+				}
+
+	
 
 		function fadeOutText() {
 			if (skipText != null) {
@@ -2853,7 +2903,7 @@ class PlayState extends MusicBeatState {
 				remove(skipText, true);
 				skipText = null;
 			}
-		}
+		}*/
 
 
 
@@ -3061,6 +3111,9 @@ class PlayState extends MusicBeatState {
 
 			SONG.keyCount = ogKeyCount;
 			SONG.playerKeyCount = ogPlayerKeyCount;
+
+			PlayState.chartingMode = false;
+			PlayState.modchartingMode = false;
 
 			FlxG.switchState(() -> new FreeplayState());
 		}
@@ -3283,6 +3336,7 @@ class PlayState extends MusicBeatState {
 		Options.setData(!Options.getData("botplay"), "botplay");
 		set("bot", Options.getData("botplay"));
 		SONG.validScore = false;
+		botUsed = true;
 		updateSongInfoText();
 	}
 

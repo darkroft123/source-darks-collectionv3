@@ -1,5 +1,8 @@
 package ui;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.FlxG;
 import flixel.system.FlxAssets.FlxShader;
 import openfl.display.BlendMode;
 import openfl.display.BitmapDataChannel;
@@ -69,6 +72,7 @@ class NoteTimer extends FlxTypedSpriteGroup<FlxSprite>
     private var timerText:FlxText;
     private var timerCircle:FlxSprite;
     private var circleShader:CircleShader = new CircleShader();
+    private var skipText:FlxText;
     public function new(instance:PlayState)
     {
         super();
@@ -84,19 +88,45 @@ class NoteTimer extends FlxTypedSpriteGroup<FlxSprite>
         timerText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
         add(timerText);
 
+        skipText = new FlxText(0,0,0,"Press SHIFT to Skip Intro");
+        skipText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        add(skipText);
+        skipText.visible = false;
+
         timerCircle.screenCenter();
         timerText.screenCenter();
 
         circleShader.percent.value = [0.0];
 
+
+
+        firstNoteTime = getClosestNote();
+        if (firstNoteTime != FlxMath.MAX_VALUE_FLOAT && firstNoteTime > 5000)
+        {
+            skipped = false;
+            skipText.visible = true;
+            skipText.alpha = 0;
+            PlayState.instance.tweenManager.tween(skipText, {alpha: 1}, 1, {ease:FlxEase.cubeInOut, startDelay: Conductor.crochet*0.001*5, onComplete: function(twn)
+            {
+                PlayState.instance.tweenManager.tween(skipText, {alpha: 0}, 1, {ease:FlxEase.cubeIn, startDelay: Conductor.crochet*0.001*5});
+            }});
+        }
+        else 
+            skipped = true;
+
         //alpha = 0;
     }
+
+    private var firstNoteTime:Float = 0;
 
     private var lastStartTime:Float = FlxMath.MAX_VALUE_FLOAT;
     override public function update(elapsed:Float)
     {
         super.update(elapsed);
         var timeTillNextNote:Float = FlxMath.MAX_VALUE_FLOAT;
+
+        if (skipped)
+            skipText.visible = false;
 
         if (instance != null)
         {
@@ -162,6 +192,16 @@ class NoteTimer extends FlxTypedSpriteGroup<FlxSprite>
                 {
                     //visible = true;
                     targetAlpha = 1.0;
+
+                    if (FlxG.keys.justPressed.SHIFT)
+                    {
+                        if (!skipped)
+                        {
+                            if (Conductor.songPosition < firstNoteTime-1000)
+                                skipToTime(firstNoteTime-350);
+                        }
+                    }
+
                 }
             }
 
@@ -171,27 +211,82 @@ class NoteTimer extends FlxTypedSpriteGroup<FlxSprite>
     }
 
     function updatePosition()
+    {
+        timerCircle.screenCenter();
+        timerText.screenCenter();
+        skipText.screenCenter();
+        if (utilities.Options.getData("downscroll"))
         {
-            timerCircle.screenCenter();
-            timerText.screenCenter();
-        
-            if (utilities.Options.getData("downscroll"))
-            {
-                timerCircle.y += 260;
-                timerText.y += 260;
-            }
-            else 
-            {
-                timerCircle.y -= 260;
-                timerText.y -= 260;
-            }
-        
+            timerCircle.y += 260;
+            timerText.y += 260;
+            skipText.y += 260-100;
+        }
+        else 
+        {
+            timerCircle.y -= 260;
+            timerText.y -= 260;
+            skipText.y -= 260-100;
+        }
+    }
 
-            if (utilities.Options.getData("middlescroll"))
+    public var skipped:Bool = false;
+
+    public function getClosestNote()
+    {
+        var t:Float = FlxMath.MAX_VALUE_FLOAT;
+        for (daNote in instance.notes)
+        {
+            var timeDiff = daNote.strumTime;
+            if (timeDiff < t)
+                t = timeDiff;
+        }
+
+        //if (t == FlxMath.MAX_VALUE_FLOAT) //now check unspawnNotes if not found anything
+        //{
+            for (daNote in instance.unspawnNotes)
             {
-                timerCircle.x += 350; 
-                timerText.x += 350;   
+                var timeDiff = daNote.strumTime;
+                if (timeDiff < t)
+                {
+                    t = timeDiff;
+                    //break;
+                }
+            }
+        //}
+        return t;
+    }
+
+    public function skipToTime(time:Float)
+    {
+        if (skipped)
+            return;
+        skipped = true;
+        var timeDiff = time-Conductor.songPosition;
+        var addedTime = Conductor.songPosition;
+
+        while(timeDiff > 0)
+        {
+            var timeToAdd = Conductor.stepCrochet;
+            var ending:Bool = false;
+            if (timeDiff <= timeToAdd)
+            {
+                timeToAdd = timeDiff; //less than a step left so just takeaway the rest
+                ending = true;
+            }
+            timeDiff -= timeToAdd;
+            //trace('time left: ' + timeDiff);
+            //trace('song pos: ' + Conductor.songPosition);
+            FlxG.state.update(timeToAdd*0.001); //advance time
+            
+            addedTime += timeToAdd; //need to do it like this because the songpos gets updated with FlxG.elapsed which wouldnt change
+            Conductor.songPosition = addedTime; //make sure it updates the step correctly
+            if (ending)
+            {
+                timeDiff = 0;
+                Conductor.songPosition = time;
+                FlxG.sound.music.time = time;
+                break;
             }
         }
-        
+    }
 }

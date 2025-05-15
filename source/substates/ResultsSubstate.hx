@@ -53,20 +53,22 @@ class ResultsSubstate extends MusicBeatSubstate {
 		var bottomText:FlxText = new FlxText(FlxG.width, FlxG.height, 0,
 			"Press ENTER to close this menu");
 		bottomText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
-		bottomText.setPosition(FlxG.width - bottomText.width - 2, FlxG.height - 96);
+		bottomText.setPosition(FlxG.width - bottomText.width - 2, FlxG.height - 32);
 		bottomText.scrollFactor.set();
 		add(bottomText);
 
+		var clearedText:FlxText = new FlxText(FlxG.width - 550, 0, 0, "");
+		clearedText.y = bottomText.y - 256;
+		clearedText.scrollFactor.set();
+
 		if (PlayState.SONG.validScore) {
-			var clearedText:FlxText = new FlxText(200, -50, 0, "CLEARED");
-			clearedText.setFormat(Paths.font("vcr.ttf"), 64, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-			clearedText.screenCenter(X);
-			clearedText.y = bottomText.y - 64;
-			clearedText.scrollFactor.set();
-			add(clearedText);
+			clearedText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.LIME, LEFT, OUTLINE, FlxColor.BLACK);
+			clearedText.text = "Score saved!";
+		} else {
+			clearedText.setFormat(Paths.font("vcr.ttf"), 24, 0xFF6183, LEFT, OUTLINE, FlxColor.BLACK);
+			clearedText.text = 'Score NOT saved\n${PlayState.botUsed ? '• Botplay was enabled\n' : ''}${PlayState.noDeathUsed ? '• No Death was enabled\n' : ''}${PlayState.characterPlayingAs != 0 ? '• Opponent Play was enabled\n' : ''}${PlayState.chartingMode ? '• Chart Editor was used\n' : ''}${PlayState.modchartingMode ? '• Modchart Editor was used\n' : ''}';
 		}
-
-
+		add(clearedText);
 		add(new NoteGraph(PlayState.instance, FlxG.width - 550, 75)); 
 
 		cameras = [uiCamera];
