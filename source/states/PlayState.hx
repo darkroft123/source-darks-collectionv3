@@ -1627,7 +1627,7 @@ class PlayState extends MusicBeatState {
 			case "FS Rejected":
 				curPortrait = "rev4";
 			case "Rejected PS":
-				curPortrait = "rejectedunt0ld";
+				curPortrait = "godpapermatt";
 			case "Mattpurgation":
 				curPortrait = "voiidgodmatt";
 			case "Defamation Of Reality":
@@ -1646,6 +1646,8 @@ class PlayState extends MusicBeatState {
 				curPortrait = "hdx";
 			case "VC AHP":
 				curPortrait = "ahpvc";
+			case "God Mode Instinct":
+				curPortrait = "gmi";
 			case "Spiral Dismay":
 				curPortrait = "multishaggy";
 			case "Final Boss":
@@ -1670,7 +1672,7 @@ class PlayState extends MusicBeatState {
 				curPortrait = "divineparadox";
 			case "DS Final Destination":
 				curPortrait = "donsides";
-			case "Wind Up" | "Cleverness" | "Game Over":
+			case "Wind Up" | "Cleverness" | "Game Over" | "Final Stand Remix":
 				curPortrait = "matt";
 			case "VC Final Destination" | "VS Final Destination":
 				curPortrait = "voiidgodsxm";
