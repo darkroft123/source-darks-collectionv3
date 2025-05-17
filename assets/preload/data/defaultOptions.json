@@ -21,6 +21,10 @@
       "value": false
     },
     {
+      "option": "showDiscord",
+      "value": true
+    },
+    {
       "option": "uiSkin",
       "value": "default"
     },
@@ -54,7 +58,7 @@
     },
     {
       "option": "maxFPS",
-      "value": 120
+      "value": 240
     },
     {
       "option": "vSync",
@@ -66,6 +70,10 @@
     },
     {
       "option": "antialiasing",
+      "value": true
+    },
+    {
+      "option": "lowQuality",
       "value": true
     },
     {

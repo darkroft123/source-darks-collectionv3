@@ -31,7 +31,7 @@ class CustomShader extends FlxRuntimeShader {
 	public function tween(property:String, to:Float, duration:Float = 1, ease:EaseFunction, ?startDelay:Float = 0.0, ?onComplete:Dynamic) {
 		PlayState.instance.tweenManager.num(getFloat(property), to, duration, {
 			ease: ease,
-			onComplete: function(twn) {
+			onComplete: (_) -> {
 				setFloat(property, to); // make sure
 				if (onComplete != null)
 					onComplete();

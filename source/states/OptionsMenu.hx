@@ -78,6 +78,7 @@ class OptionsMenu extends MusicBeatState {
 		"Optimizations" => [
 			new PageOption("Back", "Graphics"),
 			new BoolOption("Antialiasing", "antialiasing"),
+			new BoolOption("Low Quality", "lowQuality"),
 			new BoolOption("Health Icons", "healthIcons"),
 			new BoolOption("Health Bar", "healthBar"),
 			new BoolOption("Ratings and Combo", "ratingsAndCombo"),
