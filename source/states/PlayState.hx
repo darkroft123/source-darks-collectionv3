@@ -494,14 +494,24 @@ class PlayState extends MusicBeatState {
 	static var modchartingMode:Bool = false;
 
 	/**
+	 * Is the songMultiplier too low?
+	 */
+	static var tooSlow:Bool = false;
+
+	/**
 	 * Has the player enabled botplay?
 	 */
 	static var botUsed:Bool = false;
-	/**
 
+	/**
 	 * Has the player enabled noDeath?
 	 */
 	static var noDeathUsed:Bool = false;
+
+	/**
+	 * Are player judgements too high?
+	 */
+	static var invalidJudgements:Bool = false;
 
 
 	/**
@@ -652,9 +662,8 @@ class PlayState extends MusicBeatState {
 			SONG.keyCount = oldRegKeyCount;
 		}
 
-		// check for invalid settings
-		if (Options.getData("botplay") || Options.getData("noDeath") || characterPlayingAs != 0 || PlayState.chartingMode || PlayState.modchartingMode) {
-			SONG.validScore = false;
+		if (songMultiplier < 1) {
+			tooSlow = true;
 		}
 
 		if (Options.getData("botplay")) {
@@ -663,6 +672,17 @@ class PlayState extends MusicBeatState {
 
 		if (Options.getData("noDeath")) {
 			noDeathUsed = true;
+		}
+
+		var timings:Array<Float> = utilities.Options.getData("judgementTimings");
+
+		if (timings[0] > 25 || timings[1] > 50 || timings[2] > 90 || timings[3] > 135) {
+			invalidJudgements = true;
+		}
+
+		// check for invalid settings
+		if (tooSlow ||Options.getData("botplay") || Options.getData("noDeath") || invalidJudgements || characterPlayingAs != 0 || PlayState.chartingMode || PlayState.modchartingMode) {
+			SONG.validScore = false;
 		}
 
 		// preload the miss sounds
@@ -3234,16 +3254,18 @@ class PlayState extends MusicBeatState {
 		rating.velocity.y = FlxG.random.int(30, 60);
 		rating.velocity.x = FlxG.random.int(-10, 10);
 
-		var noteMath:Float = FlxMath.roundDecimal(noteDiff, 2);
+		var noteMath:Float = -FlxMath.roundDecimal(noteDiff, 2);
+		if (Math.abs(noteMath) == 0)
+			noteMath = 0;
 
 		if (Options.getData("displayMs")) {
 			accuracyText.text = noteMath + " ms" + (Options.getData("botplay") ? " (BOT)" : "");
 			accuracyText.setPosition(initRatingX + Options.getData("accuracyTextOffset")[0], initRatingY + 100 + Options.getData("accuracyTextOffset")[1]);
 
 			if (Math.abs(noteMath) == noteMath)
-				accuracyText.color = FlxColor.CYAN;
-			else
 				accuracyText.color = FlxColor.ORANGE;
+			else
+				accuracyText.color = FlxColor.CYAN;
 
 			accuracyText.borderStyle = FlxTextBorderStyle.OUTLINE_FAST;
 			accuracyText.borderSize = 1;
@@ -3343,7 +3365,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function updateScoreText() {
-		scoreTxt.text = '<  ${Options.getData('showScore') ? 'Score:${songScore} ~ ' : ''}Misses:${misses} ~ Accuracy:${accuracy}% ~ ${ratingStr}  >';
+		scoreTxt.text = '<  ${Options.getData('showScore') ? 'Score:${songScore} • ' : ''}Misses:${misses} • Accuracy:${accuracy}% • ${ratingStr}  >';
 		scoreTxt.screenCenter(X);
 	}
 
@@ -4043,27 +4065,51 @@ class PlayState extends MusicBeatState {
 		var MA:Int = ratingArray[1] + ratingArray[2] + ratingArray[3] + ratingArray[4];
 		var PA:Int = MA - ratingArray[1];
 
-		return ((marvelousRatings ? "Marvelous: " + Std.string(ratingArray[0]) + "\n" : "")
-			+ "Sick: "
-			+ Std.string(ratingArray[1])
-			+ "\n"
-			+ "Good: "
-			+ Std.string(ratingArray[2])
-			+ "\n"
-			+ "Bad: "
-			+ Std.string(ratingArray[3])
-			+ "\n"
-			+ "Shit: "
-			+ Std.string(ratingArray[4])
-			+ "\n"
-			+ "Misses: "
-			+ Std.string(misses)
-			+ "\n"
-			+ (marvelousRatings
-				&& ratingArray[0] > 0
-				&& MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
-			+ (ratingArray[1] > 0
-				&& PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
+		if (SONG.ui_Skin == "voiid") {
+			return ((marvelousRatings ? "Krazy: " + Std.string(ratingArray[0]) + "\n" : "")
+				+ "Sick: "
+				+ Std.string(ratingArray[1])
+				+ "\n"
+				+ "Good: "
+				+ Std.string(ratingArray[2])
+				+ "\n"
+				+ "Guh: "
+				+ Std.string(ratingArray[3])
+				+ "\n"
+				+ "Mid: "
+				+ Std.string(ratingArray[4])
+				+ "\n"
+				+ "Misses: "
+				+ Std.string(misses)
+				+ "\n"
+				+ (marvelousRatings
+					&& ratingArray[0] > 0
+					&& MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
+				+ (ratingArray[1] > 0
+					&& PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
+		} else {
+			return ((marvelousRatings ? "Marvelous: " + Std.string(ratingArray[0]) + "\n" : "")
+				+ "Sick: "
+				+ Std.string(ratingArray[1])
+				+ "\n"
+				+ "Good: "
+				+ Std.string(ratingArray[2])
+				+ "\n"
+				+ "Bad: "
+				+ Std.string(ratingArray[3])
+				+ "\n"
+				+ "Shit: "
+				+ Std.string(ratingArray[4])
+				+ "\n"
+				+ "Misses: "
+				+ Std.string(misses)
+				+ "\n"
+				+ (marvelousRatings
+					&& ratingArray[0] > 0
+					&& MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
+				+ (ratingArray[1] > 0
+					&& PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
+				}
 	}
 
 	static function getCharFromEvent(eventVal:String):Character {

@@ -50,21 +50,26 @@ class ResultsSubstate extends MusicBeatSubstate {
 		ratings.scrollFactor.set();
 		add(ratings);
 
-			var rawAccuracy = Std.int(PlayState.instance.accuracy * 10000); 
-			var accStr = Std.string(rawAccuracy);
-			if (accStr.length >= 3) {
-				accStr = accStr.substr(0, accStr.length - 2) + "." + accStr.substr(accStr.length - 2);
-			} else if (accStr.length == 2) {
-				accStr = "0." + accStr;
-			} else if (accStr.length == 1) {
-				accStr = "0.0" + accStr;
-			}
-
-			var accText:FlxText = new FlxText(0, 0, 0, "Accuracy: " + accStr + "%");
-			accText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.YELLOW, LEFT, OUTLINE, FlxColor.BLACK);
-			accText.y = ratings.y + ratings.height + 30;
-			accText.scrollFactor.set();
-			add(accText);
+		var finalScore:FlxText = new FlxText(0, 0, 0, "Score: " + PlayState.instance.songScore);
+		finalScore.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		finalScore.y = ratings.y - 30;
+		finalScore.scrollFactor.set();
+		add(finalScore);
+		
+		var accText:FlxText = new FlxText(0, 0, 0, "Accuracy: " + PlayState.instance.accuracy + "%\n" + PlayState.instance.ratingStr);
+		accText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		if (PlayState.instance.accuracy >= 95) {
+			accText.color = FlxColor.ORANGE;
+		} else if (PlayState.instance.accuracy >= 90) {
+			accText.color = FlxColor.CYAN;
+		} else if (PlayState.instance.accuracy >= 80) {
+			accText.color = 0xFFFF69B4;
+		} else {
+			accText.color = FlxColor.LIME;
+		}
+		accText.y = ratings.y + ratings.height;
+		accText.scrollFactor.set();
+		add(accText);
 
 
 		@:privateAccess
@@ -84,7 +89,7 @@ class ResultsSubstate extends MusicBeatSubstate {
 			clearedText.text = "Score saved!";
 		} else {
 			clearedText.setFormat(Paths.font("vcr.ttf"), 24, 0xFF6183, LEFT, OUTLINE, FlxColor.BLACK);
-			clearedText.text = 'Score NOT saved\n${PlayState.botUsed ? '• Botplay was enabled\n' : ''}${PlayState.noDeathUsed ? '• No Death was enabled\n' : ''}${PlayState.characterPlayingAs != 0 ? '• Opponent Play was enabled\n' : ''}${PlayState.chartingMode ? '• Chart Editor was used\n' : ''}${PlayState.modchartingMode ? '• Modchart Editor was used\n' : ''}';
+			clearedText.text = 'Score NOT saved\n${PlayState.tooSlow ? '• Song Speed is less than 1x\n' : ''}${PlayState.botUsed ? '• Botplay was enabled\n' : ''}${PlayState.noDeathUsed ? '• No Death was enabled\n' : ''}${PlayState.invalidJudgements ? '• Judgement Timings are invalid\n' : ''}${PlayState.characterPlayingAs != 0 ? '• Opponent Play was enabled\n' : ''}${PlayState.chartingMode ? '• Chart Editor was used\n' : ''}${PlayState.modchartingMode ? '• Modchart Editor was used\n' : ''}';
 		}
 		add(clearedText);
 		add(new NoteGraph(PlayState.instance, FlxG.width - 550, 75)); 
