@@ -27,17 +27,19 @@ class PauseSubState extends MusicBeatSubstate {
 	var curSelected:Int = 0;
 
 	var menus:Map<String, Array<String>> = [
-		"default" => ['Resume', 'Restart Song', 'Options', 'Exit To Menu'],
+		"default" => ['Resume', 'Restart Song','Quickly Options', 'Options', 'Exit To Menu'],
+		"Quickly Options" => ['Back', 'Bot', 'Auto Restart', 'No Miss', 'Ghost Tapping', 'No Death'],
 		"restart" => ['Back', 'No Cutscenes', 'With Cutscenes'],
+		
 	];
 
 	var menu:String = "default";
-
+	var warningAmountLols:Int = 0;
 	var pauseMusic:FlxSound = new FlxSound().loadEmbedded(Paths.music('breakfast'
 		+ (Assets.exists(Paths.music('breakfast-' + PlayState.boyfriend.curCharacter, 'shared')) ? '-' + PlayState.boyfriend.curCharacter : ''),
 		'shared'),
 		true, true);
-
+	var scoreWarning:FlxText = new FlxText(20, 15 + 64, 0, "Remember, changing options invalidates your score!", 32);
 	var pauseCamera:FlxCamera = new FlxCamera();
 
 	var curTime:Float = Math.max(0, Conductor.songPosition);
@@ -64,6 +66,8 @@ class PauseSubState extends MusicBeatSubstate {
 		bg.scrollFactor.set();
 		add(bg);
 
+		
+
 		var levelInfo:FlxText = new FlxText(20, 15, 0, "", 32);
 		levelInfo.text = PlayState.SONG.song;
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
@@ -76,8 +80,33 @@ class PauseSubState extends MusicBeatSubstate {
 		levelDifficulty.updateHitbox();
 		add(levelDifficulty);
 
+		scoreWarning.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+		scoreWarning.updateHitbox();
+		scoreWarning.screenCenter(X);
+		add(scoreWarning);
+
+		var songName = PlayState.SONG.song.toUpperCase();
+		var renderKey = FreeplayState.songRender.get(songName);
+
+		if (renderKey != null) {
+			var renderPath = Paths.image('freeplay/Renders/' + renderKey);
+			var spriteToShow = new FlxSprite().loadGraphic(renderPath);
+			spriteToShow.antialiasing = Options.getData("antialiasing"); 
+
+			spriteToShow.x = FlxG.width - (spriteToShow.width + 20);
+			spriteToShow.y = levelDifficulty.y + levelDifficulty.height - 50 ;
+
+			spriteToShow.scrollFactor.set(); 
+			spriteToShow.alpha = 0;
+			insert(members.indexOf(bg) + 1, spriteToShow);
+
+
+			FlxTween.tween(spriteToShow, {alpha: 1}, 0.5, {ease: FlxEase.cubeInOut, startDelay: 0.5});
+		}
+
 		levelDifficulty.alpha = 0;
 		levelInfo.alpha = 0;
+		scoreWarning.alpha = 0;
 
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
@@ -85,7 +114,10 @@ class PauseSubState extends MusicBeatSubstate {
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
+  	
+		FlxTween.tween(scoreWarning, {alpha: 1, y: scoreWarning.y + 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
 
+		FlxTween.tween(scoreWarning, {alpha: 0, y: scoreWarning.y - 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 4});
 		add(grpMenuShit);
 
 		updateAlphabets();
@@ -114,6 +146,45 @@ class PauseSubState extends MusicBeatSubstate {
 
 		if (!accepted)
 			justPressedAcceptLol = false;
+
+		switch (warningAmountLols) {
+			case 2:
+				scoreWarning.text = "Remember? Changing options invalidates your score.";
+			case 3:
+				scoreWarning.text = "Remember.? Changing options invalidates your score..?";
+			case 4:
+				scoreWarning.text = "Remember, changing options invalidates your score!\n(what are you doing)";
+			case 5:
+				scoreWarning.text = "Remember changing options, invalidates your score!";
+			case 6:
+				scoreWarning.text = "Remember changing, options invalidates your score!";
+			case 7:
+				scoreWarning.text = "Remember changing options invalidates, your score!";
+			case 8:
+				scoreWarning.text = "Remember changing options invalidates your, score!";
+			case 9:
+				scoreWarning.text = "Remember changing options invalidates your score!";
+			#if debug
+			case 10:
+				scoreWarning.text = "debug mode go brrrrrrrrrrrrrrrr";
+			#end
+			#if NO_PRELOAD_ALL
+			case 11:
+				scoreWarning.text = "haha web!! laugh at this user";
+			#end
+			case 50:
+				scoreWarning.text = "What are you doing?";
+			case 69:
+				scoreWarning.text = "Haha funny number.";
+			case 100:
+				scoreWarning.text = "abcdefghjklmnopqrstuvwxyz";
+			case 420:
+				scoreWarning.text = "br";
+			case 1000:
+				scoreWarning.text = "collect your cookie you've earned it\n for getting carpal tunnel!!!!!!!\n";
+			default:
+				scoreWarning.text = "Remember, changing options invalidates your score!";
+		}
 
 		if (-1 * Math.floor(FlxG.mouse.wheel) != 0)
 			changeSelection(-1 * Math.floor(FlxG.mouse.wheel));
@@ -168,6 +239,10 @@ class PauseSubState extends MusicBeatSubstate {
 				case "restart song":
 					menu = "restart";
 					updateAlphabets();
+				case "quickly options":
+					menu = "Quickly Options";
+					updateAlphabets();
+
 				case "no cutscenes":
 					PlayState.SONG.speed = PlayState.previousScrollSpeed;
 					PlayState.playCutscenes = true;
@@ -192,6 +267,53 @@ class PauseSubState extends MusicBeatSubstate {
 					FlxG.cameras.remove(pauseCamera);
 
 					FlxG.resetState();
+				case "bot":
+					utilities.Options.setData(!utilities.Options.getData("botplay"), "botplay");
+
+					PlayState.instance.updateSongInfoText();
+					PlayState.SONG.validScore = false;
+					PlayState.botUsed = true;
+					FlxTween.tween(scoreWarning, {alpha: 1, y: scoreWarning.y + 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+					FlxTween.tween(scoreWarning, {alpha: 0, y: scoreWarning.y - 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 4});
+
+					warningAmountLols += 1;
+				case "auto restart":
+					utilities.Options.setData(!utilities.Options.getData("quickRestart"), "quickRestart");
+
+					FlxTween.tween(scoreWarning, {alpha: 1, y: scoreWarning.y + 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+					FlxTween.tween(scoreWarning, {alpha: 0, y: scoreWarning.y - 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 4});
+
+					warningAmountLols += 1;
+				case "no miss":
+
+					utilities.Options.setData(!utilities.Options.getData("noHit"), "noHit");
+
+					FlxTween.tween(scoreWarning, {alpha: 1, y: scoreWarning.y + 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+					FlxTween.tween(scoreWarning, {alpha: 0, y: scoreWarning.y - 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 4});
+
+					warningAmountLols += 1;
+				case "ghost tapping":
+					
+					utilities.Options.setData(!utilities.Options.getData("ghostTapping"), "ghostTapping");
+
+					if (utilities.Options.getData("ghostTapping")) // basically making it easier lmao
+						PlayState.SONG.validScore = false;
+
+					FlxTween.tween(scoreWarning, {alpha: 1, y: scoreWarning.y + 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+					FlxTween.tween(scoreWarning, {alpha: 0, y: scoreWarning.y - 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 4});
+
+					warningAmountLols += 1;
+				case "no death":
+				
+					utilities.Options.setData(!utilities.Options.getData("noDeath"), "noDeath");
+
+					if (utilities.Options.getData("noDeath"))
+					PlayState.SONG.validScore = false;
+					PlayState.noDeathUsed = true;
+					FlxTween.tween(scoreWarning, {alpha: 1, y: scoreWarning.y + 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+					FlxTween.tween(scoreWarning, {alpha: 0, y: scoreWarning.y - 10}, 0.4, {ease: FlxEase.quartInOut, startDelay: 4});
+
+					warningAmountLols += 1;
 				case "skip time":
 					if (curTime < Conductor.songPosition) {
 						PlayState.startOnTime = curTime;

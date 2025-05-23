@@ -6,7 +6,8 @@ import flixel.FlxG;
 import flixel.text.FlxText;
 
 class StarInfoSubState extends MusicBeatSubstate {
-    public function new(totals:{rose:Int, blue:Int, gold:Int, marks:Int}, totalSongs:Int){
+    public function new(totals:{rose:Int, blue:Int, gold:Int, marks:Int, totalDifficulties:Int}, totalSongs:Int){
+
         super();
 
         var bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xAA000000);
@@ -56,10 +57,12 @@ class StarInfoSubState extends MusicBeatSubstate {
         mark.updateHitbox();
         add(mark);
 
-        var markCounterText = new FlxText(mark.x - 10, mark.y + 200, 0, ' ${totals.marks} / $totalSongs', 24);
+       var markCounterText = new FlxText(mark.x - 10, mark.y + 200, 0, totals.marks + " / " + (totalSongs + totals.totalDifficulties), 24);
         markCounterText.setFormat(Paths.font("vcr.ttf"), 48, FlxColor.WHITE, LEFT);
         markCounterText.scrollFactor.set();
         add(markCounterText);
+
+    
 
         var red = new FlxText(0, 460, FlxG.width, "Rose Star : 80 % ACC", 24);
         red.setFormat(Paths.font("vcr.ttf"), 32, 0xFFFF69B4, "center");

@@ -606,7 +606,7 @@ class PlayState extends MusicBeatState {
     var noteTimer:NoteTimer;
 	static var playCutscenes:Bool = false;
 	public static var selectedCharacter:String = "";
- 	 public static var perroxd:Array<String> = ["haxchi", "vc final destination"];
+ 	 public static var perroxd:Array<String> = ["haxchi"];
 	/**
 	 * Manages tweens in lua scripts to pause when game is
 	 */
@@ -1685,6 +1685,8 @@ class PlayState extends MusicBeatState {
 				curPortrait = "veteranps";
 			case "Fight It Up":
 				curPortrait = "revsxm1";
+			case "Ayuda no puedo parar de escuchar esta parte" | "Rev Final Destination":
+				curPortrait = "revsxm2";
 			case "VC Ultra Instinct Tomz" | "VC Talladega":
 				curPortrait = "voiidgodshaggy";
 			case "Unleashed":
@@ -1721,6 +1723,14 @@ class PlayState extends MusicBeatState {
 				curPortrait = "uishaggies";
 			case "Above and Beyond":
 				curPortrait = "godlike";
+			case "Last Resort" | "Priimunus" | "Calamiity":
+				curPortrait = "akirotommy";
+			case "Trip":
+				curPortrait = "trip";
+			case "Hatarii":
+				curPortrait = "akiromatt";
+			case "Purgatory Imposible":
+				curPortrait = "triplegodmatt";
 			default: 
 				curPortrait = "final_version";
 		}
@@ -1759,9 +1769,14 @@ class PlayState extends MusicBeatState {
 				curImage = "hdx2";
 			case "Multiverse Destination":
 				curImage = "ms2";
-			
-			case "Haxchi" | "Alarmiing":
-				curPortrait = "corruption";
+			case "Last Resort" | "Hatarii":
+				curImage = "akirobg";
+			case "Homebrew" | "Alarmiing":
+				curImage = "corruption";
+			case "Haxchi":
+				curImage = "corrupted2";	
+			case "Priimunus" | "Calamiity":
+				curImage = "tommybg";
 			default: 
 				curImage = "final_version";
 		}

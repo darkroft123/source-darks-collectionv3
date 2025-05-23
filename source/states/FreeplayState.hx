@@ -117,7 +117,15 @@ class FreeplayState extends MusicBeatState {
 	public static var instance:FreeplayState = null;
 
 	public var VCRSHADER:VCR;  
-    
+
+	 var up:FlxSprite;
+    var down:FlxSprite;
+    var ports:Map<String, FlxSprite> = new Map();
+    var songPortMap:Map<String, String> = new Map();
+
+    public static var render:Map<String, FlxSprite> = new Map();
+    public static var songRender:Map<String, String> = new Map();
+		
 
 	override public function call(func:String, ?args:Array<Any>, ?executeOn:Dynamic):Void {
 		if (stateScript != null)
@@ -333,10 +341,9 @@ class FreeplayState extends MusicBeatState {
 					
 					grpSongs.add(songText);
 					
-
 				  
 					if (FlxG.keys.justPressed.ENTER) {
-						selectedCharacter = songMeta.songCharacter; // Se asigna cuando se presiona Enter sobre la canción
+						selectedCharacter = songMeta.songCharacter; 
 					}
 					var icon:HealthIcon = new HealthIcon(songMeta.songCharacter);
 					icon.sprTracker = songText;
@@ -349,6 +356,49 @@ class FreeplayState extends MusicBeatState {
 		}
 		
 		#end
+
+
+		var portList = CoolUtil.coolTextFile(Paths.file('images/freeplay/ports/data.txt'));
+		var imagesvip = CoolUtil.coolTextFile(Paths.file('images/freeplay/Renders/data.txt'));
+
+		for (portName in portList) {
+			if (Options.getData("charsAndBGs")) {
+				var port = new FlxSprite().loadGraphic(Paths.image('freeplay/ports/' + portName));
+				port.alpha = 0;
+				port.antialiasing = Options.getData("antialiasing");
+				insert(members.indexOf(bg) + 1, port);
+				ports.set(portName, port);
+			}
+		}
+
+		for (images in imagesvip) {
+			if (Options.getData("charsAndBGs")) {
+				var png = new FlxSprite().loadGraphic(Paths.image('freeplay/Renders/' + images));
+				png.alpha = 0;
+				png.antialiasing = Options.getData("antialiasing");
+				insert(members.indexOf(ajedrez) + 2, png);
+				render.set(images, png);
+			}
+		}
+
+		var songList = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
+		for (i in 0...songList.length) {
+			var listArray = songList[i].split(":");
+			var q = listArray[0];
+
+			if (listArray[5] != null) {
+				songPortMap.set(q, listArray[5]);
+			}
+
+			if (listArray[6] != null) {
+				songRender.set(q, listArray[6]);
+			}
+		}
+
+		up = new FlxSprite().loadGraphic(Paths.gpuBitmap('freeplay/Up_Arrow'));
+		add(up);
+		down = new FlxSprite().loadGraphic(Paths.gpuBitmap('freeplay/Down_Arrow'));
+		add(down);
 
 
 		// layering
@@ -431,22 +481,50 @@ class FreeplayState extends MusicBeatState {
 			openSubState(new modding.SwitchModSubstate());
 			persistentUpdate = false;
 		}
-
-	
 		#end
 
 		super.update(elapsed);
 
 		VCRSHADER.time += elapsed;
- 
-		//vignetteShader.set("iTime", vignetteShader.get("iTime") + elapsed);
-		
+
+		if (songs.length > 0) { 
+			var songName = songs[FreeplayState.curSelected].songName.toLowerCase(); 
+			var songKey = songs[FreeplayState.curSelected].songName;
+			var curDiff = curDiffString;
+
+			for (portName in ports.keys()) {
+				var port = ports.get(portName);
+				var alp = 0;
+				if (songPortMap.exists(songKey) && songPortMap.get(songKey) == portName) {
+					alp = 1;
+				}
+				//if (songName == "final destination" && curDiff.indexOf("VOIID GOD") != -1) {
+				//	alp = (portName == "Wiik_SxM-GodMode") ? 1 : 0;
+				//}
+				port.alpha = FlxMath.lerp(port.alpha, alp, elapsed * 8);
+			}
+
+			for (images in render.keys()) {
+				var png = render.get(images);
+				var alp = 0;
+				var xd = 600;
+				if (songRender.exists(songKey) && songRender.get(songKey) == images) {
+					alp = 1;
+					xd = 0;
+				}
+				png.alpha = FlxMath.lerp(png.alpha, alp, elapsed * 8);
+				png.x = FlxMath.lerp(png.x, xd, elapsed * 8);
+			}
+		}
+
+		up.y = FlxMath.lerp(up.y, 0, elapsed * 8);
+		down.y = FlxMath.lerp(down.y, 0, elapsed * 8);
+
+
+
 		for (entry in songBackgrounds) {
 			entry.bg.y = entry.text.y;
 		}
-
-	
-
 		for (songText in grpSongs) {
 			var targetX = Math.floor((FlxG.width - songText.width) / 2);
 			if (songText.x != targetX) {
@@ -774,7 +852,7 @@ class FreeplayState extends MusicBeatState {
 			return sprite;
 	}
 
-	function getTotalStars(songs:Array<Dynamic>):{ rose:Int, blue:Int, gold:Int, marks:Int } {
+	function getTotalStars(songs:Array<Dynamic>):{ rose:Int, blue:Int, gold:Int, marks:Int, totalDifficulties:Int } {
 		var totalRose = 0;
 		var totalBlue = 0;
 		var totalGold = 0;
@@ -816,7 +894,14 @@ class FreeplayState extends MusicBeatState {
 				greenMarks++;
 		}
 
-		return { rose: totalRose, blue: totalBlue, gold: totalGold, marks: greenMarks };
+		return {
+			rose: totalRose,
+			blue: totalBlue,
+			gold: totalGold,
+			marks: greenMarks,
+			totalDifficulties: difficulties.length
+		};
+
 	}
 
 
@@ -826,6 +911,15 @@ class FreeplayState extends MusicBeatState {
 	
 	function changeSelection(change:Int = 0) {
 		call("changeSelection", [change]);
+
+			 if (change != 0)
+				{
+					if (change > 0)
+						down.y += 20; 
+					else 
+						up.y -= 20;
+				}
+
 
 		if (grpSongs.length <= 0) return;
 
