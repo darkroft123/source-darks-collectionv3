@@ -25,6 +25,14 @@
       "value": true
     },
     {
+      "option": "renders",
+      "value": true
+    },
+    {
+      "option": "renderBGs",
+      "value": true
+    },
+    {
       "option": "uiSkin",
       "value": "default"
     },

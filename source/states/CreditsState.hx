@@ -137,7 +137,7 @@ class CreditsState extends MusicBeatState {
                 grpCredits.add(creditText);
 
                 descriptionText = new FlxText(songTextBG.x + 900, songTextBG.y + 250, 300, "", 12);
-                descriptionText.setFormat(Paths.font("Mii.ttf"), 48, FlxColor.BLACK, LEFT);
+                descriptionText.setFormat(Paths.font("EurostileExtendedBlack.ttf"), 48, FlxColor.BLACK, LEFT);
                 descriptionText.wordWrap = true;
                 descriptionText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.WHITE, 2);
                 descriptionText.autoSize = false;

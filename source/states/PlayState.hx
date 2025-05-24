@@ -3,6 +3,7 @@ package states;
 import haxe.Json;
 import substates.ResultsSubstate;
 //import substates.ResultsSubstate.SaveScoreData;
+import states.AwardsState.AwardManager;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -569,7 +570,7 @@ class PlayState extends MusicBeatState {
 		(Used when playing as opponent).
 	**/
 	var ogPlayerKeyCount:Int = 4;
-
+	@:allow(states.AwardManager)
 	/**
 		Keeps track of the original opponent (or both if not specified for player) key count.
 
@@ -3141,7 +3142,7 @@ class PlayState extends MusicBeatState {
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
 				prevCamFollow = camFollow;
-
+  
 				PlayState.SONG = SongLoader.loadFromJson(storyDifficultyStr, PlayState.storyPlaylist[0]);
 
 				if (vocals != null && vocals.active)
@@ -3155,7 +3156,7 @@ class PlayState extends MusicBeatState {
 			}
 		} else {
 			switchedStates = true;
-
+            AwardManager.onBeatWiik(this);
 			if (vocals != null && vocals.active)
 				vocals.stop();
 			if (FlxG.sound.music != null && FlxG.sound.music.active)

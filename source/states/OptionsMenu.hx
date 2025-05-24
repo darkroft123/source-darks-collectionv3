@@ -154,8 +154,9 @@ class OptionsMenu extends MusicBeatState {
 			//new BoolOption("Modcharts", "modcharts"),
 			new BoolOption("DarkHeader (WIP)", "darkHeader"),
 			new BoolOption("Shaders", "shaders"),
-			new BoolOption("Gradient TimeBar", "gradientTimeBar")
-	
+			new BoolOption("Gradient TimeBar", "gradientTimeBar"),
+			new BoolOption("BG Renders", "renderBGs"),
+			new BoolOption("Renders", "renders")
 		]
 	];
 

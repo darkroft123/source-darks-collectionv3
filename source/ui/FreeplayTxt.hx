@@ -5,6 +5,7 @@ import flixel.text.FlxText;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
+import flixel.util.FlxColor;
 
 using StringTools;
 
@@ -39,36 +40,37 @@ class FreeplayTxt extends FlxSpriteGroup {
         }
     }
 
-	public function addText() {
-		doSplitWords();
-		var xPos:Float = 0;
-	
-		for (character in splitWords) {
-			if (character == " ") lastWasSpace = true;
-	
-			// Reducir tamaño si la palabra tiene más de 15 caracteres
-			var fontSize:Int = isBold ? 48 : 32; // Tamaño normal
-			if (character.length > 15) {
-				fontSize = isBold ? 24 : 24; // Reducir tamaño
-			}
-	
-			var letter:FlxText = new FlxText(xPos, 0, 0, character, fontSize);
-			letter.setFormat(Paths.font("EurostileExtendedBlack.ttf"), fontSize, 0xFF000000, "left"); // Texto negro
-	
-			// Contorno blanco
-			letter.borderStyle = FlxTextBorderStyle.OUTLINE;
-			letter.borderColor = 0xFFFFFFFF; // Blanco
-			letter.borderSize = 2; // Tamaño del contorno
-	
-			if (lastWasSpace) {
-				xPos += 40;
-				lastWasSpace = false;
-			}
-	
-			add(letter);
-			xPos += letter.width;
-		}
-	}
+    public function addText() {
+        doSplitWords();
+        var xPos:Float = 0;
+
+        for (i in 0...splitWords.length) {
+            var character = splitWords[i];
+            if (character == " ") lastWasSpace = true;
+
+            var fontSize:Int = isBold ? 64 : 48;
+            if (character.length > 15) {
+                fontSize = isBold ? 48 : 48;
+            }
+
+
+            var letter:FlxText = new FlxText(xPos, 0, 0, character, fontSize);
+            letter.setFormat(Paths.font("EurostileExtendedBlack.ttf"), fontSize, 0xFF000000, "left");
+            letter.borderStyle = FlxTextBorderStyle.OUTLINE;
+            letter.borderColor = 0xFFFFFFFF; // blanco
+            letter.borderSize = 2;
+            letter.alpha = 1;
+
+            if (lastWasSpace) {
+                xPos += 40;
+                lastWasSpace = false;
+            }
+
+            add(letter);
+            xPos += letter.width;
+        }
+    }
+
 	
 	
 	

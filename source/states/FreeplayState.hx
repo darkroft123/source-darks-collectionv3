@@ -362,7 +362,7 @@ class FreeplayState extends MusicBeatState {
 		var imagesvip = CoolUtil.coolTextFile(Paths.file('images/freeplay/Renders/data.txt'));
 
 		for (portName in portList) {
-			if (Options.getData("charsAndBGs")) {
+			if (Options.getData("renderBGs")) {
 				var port = new FlxSprite().loadGraphic(Paths.image('freeplay/ports/' + portName));
 				port.alpha = 0;
 				port.antialiasing = Options.getData("antialiasing");
@@ -372,7 +372,7 @@ class FreeplayState extends MusicBeatState {
 		}
 
 		for (images in imagesvip) {
-			if (Options.getData("charsAndBGs")) {
+			if (Options.getData("renders")) {
 				var png = new FlxSprite().loadGraphic(Paths.image('freeplay/Renders/' + images));
 				png.alpha = 0;
 				png.antialiasing = Options.getData("antialiasing");
