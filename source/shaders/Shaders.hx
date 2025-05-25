@@ -20,6 +20,40 @@ class ShaderEffect {
 		// nothing yet
 	}
 }
+class GreyscaleEffect extends ShaderEffect
+{
+	public var shader(default,null):GreyscaleShader = new GreyscaleShader();
+	public var strength:Float = 0.0;
+
+	public function new():Void
+	{
+		shader.strength.value = [0];
+	}
+
+	override public function update(elapsed:Float):Void
+	{
+		shader.strength.value[0] = strength;
+	}
+}
+class GreyscaleShader extends FlxShader
+{
+	@:glFragmentSource('
+		#pragma header
+		
+		uniform float strength;
+
+		void main()
+		{
+			vec2 uv = openfl_TextureCoordv;
+			vec4 col = flixel_texture2D(bitmap, uv);
+			float grey = dot(col.rgb, vec3(0.299, 0.587, 0.114)); //https://en.wikipedia.org/wiki/Grayscale
+			gl_FragColor = mix(col, vec4(grey,grey,grey, col.a), strength);
+		}')
+	public function new()
+	{
+		super();
+	}
+}
 
 class ThreeDEffect extends ShaderEffect {
 	public var shader(default, null):ThreeDShader = new ThreeDShader();

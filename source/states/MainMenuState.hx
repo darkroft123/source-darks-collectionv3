@@ -28,9 +28,11 @@ import game.Conductor;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import openfl.display.BlendMode;
+import states.AwardsState;
 
 using utilities.BackgroundUtil;
-
+import states.AwardsState.AwardDisplay;
+import states.AwardsState.AwardManager;
 class MainMenuState extends MusicBeatState {
 	/**
 		Current instance of `MainMenuState`.
@@ -43,7 +45,7 @@ class MainMenuState extends MusicBeatState {
 	public var textItems:FlxTypedGroup<FlxText>;  
 	public var BG2:FlxSprite; 
 	public var ajedrez:FlxBackdrop;
-	public var optionShit:Array<String> = ['FREEPLAY', 'OPTIONS', 'CREDITS'];
+	public var optionShit:Array<String> = ['FREEPLAY', 'OPTIONS', 'CREDITS','AWARDS'];
 
 	public var bfsItems:Array<FlxSprite> = []; 
 	public var selectedImage:FlxSprite;
@@ -160,11 +162,11 @@ class MainMenuState extends MusicBeatState {
 	
 
 		for (i in 0...optionShit.length) {
-			var baseX = 750; 
+			var baseX = 800; 
 			var offsetX = - (i * 30); 
 		
 			var posX = baseX + offsetX; 
-			var posY = 150 + (i * 90); 
+			var posY = 100 + (i * 90); 
 			var offsetText = 20;
 			var offsetTextX = 100;
 		
@@ -179,7 +181,7 @@ class MainMenuState extends MusicBeatState {
 			*/
 		
 			var menuItem:FlxText = new FlxText(posX + offsetTextX, posY + offsetText, 0, optionShit[i], 48);
-			menuItem.setFormat(Paths.font("EurostileExtendedBlack.ttf"), 48, FlxColor.BLACK, LEFT);
+			menuItem.setFormat(Paths.font("EurostileExtendedBlack.ttf"), 64, FlxColor.BLACK, LEFT);
 			menuItem.borderStyle = FlxTextBorderStyle.OUTLINE;
 			menuItem.borderColor = FlxColor.WHITE;
 			menuItem.borderSize = 2;
@@ -350,7 +352,8 @@ class MainMenuState extends MusicBeatState {
 			#end
 			case 'CREDITS':
 				FlxG.switchState(() -> new CreditsState());
-
+			case 'AWARDS':
+				FlxG.switchState(() -> new AwardsState());
 			case 'TOOLBOX':
 				FlxG.switchState(() -> new toolbox.ToolboxState());
 		}
