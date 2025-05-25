@@ -7,12 +7,12 @@
 	<!-- Change things about the exported file, such as executable name or version number. -->
 	<!-- You likely will want to change these if you're making a source mod. -->
 	<app
-		title="Leather Engine"
-		file="LeatherEngine"
-		packageName="com.leather128.funkin"
-		package="com.leather128.funkin"
+		title="Dark's Collection"
+		file="Dark's Collection"
+		packageName="com.darkroft.funkin"
+		package="com.darkroft.funkin"
 		version="0.5.0pre"
-		company="leather128"
+		company="darkroft"
 	/>
 
 	<!-- LEATHER ENGINE CUSTOMIZATION -->

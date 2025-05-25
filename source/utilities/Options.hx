@@ -22,7 +22,7 @@ typedef DefaultOption = {
  * 
  */
 class Options {
-	public inline static final bindNamePrefix:String = "leather_engine-";
+	public inline static final bindNamePrefix:String = "darks_collection-";
 	public static var bindPath:String;
 
 	public static var saves:Map<String, FlxSave> = [];
@@ -40,6 +40,7 @@ class Options {
 		createSave("arrowColors", "arrowColors");
 		createSave("autosave", "autosave");
 		createSave("modlist", "modlist");
+        createSaveFullPath("progress", "darks_collection-progress");
 
 		defaultOptions = Json.parse(Assets.getText(Paths.json("defaultOptions")));
 
@@ -80,6 +81,14 @@ class Options {
 
 		saves.set(key, save);
 	}
+
+	public static function createSaveFullPath(key:String, bindName:String)
+    {
+        var save = new FlxSave();
+        save.bind(bindName, bindPath);
+
+        saves.set(key, save);
+    }
 
 	/**
 	 * Returns an option.

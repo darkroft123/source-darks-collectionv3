@@ -91,14 +91,18 @@ class AwardManager {
 
     public static function onUnlock(saveStr:String) {
         var award = getAwardFromSaveDataString(saveStr);
-        if (award != null) {
-            if (Options.getData(award.saveData, "progress") == null)
-                Main.popupManager.addPopup(new AwardPopup(6, 400, 120, award));
-        }
+        // if (award != null) {
+        //     if (Options.getData(award.saveData, "progress") == null)
+        //         Main.popupManager.addPopup(new AwardPopup(6, 400, 120, award));
+        // }
     }
 
     public static function isUnlocked(award:Award):Bool {
-        return award != null && Options.getData(award.saveData, "progress") != null;
+        if (award != null)
+        {
+            return Options.getData(award.saveData, "progress") != null;
+        }
+        return false;
     }
 
     public static function isAllUnlocked():Bool {

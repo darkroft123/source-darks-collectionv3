@@ -3099,6 +3099,8 @@ class PlayState extends MusicBeatState {
 	}
 
 	function finishSongStuffs() {
+		AwardManager.onBeatSong(this);
+		
 		if (isStoryMode) {
 			campaignScore += songScore;
 
@@ -3156,7 +3158,7 @@ class PlayState extends MusicBeatState {
 			}
 		} else {
 			switchedStates = true;
-            AwardManager.onBeatWiik(this);
+            // AwardManager.onBeatWiik(this);
 			if (vocals != null && vocals.active)
 				vocals.stop();
 			if (FlxG.sound.music != null && FlxG.sound.music.active)

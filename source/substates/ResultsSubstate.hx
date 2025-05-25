@@ -11,6 +11,7 @@ import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import states.PlayState;
+import lime.utils.Assets;
 
 /**
  * The substate for the results screen after a song or week is finished.
@@ -55,17 +56,23 @@ class ResultsSubstate extends MusicBeatSubstate {
 		finalScore.y = ratings.y - 30;
 		finalScore.scrollFactor.set();
 		add(finalScore);
-		
+	
+		var star:String;
+
 		var accText:FlxText = new FlxText(0, 0, 0, "Accuracy: " + PlayState.instance.accuracy + "%\n" + PlayState.instance.ratingStr);
 		accText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		if (PlayState.instance.accuracy >= 95) {
 			accText.color = FlxColor.ORANGE;
+			star = "gold star";
 		} else if (PlayState.instance.accuracy >= 90) {
 			accText.color = FlxColor.CYAN;
+			star = "blue star";
 		} else if (PlayState.instance.accuracy >= 80) {
 			accText.color = 0xFFFF69B4;
+			star = "rose star";
 		} else {
 			accText.color = FlxColor.LIME;
+			star = "green check";
 		}
 		accText.y = ratings.y + ratings.height;
 		accText.scrollFactor.set();
@@ -94,6 +101,8 @@ class ResultsSubstate extends MusicBeatSubstate {
 		add(clearedText);
 		add(new NoteGraph(PlayState.instance, FlxG.width - 550, 75)); 
 
+		addStar(star, -100, 400);
+
 		cameras = [uiCamera];
 	}
 
@@ -104,5 +113,17 @@ class ResultsSubstate extends MusicBeatSubstate {
 			PlayState.instance.finishSongStuffs();
             return;
         }
+	}
+
+	function addStar(iconPath:String, posX:Float, posY:Float):FlxSprite {
+		var sprite:FlxSprite = null;
+			if (Assets.exists(Paths.image(iconPath))) {
+				sprite = new FlxSprite(posX, posY);
+				sprite.loadGraphic(Paths.image(iconPath));
+				sprite.scale.set(0.5, 0.5);
+				sprite.antialiasing = true;
+				add(sprite);
+			}
+			return sprite;
 	}
 }
