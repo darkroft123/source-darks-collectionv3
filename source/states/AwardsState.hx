@@ -25,8 +25,8 @@ typedef Award = {
 
 class AwardManager {
     public static final awards:Array<Award> = [
-        {name: "Wiik 1", desc: "Beat Wiik 1", saveData: "beat_wiik 1", awardImage: "Wiik1"},
-        {name: "Light it Up FC", desc: "", saveData: "fc_light it up", awardImage: "Wiik1FC"},
+        {name: "Rose Stars", desc: "Get A Rose Star", saveData: "beat_wiik 1", awardImage: "RoseStar"},
+        {name: "Gold Stars", desc: "Get a Gold Star", saveData: "fc_light it up", awardImage: "GoldStar"},
         {name: "Ruckus FC", desc: "", saveData: "fc_ruckus", awardImage: "Wiik1FC"},
         {name: "Target Practice FC", desc: "", saveData: "fc_target practice", awardImage: "Wiik1FC"},
 
@@ -50,7 +50,7 @@ class AwardManager {
         {name: "Alter Ego FC", desc: "", saveData: "fc_alter ego", awardImage: "AlterEgo"},
         {name: "Rejected FC", desc: "", saveData: "fc_rejected", awardImage: "Rejected"},
         {name: "Rejected VIP", desc: "perroxd", saveData: "beat_rejected vip", awardImage: "Rejected"},
-        {name: "Hatarii", desc: "perroxd", saveData: "beat_hatarii", awardImage: "Rejected"},
+        {name: "Hatarii", desc: "Clear Hatarii", saveData: "beat_hatarii", awardImage: "Rejected"},
     ];
 
    public static function onBeatWiik(instance:PlayState) {
@@ -60,36 +60,20 @@ class AwardManager {
     }
 
 
-    public static function onBeatSong(instance:PlayState) {
+   public static function onBeatSong(instance:PlayState) {
         if (!PlayState.botUsed) {
             var saveStr = 'beat_' + PlayState.SONG.song.toLowerCase();
             onUnlock(saveStr);
             Options.setData(true, saveStr, "progress");
 
-            // Trace para cuando se desbloquea por haber completado la canción
-            trace('Canción completada: ' + saveStr);
-
             if (instance.misses == 0) {
                 var saveStrFC = 'fc_' + PlayState.SONG.song.toLowerCase();
-                trace('FC detectado: ' + saveStrFC);
+                trace(saveStrFC);
                 onUnlock(saveStrFC);
                 Options.setData(true, saveStrFC, "progress");
-
-                // Trace para confirmar que el award fue encontrado
-                var fcAward = getAwardFromSaveDataString(saveStrFC);
-                if (fcAward != null) {
-                    trace('Award FC encontrado: ' + fcAward.name);
-                } else {
-                    trace('Award FC NO encontrado para: ' + saveStrFC);
-                }
-            } else {
-                trace('No se hizo FC, misses: ' + instance.misses);
             }
-        } else {
-            trace('Bot usado, no se guarda progreso.');
         }
     }
-
 
 
     public static function getAwardFromSaveDataString(saveStr:String):Award {
