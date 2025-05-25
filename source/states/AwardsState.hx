@@ -15,7 +15,9 @@ import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import utilities.Options;
 import Popup.AwardPopup;
 import flixel.FlxG;
+import utilities.StarLoader;
 
+import substates.StarInfoSubState;
 typedef Award = {
     var name:String;
     var desc:String;
@@ -25,10 +27,14 @@ typedef Award = {
 
 class AwardManager {
     public static final awards:Array<Award> = [
-        {name: "Rose Stars", desc: "Get A Rose Star", saveData: "beat_wiik 1", awardImage: "RoseStar"},
-        {name: "Gold Stars", desc: "Get a Gold Star", saveData: "fc_light it up", awardImage: "GoldStar"},
-        {name: "Ruckus FC", desc: "", saveData: "fc_ruckus", awardImage: "Wiik1FC"},
-        {name: "Target Practice FC", desc: "", saveData: "fc_target practice", awardImage: "Wiik1FC"},
+        { name: "First Gold", desc: "Earn at least 1 gold star", saveData: "get_1_gold_star", awardImage: "Gold Star Total" },
+        { name: "Blue Collection", desc: "Earn at least 3 blue stars", saveData: "get_3_blue_star", awardImage: "Blue Star Total" },
+        { name: "Pinky Rose", desc: "Earn at least 5 rose stars", saveData: "get_5_rose_star", awardImage: "Rose Star Total" },
+        { name: "Gold Fan", desc: "Earn 10 gold stars", saveData: "get_10_gold_star", awardImage: "Gold Star Total" },
+        { name: "Blue Fan", desc: "Earn 15 blue stars", saveData: "get_15_blue_star", awardImage: "Blue Star Total" },
+        { name: "Rose Fan", desc: "Earn 20 rose stars", saveData: "get_20_rose_star", awardImage: "Rose Star Total" },
+
+
 
         {name: "Wiik 2", desc: "Beat Wiik 2", saveData: "beat_wiik 2", awardImage: "Wiik2"},
         {name: "Burnout FC", desc: "", saveData: "fc_burnout", awardImage: "Wiik2FC"},
@@ -47,10 +53,13 @@ class AwardManager {
         {name: "Banger FC", desc: "", saveData: "fc_banger", awardImage: "Wiik100FC"},
         {name: "Edgy FC", desc: "", saveData: "fc_edgy", awardImage: "Wiik100FC"},
 
-        {name: "Alter Ego FC", desc: "", saveData: "fc_alter ego", awardImage: "AlterEgo"},
-        {name: "Rejected FC", desc: "", saveData: "fc_rejected", awardImage: "Rejected"},
+        {name: "Alter Ego FC", desc: "", saveData: "fc_ayuda no puedo parar de escuchar esta parte", awardImage: "AlterEgo"},
+        {name: "Rejected q", desc: "", saveData: "beat_harsh reality,beat_god fury", awardImage: "Rejected"},
         {name: "Rejected VIP", desc: "perroxd", saveData: "beat_rejected vip", awardImage: "Rejected"},
-        {name: "Hatarii", desc: "Clear Hatarii", saveData: "beat_hatarii", awardImage: "Rejected"},
+        {name: "Rejected 1", desc: "perroxd", saveData: "beat_reconciled", awardImage: "Rejected"},
+        {name: "LordNudes", desc: "Clear All Lordv***d Songs", saveData: "beat_rejected vip,beat_wastelands,beat_zagreus,beat_remazed,beat_pandemonium,beat_defamation of reality,beat_final timeout,beat_radical showdown,beat_tko vip,beat_alter ego vip,beat_vc champion,beat_vc last combat,beat_vc disadvantage,beat_total bravery,beat_vc rejected,beat_vc cosmic memories,beat_vc galactic storm", awardImage: "Rejected"},
+        {name: "Rejected VIP PROS", desc: "Make FC Rejected VIP", saveData: "fc_rejected vip", awardImage: "RejectedVIP"},
+        {name: "EXTRAS?!?", desc: "Clear All Extras Songs", saveData: "beat_vc final destination,beat_ayuda no puedo parar de escuchar esta parte", awardImage: "Rejected"},
     ];
 
    public static function onBeatWiik(instance:PlayState) {
@@ -75,13 +84,73 @@ class AwardManager {
         }
     }
 
+    public static function checkMultiClears(instance:PlayState) {
+        for (award in awards) {
+            if (award.saveData.indexOf(",") != -1) { 
+                var saves = award.saveData.split(",");
+                var allCleared = true;
+
+                for (s in saves) {
+                    if (!Options.getData(s.trim(), "progress")) {
+                        allCleared = false;
+                        break;
+                    }
+                }
+
+                if (allCleared && !Options.getData(award.saveData, "progress")) {
+                    Options.setData(true, award.saveData, "progress");
+                    onUnlock(award.saveData);
+                }
+            }
+        }
+    }
+
+    public static function checkStarAwards(instance:PlayState) {
+        var starData = StarInfoSubState.cachedTotals;
+        
+        if (starData == null) {
+           
+            return;
+        }
+
+        for (award in awards) {
+            if (award.saveData.startsWith("get_")) {
+                var parts = award.saveData.split("_");
+                if (parts.length >= 4) {
+                    var count = Std.parseInt(parts[1]);
+                    var color = parts[2];
+                    if (count != null) {
+                        var total = 0;
+                        switch (color) {
+                            case "gold": total = starData.gold;
+                            case "blue": total = starData.blue;
+                            case "rose": total = starData.rose;
+                            default: total = -1;
+                        }
+                        if (total >= count && !Options.getData(award.saveData, "progress")) {
+                            Options.setData(true, award.saveData, "progress");
+                            onUnlock(award.saveData);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 
     public static function getAwardFromSaveDataString(saveStr:String):Award {
-        for (award in awards)
-            if (award.saveData == saveStr)
-                return award;
+        for (award in awards) {
+            var parts = award.saveData.split(',');
+            for (part in parts) {
+                if (part.trim() == saveStr) {
+                    return award;
+                }
+            }
+        }
         return null;
     }
+
 
     public static function getAwardImageName(award:Award):String {
         if (award != null && award.awardImage != null)
@@ -89,13 +158,22 @@ class AwardManager {
         return "default";
     }
 
-    public static function onUnlock(saveStr:String) {
+   public static function onUnlock(saveStr:String) {
         var award = getAwardFromSaveDataString(saveStr);
+        if (award != null) {
+            if (Options.getData(award.saveData, "progress") == null) {
+                Options.setData(true, award.saveData, "progress");
+                Main.popupManager.addPopup(new AwardPopup(6, 400, 120, award));
+            }
+        }
         // if (award != null) {
         //     if (Options.getData(award.saveData, "progress") == null)
         //         Main.popupManager.addPopup(new AwardPopup(6, 400, 120, award));
         // }
     }
+
+        
+    
 
     public static function isUnlocked(award:Award):Bool {
         if (award != null)
@@ -180,7 +258,7 @@ class AwardsState extends MusicBeatState
         #if discord_rpc
         // Updating Discord Rich Presence
         MusicBeatState.windowNameSuffix = "Awards Menu";
-        DiscordClient.changePresence("In the Awards Menu", null, "empty", "logo");
+        DiscordClient.changePresence("In the Awards Menu", null);
         #end
         if (FlxG.sound.music == null || FlxG.sound.music.playing != true)
             TitleState.playTitleMusic();
@@ -198,17 +276,26 @@ class AwardsState extends MusicBeatState
         camPos.screenCenter();
         FlxG.camera.follow(camPos, LOCKON, 1);
 
+   
+
         for (i in 0...AwardManager.awards.length)
         {
             var display:AwardDisplay = new AwardDisplay(AwardManager.awards[i]);
-            display.screenCenter(X);
-            display.y = 200 + (i*160);
+
+            var columna = i % 2; 
+            var fila = Std.int(i / 2); 
+
+            display.x = 180 + (columna * 500);
+            display.y = 200 + (fila * 200);
+
             add(display);
             awardDisplays.push(display);
-            listHeight += 160;
+            listHeight += 200;
+
             if (AwardManager.isUnlocked(AwardManager.awards[i]))
                 unlockedCount++;
         }
+
 
         var pageTabsText = new Alphabet(450, 50, "Awards", true, false);
         //pageTabsText.screenCenter();
@@ -272,7 +359,7 @@ class AwardsState extends MusicBeatState
         for (i in awardDisplays)
         {
             if (FlxG.mouse.overlaps(i)) //when hover
-                i.setBorderColor(0xFF6E27CA);
+                i.setBorderColor(0xFF00FF00);
             else 
                 i.setBorderColor(0xFFFFFFFF);
         }

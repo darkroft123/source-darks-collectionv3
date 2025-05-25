@@ -58,6 +58,73 @@ class Popup extends Sprite
     }
 }
 
+class MessagePopup extends Popup
+{
+    var text:TextField;
+    override public function new(time:Float, w:Int = 300, h:Int = 120, m:String = "", size:Int = 16)
+    {
+        super(time, w, h);
+        text = new TextField();
+        text.text = m;
+        text.defaultTextFormat = new TextFormat(openfl.utils.Assets.getFont(Paths.font("Contb___.ttf")).fontName,
+        size, 0xFFFFFF, null, null, null, null, null, LEFT);
+        addChild(text);
+        text.border = true;
+        text.borderColor = 0xFFFFFF;
+        text.width = w-10;
+        text.height = h-10;
+        text.selectable = false;
+        text.wordWrap = true;
+
+        text.x = getScreenWidth()-w+5;
+    }
+    override public function update(deltaTime:Float)
+    {
+        super.update(deltaTime);
+        text.y = popupY+5;
+    }
+}
+class ClickableMessagePopup extends Popup
+{
+    var text:TextField;
+    var clickFunc:Void->Void = null;
+    var hitbox:FlxObject;
+    override public function new(time:Float, w:Int = 300, h:Int = 120, m:String = "", size:Int = 16, clickFunc:Void->Void)
+    {
+        super(time, w, h);
+        this.clickFunc = clickFunc;
+        text = new TextField();
+        text.text = m;
+        text.defaultTextFormat = new TextFormat(openfl.utils.Assets.getFont(Paths.font("Contb___.ttf")).fontName,
+        size, 0xFFFFFF, null, null, null, null, null, LEFT);
+        addChild(text);
+        text.border = true;
+        text.borderColor = 0xFFFFFF;
+        text.width = w-10;
+        text.height = h-10;
+        text.selectable = false;
+        text.wordWrap = true;
+        text.x = getScreenWidth()-w+5;
+
+        hitbox = new FlxObject(0,0,w,h);
+        
+    }
+    override public function update(deltaTime:Float)
+    {
+        super.update(deltaTime);
+        text.y = popupY+5;
+        hitbox.x = bg.x;
+        hitbox.y = bg.y;
+
+       
+        if (alive && FlxG.mouse.justPressed && hitbox.overlapsPoint(FlxG.mouse.getScreenPosition()))
+        {
+            alive = false;
+            if (clickFunc != null)
+                clickFunc();
+        }
+    }
+}
 class AwardPopup extends Popup
 {
     var text:TextField;
@@ -68,7 +135,6 @@ class AwardPopup extends Popup
         if (award == null)
         {
             award = {name: "Null Award lol", desc: "", saveData: ""};
-
         }
         super(time, w, h);
         text = new TextField();
@@ -126,8 +192,6 @@ class AwardPopup extends Popup
         image.y = popupY+10;
     }
 }
-
-
 
 class PopupManager extends Sprite
 {

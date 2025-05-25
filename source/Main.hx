@@ -35,7 +35,7 @@ class Main extends Sprite {
 
 	public static var onCrash(default, null):FlxTypedSignal<UncaughtErrorEvent->Void> = new FlxTypedSignal<UncaughtErrorEvent->Void>();
 	public static var popupManager:PopupManager;
-	public static var glovePopupManager:PopupManager;
+
 	public function new() {
 		super();
 
@@ -71,7 +71,7 @@ class Main extends Sprite {
 		logsOverlay = new Logs();
 		logsOverlay.visible = false;
 		addChild(logsOverlay);
-		
+		init();
 		LogStyle.WARNING.onLog.add((data, ?pos) -> trace(data, WARNING, pos));
 		LogStyle.ERROR.onLog.add((data, ?pos) -> trace(data, ERROR, pos));
 		LogStyle.NOTICE.onLog.add((data, ?pos) -> trace(data, LOG, pos));
@@ -106,10 +106,8 @@ class Main extends Sprite {
 
 		popupManager = new PopupManager();
 		addChild(popupManager);
-		glovePopupManager = new PopupManager();
-		addChild(glovePopupManager);
 		FlxG.signals.gameResized.add(fixCameraShaders);
-
+	
 	}
 
 

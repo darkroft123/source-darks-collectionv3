@@ -3100,7 +3100,11 @@ class PlayState extends MusicBeatState {
 
 	function finishSongStuffs() {
 		AwardManager.onBeatSong(this);
-		
+		AwardManager.checkMultiClears(this);
+		AwardManager.checkStarAwards(this);
+
+
+
 		if (isStoryMode) {
 			campaignScore += songScore;
 

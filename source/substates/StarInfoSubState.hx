@@ -6,6 +6,8 @@ import flixel.FlxG;
 import flixel.text.FlxText;
 
 class StarInfoSubState extends MusicBeatSubstate {
+     public static var cachedTotals:{rose:Int, blue:Int, gold:Int, marks:Int, totalDifficulties:Int} = null;
+    
     public function new(totals:{rose:Int, blue:Int, gold:Int, marks:Int, totalDifficulties:Int}, totalSongs:Int){
 
         super();
