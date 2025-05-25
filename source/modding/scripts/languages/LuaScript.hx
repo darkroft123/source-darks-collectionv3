@@ -2914,6 +2914,8 @@ class LuaScript extends Script {
 		// shader bullshit
 
 		setFunction("setActor3DShader", function(id:String, ?speed:Float = 3, ?frequency:Float = 10, ?amplitude:Float = 0.25) {
+			if (!Options.getData("shaders"))
+				return;
 			var actor = getActorByName(id);
 
 			if (actor != null) {
@@ -2928,6 +2930,8 @@ class LuaScript extends Script {
 		});
 
 		setFunction("setActorNoShader", function(id:String) {
+			if (!Options.getData("shaders"))
+				return;
 			var actor = getActorByName(id);
 
 			if (actor != null) {
@@ -2937,6 +2941,8 @@ class LuaScript extends Script {
 		});
 
 		setFunction("createCustomShader", function(id:String, frag:String, ?vert:String) {
+			if (!Options.getData("shaders"))
+				return;
 			var _vert:String = Assets.exists(Paths.vert(vert)) ? Assets.getText(Paths.vert(vert)) : null;
 			lua_Custom_Shaders.set(id, new CustomShader(Assets.getText(Paths.frag(frag)), _vert));
 		});
@@ -2962,6 +2968,8 @@ class LuaScript extends Script {
 		});
 
 		setFunction("setActorNoCustomShader", function(actor:String) {
+			if (!Options.getData("shaders"))
+				return;
 			getActorByName(actor).shader = null;
 		});
 
@@ -2998,37 +3006,51 @@ class LuaScript extends Script {
 		});
 
 		setFunction("getCustomShaderBool", function(id:String, property:String) {
+			// if (!Options.getData("shaders"))
+			// 	return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			return funnyCustomShader.getBool(property);
 		});
 
 		setFunction("getCustomShaderInt", function(id:String, property:String) {
+			// if (!Options.getData("shaders"))
+			// 	return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			return funnyCustomShader.getInt(property);
 		});
 
 		setFunction("getCustomShaderFloat", function(id:String, property:String) {
+			// if (!Options.getData("shaders"))
+			// 	return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			return funnyCustomShader.getFloat(property);
 		});
 
 		setFunction("setCustomShaderBool", function(id:String, property:String, value:Bool) {
+			if (!Options.getData("shaders"))
+				return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			funnyCustomShader.setBool(property, value);
 		});
 
 		setFunction("setCustomShaderInt", function(id:String, property:String, value:Int) {
+			if (!Options.getData("shaders"))
+				return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			funnyCustomShader.setInt(property, value);
 		});
 
 		setFunction("setCustomShaderFloat", function(id:String, property:String, value:Float) {
+			if (!Options.getData("shaders"))
+				return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			funnyCustomShader.setFloat(property, value);
 		});
 
 		setFunction("tweenShader",
 			function(id:String, property:String, value:Float, duration:Float, ease:String = "linear", startDelay:Float = 0.0, ?onComplete:Dynamic) {
+				if (!Options.getData("shaders"))
+					return;
 				var shader:CustomShader = lua_Custom_Shaders.get(id);
 				if (shader != null) {
 					shader.tween(property, value, duration, easeFromString(ease), startDelay, onComplete);

@@ -19,13 +19,15 @@ import lime.utils.Assets;
 class ResultsSubstate extends MusicBeatSubstate {
 	var uiCamera:FlxCamera = new FlxCamera();
 
-	public function new() {
-		super();
-
-        if (utilities.Options.getData("skipResultsScreen")) {
+	override function create():Void {
+		if (utilities.Options.getData("skipResultsScreen")) {
             PlayState.instance.finishSongStuffs();
             return;
         }
+	}
+	
+	public function new() {
+		super();
 
 		uiCamera.bgColor.alpha = 0;
 		FlxG.cameras.add(uiCamera, false);
