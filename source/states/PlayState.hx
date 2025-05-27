@@ -1352,7 +1352,7 @@ class PlayState extends MusicBeatState {
 		paused = false;
 		canPause = true;
 
-		if (Options.getData("middlescroll")) {
+		if (Options.getData("middlescroll") && !SONG.modchartingTools) {
 			generateStaticArrows(50, false);
 			generateStaticArrows(0.5, true);
 		} else {
