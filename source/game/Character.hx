@@ -426,6 +426,8 @@ class Character extends FlxSprite {
 
 	public var shouldDance:Bool = true;
 
+	public var forceAutoDance:Bool = false;
+
 	override function update(elapsed:Float) {
 		if (!debugMode && curCharacter != '' && hasAnims()) {
 			if (curAnimFinished() && hasAnim(curAnimName() + '-loop')) {
@@ -437,16 +439,20 @@ class Character extends FlxSprite {
 				preventDanceForAnim = false;
 				dance('');
 			}
-			if (!isPlayer) {
+			if (!isPlayer || forceAutoDance) {
 				if (curAnimName().startsWith('sing'))
 					holdTimer += elapsed * (FlxG.state == PlayState.instance ? PlayState.songMultiplier : 1);
+
+				var dadVar:Float = 4;
+
+				if (curCharacter == 'dad')
+					dadVar = 6.1;
 
 				if (holdTimer >= Conductor.stepCrochet * singDuration * 0.001) {
 					dance(mostRecentAlt);
 					holdTimer = 0;
 				}
 			}
-
 			// fix for multi character stuff lmao
 			if (hasAnims()) {
 				if (curAnimName() == 'hairFall' && curAnimFinished())
@@ -578,6 +584,7 @@ class Character extends FlxSprite {
 		}
 		return this;
 	}
+	
 }
 
 typedef PsychCharacterFile = {
