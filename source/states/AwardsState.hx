@@ -84,6 +84,36 @@ class AwardManager {
         }
     }
 
+    public static function addStars(instance:PlayState) {
+        if (!PlayState.botUsed) {
+            if (instance.accuracy >= 95) {
+                var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
+                var blueStr = 'blue_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
+                var goldStr = 'gold_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
+                trace(roseStr);
+                trace(blueStr);
+                trace(goldStr);
+                Options.setData(true, roseStr, "progress");
+                Options.setData(true, blueStr, "progress");
+                Options.setData(true, goldStr, "progress");
+                // checkStarAwards();
+            } else if (instance.accuracy >= 90) {
+                var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
+                var blueStr = 'blue_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
+                trace(roseStr);
+                trace(blueStr);
+                Options.setData(true, roseStr, "progress");
+                Options.setData(true, blueStr, "progress");
+                // checkStarAwards();
+            } else if (instance.accuracy >= 80) {
+                var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
+                trace(roseStr);
+                Options.setData(true, roseStr, "progress");
+                // checkStarAwards();
+            }
+        }
+    }
+
     public static function checkMultiClears(instance:PlayState) {
         for (award in awards) {
             if (award.saveData.indexOf(",") != -1) { 
@@ -105,7 +135,7 @@ class AwardManager {
         }
     }
 
-    public static function checkStarAwards(instance:PlayState) {
+    public static function checkStarAwards(instance:PlayState) { // i forgot to work on this btw so it doesnt do the thing yet -kirbo
         var starData = StarInfoSubState.cachedTotals;
         
         if (starData == null) {

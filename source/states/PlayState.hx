@@ -3100,8 +3100,9 @@ class PlayState extends MusicBeatState {
 
 	function finishSongStuffs() {
 		AwardManager.onBeatSong(this);
+		AwardManager.addStars(this);
 		AwardManager.checkMultiClears(this);
-		AwardManager.checkStarAwards(this);
+		// AwardManager.checkStarAwards(this);
 
 
 
