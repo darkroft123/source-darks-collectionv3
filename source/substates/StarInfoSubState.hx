@@ -6,7 +6,7 @@ import flixel.FlxG;
 import flixel.text.FlxText;
 
 class StarInfoSubState extends MusicBeatSubstate {
-    public static var cachedTotals:{rose:Int, blue:Int, gold:Int, marks:Int, totalDifficulties:Int} = null;
+
     
     public function new(totals:{rose:Int, blue:Int, gold:Int, marks:Int, totalDifficulties:Int}, totalSongs:Int){
 
@@ -62,6 +62,7 @@ class StarInfoSubState extends MusicBeatSubstate {
        var markCounterText = new FlxText(mark.x - 10, mark.y + 200, 0, totals.marks + " / " + (totalSongs + totals.totalDifficulties), 24);
         markCounterText.setFormat(Paths.font("vcr.ttf"), 48, FlxColor.WHITE, LEFT);
         markCounterText.scrollFactor.set();
+        trace(totalSongs);
         add(markCounterText);
 
     

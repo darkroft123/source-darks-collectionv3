@@ -1,11 +1,11 @@
-
 package substates;
+
 import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import utilities.StarLoader;
 import substates.StarInfoSubState;
-
+import openfl.utils.Assets;
 class LoadingStarsSubstate extends MusicBeatSubstate {
     var songs:Array<Dynamic>;
     var statusText:FlxText;
@@ -18,14 +18,20 @@ class LoadingStarsSubstate extends MusicBeatSubstate {
     override function create() {
         super.create();
 
-        statusText = new FlxText(0, 0, FlxG.width, "Calculando estrellas...", 24);
+        var validSongs = songs.filter(function(song) {
+            return song.song != '---';
+        });
+
+        
+
+        statusText = new FlxText(0, 0, FlxG.width, "loading stars...", 24);
         statusText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, "center");
         statusText.screenCenter();
         add(statusText);
 
-        var result = StarLoader.getTotalStars(songs);
-
-        FlxG.state.openSubState(new StarInfoSubState(result, songs.length));
-        close(); // cierra este substate ya que terminó la carga
+        var result = StarLoader.getTotalStars(validSongs);
+        FlxG.state.openSubState(new StarInfoSubState(result, validSongs.length));
+        close();
     }
+
 }

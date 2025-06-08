@@ -5,6 +5,7 @@ import haxe.Json;
 import lime.utils.Assets;
 
 class SongLoader {
+	   public static var songs:Array<SongData>;
 	public static function getPath(difficulty:String, ?folder:String, ?mix:String):String {
 		var chartSuffix:String = '';
 		if (difficulty.toLowerCase() == 'erect' || difficulty.toLowerCase() == 'nightmare') {

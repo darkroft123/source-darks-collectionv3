@@ -16,7 +16,7 @@ import utilities.Options;
 import Popup.AwardPopup;
 import flixel.FlxG;
 import utilities.StarLoader;
-
+import shaders.VCR;
 import substates.StarInfoSubState;
 typedef Award = {
     var name:String;
@@ -32,33 +32,26 @@ class AwardManager {
         { name: "Pinky Rose", desc: "Earn at least 5 rose stars", saveData: "get_5_rose_star", awardImage: "Rose Star Total" },
         { name: "Gold Fan", desc: "Earn 10 gold stars", saveData: "get_10_gold_star", awardImage: "Gold Star Total" },
         { name: "Blue Fan", desc: "Earn 15 blue stars", saveData: "get_15_blue_star", awardImage: "Blue Star Total" },
-        { name: "Rose Fan", desc: "Earn 20 rose stars", saveData: "get_20_rose_star", awardImage: "Rose Star Total" },
+        { name: "Rose Fan2", desc: "Earn 20 rose stars", saveData: "beat_pandemonium", awardImage: "Rose Star Total" },
+        { name: "Rose Fan3", desc: "Earn 20 rose stars", saveData: "beat_pandemonium,beat_king hit ps", awardImage: "Rose Star Total" },
+         { name: "Rose Fan", desc: "Earn 20 rose stars", saveData: "beat_vc galactic storm,beat_frenetic", awardImage: "Rose Star Total" },
+        {name: "PURGATORY TRIPLE GOD", desc: "Clear Purgatory Imposible", saveData: "beat_purgatory imposible", awardImage: "Purgatory"},
+        {name: "DIVINE PARADOX?!?", desc: "Clear Divine Paradox God Mode", saveData: "beat_divine paradox", awardImage: "Divine"},
+        {name: "AKWR V3", desc: "Clear AKWR FD God Mode", saveData: "beat_ak wr fd", awardImage: "AKWR"},
+        {name: "FD SIGMA", desc: "Clear Evolved Final Destination", saveData: "beat_evolved final destination end mix", awardImage: "Evolved"},
+        {name: "Ivano", desc: "Clear All Ivano Drako Songs", saveData: "beat_vc veteran,beat_fs rejected", awardImage: "Ivano"},
+        {name: "VC Clears", desc: "Clear All Songs That Begin With VC", saveData: "beat_zagreus,beat_wastelands", awardImage: "VC"},
+        {name: "PS Clears", desc: "Clear All Songs That Begin With PS", saveData: "beat_zagreus,beat_wastelands", awardImage: "VC"},
 
+        {name: "Godly Rejected FC", desc: "", saveData: "fc_vc rejected", awardImage: "Rejected"},
+        {name: "Rejected UNT0LD FC", desc: "", saveData: "fc_rejected ps", awardImage: "Unt0ld"},
+        {name: "FS Rejected FC", desc: "", saveData: "fc_fs rejected", awardImage: "FS Rejected"},
 
-
-        {name: "Wiik 2", desc: "Beat Wiik 2", saveData: "beat_wiik 2", awardImage: "Wiik2"},
-        {name: "Burnout FC", desc: "", saveData: "fc_burnout", awardImage: "Wiik2FC"},
-        {name: "Sporting FC", desc: "", saveData: "fc_sporting", awardImage: "Wiik2FC"},
-        {name: "Boxing Match FC", desc: "", saveData: "fc_boxing match", awardImage: "Wiik2FC"},
-
-        {name: "Wiik 3", desc: "Beat Wiik 3", saveData: "beat_wiik 3", awardImage: "Wiik3"},
-        {name: "Fisticuffs FC", desc: "", saveData: "fc_fisticuffs", awardImage: "Wiik3FC"},
-        {name: "Blastout FC", desc: "", saveData: "fc_blastout", awardImage: "Wiik3FC"},
-        {name: "Immortal FC", desc: "", saveData: "fc_immortal", awardImage: "Wiik3FC"},
-        {name: "King Hit FC", desc: "", saveData: "fc_king hit", awardImage: "Wiik3FC"},
-        {name: "TKO FC", desc: "", saveData: "fc_tko", awardImage: "Wiik3FC"},
-
-        {name: "Wiik 100", desc: "Beat Wiik 100", saveData: "beat_wiik 100", awardImage: "Wiik100"},
-        {name: "Mat FC", desc: "", saveData: "fc_mat", awardImage: "Wiik100FC"},
-        {name: "Banger FC", desc: "", saveData: "fc_banger", awardImage: "Wiik100FC"},
-        {name: "Edgy FC", desc: "", saveData: "fc_edgy", awardImage: "Wiik100FC"},
-
-        {name: "Alter Ego FC", desc: "", saveData: "fc_ayuda no puedo parar de escuchar esta parte", awardImage: "AlterEgo"},
-        {name: "Rejected q", desc: "", saveData: "beat_harsh reality,beat_god fury", awardImage: "Rejected"},
-        {name: "Rejected VIP", desc: "perroxd", saveData: "beat_rejected vip", awardImage: "Rejected"},
-        {name: "Rejected 1", desc: "perroxd", saveData: "beat_reconciled", awardImage: "Rejected"},
-        {name: "LordNudes", desc: "Clear All Lordv***d Songs", saveData: "beat_rejected vip,beat_wastelands,beat_zagreus,beat_remazed,beat_pandemonium,beat_defamation of reality,beat_final timeout,beat_radical showdown,beat_tko vip,beat_alter ego vip,beat_vc champion,beat_vc last combat,beat_vc disadvantage,beat_total bravery,beat_vc rejected,beat_vc cosmic memories,beat_vc galactic storm", awardImage: "Rejected"},
         {name: "Rejected VIP PROS", desc: "Make FC Rejected VIP", saveData: "fc_rejected vip", awardImage: "RejectedVIP"},
+        {name: "Alter Ego VIP PROS", desc: "Make FC Alter Ego VIP", saveData: "fc_alter ego vip", awardImage: "Wiik2"},
+        {name: "TKO VIP PROS", desc: "Make FC TKO VIP", saveData: "fc_tko vip", awardImage: "Wiik3"},
+
+        {name: "LordNudes", desc: "Clear All Lordv***d Songs", saveData: "beat_rejected vip,beat_wastelands,beat_zagreus,beat_remazed,beat_pandemonium,beat_defamation of reality,beat_final timeout,beat_radical showdown,beat_tko vip,beat_alter ego vip,beat_vc champion,beat_vc last combat,beat_vc disadvantage,beat_total bravery,beat_vc rejected,beat_vc cosmic memories,beat_vc galactic storm", awardImage: "Rejected"},
         {name: "EXTRAS?!?", desc: "Clear All Extras Songs", saveData: "beat_vc final destination,beat_ayuda no puedo parar de escuchar esta parte", awardImage: "Rejected"},
     ];
 
@@ -80,6 +73,7 @@ class AwardManager {
                 trace(saveStrFC);
                 onUnlock(saveStrFC);
                 Options.setData(true, saveStrFC, "progress");
+                
             }
         }
     }
@@ -87,9 +81,9 @@ class AwardManager {
     public static function addStars(instance:PlayState) {
         if (!PlayState.botUsed) {
             if (instance.accuracy >= 95) {
-                var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
-                var blueStr = 'blue_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
-                var goldStr = 'gold_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
+                var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.storyDifficultyStr.toLowerCase();
+                var blueStr = 'blue_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.storyDifficultyStr.toLowerCase();
+                var goldStr = 'gold_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.storyDifficultyStr.toLowerCase();
                 trace(roseStr);
                 trace(blueStr);
                 trace(goldStr);
@@ -98,75 +92,46 @@ class AwardManager {
                 Options.setData(true, goldStr, "progress");
                 // checkStarAwards();
             } else if (instance.accuracy >= 90) {
-                var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
-                var blueStr = 'blue_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
+                var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.storyDifficultyStr.toLowerCase();
+                var blueStr = 'blue_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.storyDifficultyStr.toLowerCase();
                 trace(roseStr);
                 trace(blueStr);
                 Options.setData(true, roseStr, "progress");
                 Options.setData(true, blueStr, "progress");
                 // checkStarAwards();
             } else if (instance.accuracy >= 80) {
-                var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.SONG.storyDifficultyStr.toLowerCase();
+                var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.storyDifficultyStr.toLowerCase();
                 trace(roseStr);
                 Options.setData(true, roseStr, "progress");
                 // checkStarAwards();
             }
         }
     }
-
     public static function checkMultiClears(instance:PlayState) {
         for (award in awards) {
             if (award.saveData.indexOf(",") != -1) { 
                 var saves = award.saveData.split(",");
                 var allCleared = true;
-
                 for (s in saves) {
-                    if (!Options.getData(s.trim(), "progress")) {
-                        allCleared = false;
-                        break;
-                    }
+                    var save = s.trim();
+                    var cleared = Options.getData(save, "progress");
+                   // if (cleared) {
+                        //trace('Completado: ' + save);
+                    //} else {
+                        //trace('Faltante: ' + save);
+                        //allCleared = false;
+                    //}
                 }
-
-                if (allCleared && !Options.getData(award.saveData, "progress")) {
-                    Options.setData(true, award.saveData, "progress");
+                if (allCleared && !isUnlocked(award)) {
+                    //trace('Premio desbloqueado: ' + award.name);
+                    Options.setData(true, "award_" + award.name, "progress");
                     onUnlock(award.saveData);
-                }
+                } //else if (allCleared) {
+                   // trace('Ya estaba desbloqueado: ' + award.name);
+                //}
             }
         }
     }
-
-    public static function checkStarAwards(instance:PlayState) { // i forgot to work on this btw so it doesnt do the thing yet -kirbo
-        var starData = StarInfoSubState.cachedTotals;
-        
-        if (starData == null) {
-           
-            return;
-        }
-
-        for (award in awards) {
-            if (award.saveData.startsWith("get_")) {
-                var parts = award.saveData.split("_");
-                if (parts.length >= 4) {
-                    var count = Std.parseInt(parts[1]);
-                    var color = parts[2];
-                    if (count != null) {
-                        var total = 0;
-                        switch (color) {
-                            case "gold": total = starData.gold;
-                            case "blue": total = starData.blue;
-                            case "rose": total = starData.rose;
-                            default: total = -1;
-                        }
-                        if (total >= count && !Options.getData(award.saveData, "progress")) {
-                            Options.setData(true, award.saveData, "progress");
-                            onUnlock(award.saveData);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 
 
     public static function getAwardFromSaveDataString(saveStr:String):Award {
@@ -191,27 +156,44 @@ class AwardManager {
    public static function onUnlock(saveStr:String) {
         var award = getAwardFromSaveDataString(saveStr);
         if (award != null) {
-            if (Options.getData(award.saveData, "progress") == null) {
-                Options.setData(true, award.saveData, "progress");
-                Main.popupManager.addPopup(new AwardPopup(6, 400, 120, award));
+            if (award.saveData.indexOf(",") != -1) {
+                var saves = award.saveData.split(",");
+                var allCleared = true;
+                for (s in saves) {
+                    if (!Options.getData(s.trim(), "progress")) {
+                        allCleared = false;
+                        break;
+                    }
+                }
+                if (allCleared && !Options.getData("award_" + award.name, "progress")) {
+                    Options.setData(true, "award_" + award.name, "progress");
+                    Main.popupManager.addPopup(new AwardPopup(6, 400, 120, award));
+                }
+            } else {
+                //individual
+                if (!Options.getData(award.saveData, "progress")) {
+                    Options.setData(true, award.saveData, "progress");
+                    Main.popupManager.addPopup(new AwardPopup(6, 400, 120, award));
+                }
             }
         }
-        // if (award != null) {
-        //     if (Options.getData(award.saveData, "progress") == null)
-        //         Main.popupManager.addPopup(new AwardPopup(6, 400, 120, award));
-        // }
     }
+
 
         
     
 
     public static function isUnlocked(award:Award):Bool {
-        if (award != null)
-        {
+        if (award != null) {
+            if (award.saveData.indexOf(",") != -1) {
+                return Options.getData("award_" + award.name, "progress") != null;
+            }
+
             return Options.getData(award.saveData, "progress") != null;
         }
         return false;
     }
+
 
     public static function isAllUnlocked():Bool {
         for (award in awards) {
@@ -282,7 +264,7 @@ class AwardsState extends MusicBeatState
     var listHeight:Float = -400;
 
     var unlockedCount:Int = 0;
-
+    public var VCRSHADER:VCR;
     override public function create()
     {
         #if discord_rpc
@@ -293,12 +275,15 @@ class AwardsState extends MusicBeatState
         if (FlxG.sound.music == null || FlxG.sound.music.playing != true)
             TitleState.playTitleMusic();
 
+
+        VCRSHADER = new VCR();
         var bg = new FlxSprite().loadGraphic(Paths.image('Credits/Credits-BG'));
         bg.setGraphicSize(Std.int(1280));
         bg.updateHitbox();
         bg.screenCenter();
         bg.antialiasing = true;
         bg.scrollFactor.set();
+        bg.shader = VCRSHADER.shader;
         add(bg);
 
         FlxG.mouse.visible = true;
@@ -360,6 +345,7 @@ class AwardsState extends MusicBeatState
     var scroll:Float = 0.0;
     var grabbed:Bool = false;
     var grabY:Float = 0;
+        var time:Float = 0;
     override function update(elapsed:Float)
     {       
         if (FlxG.sound.music.volume < 0.8)
@@ -397,6 +383,8 @@ class AwardsState extends MusicBeatState
         
 
         super.update(elapsed);
+
+        VCRSHADER.time += elapsed;
     }
 }
 

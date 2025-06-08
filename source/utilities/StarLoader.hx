@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.util.FlxSignal;
 import game.SongLoader;
 import game.Highscore;
+import utilities.Options;
 
 class StarLoader {
   
@@ -30,6 +31,10 @@ class StarLoader {
       var hasScore = false;
 
       for (diff in difficulties) {
+        if (diff == "Dont Press") {
+          continue; 
+        }
+
         var accuracy = Highscore.getSongAccuracy(song.songName, diff);
         var score = Highscore.getScore(song.songName, diff);
 
@@ -53,13 +58,12 @@ class StarLoader {
         greenMarks++;
       }
     }
-
     return {
       rose: totalRose,
       blue: totalBlue,
       gold: totalGold,
       marks: greenMarks,
-      totalDifficulties: difficulties.length
-    };
+      totalDifficulties: difficulties.length - 1 
+    }; 
   }
 }

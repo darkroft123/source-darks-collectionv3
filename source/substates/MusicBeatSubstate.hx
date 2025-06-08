@@ -14,9 +14,6 @@ import flixel.FlxSubState;
 import modding.scripts.languages.HScript;
 
 class MusicBeatSubstate extends FlxSubState {
-	public var lastBeat:Float = 0;
-	public var lastStep:Float = 0;
-
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
 	public var controls(get, never):Controls;
@@ -24,9 +21,6 @@ class MusicBeatSubstate extends FlxSubState {
 	#if HSCRIPT_ALLOWED
 	public var stateScript:HScript;
 	#end
-
-	inline function get_controls():Controls
-		return PlayerSettings.player1.controls;
 
 	override public function create() {
 		super.create();
@@ -49,23 +43,11 @@ class MusicBeatSubstate extends FlxSubState {
 
 		super.update(elapsed);
 
-
-		/*if (!Options.getData("antialiasing")) {
-			forEachAlive(function(basic:FlxBasic) {
-				if (!(basic is FlxSprite)) {
-					return;
-				}
-				cast(basic, FlxSprite).antialiasing = false;
-			}, true);
-		}*/
-
 		if (FlxG.keys.checkStatus(FlxKey.fromString(Options.getData("fullscreenBind", "binds")), FlxInputState.JUST_PRESSED))
 			FlxG.fullscreen = !FlxG.fullscreen;
 
 		if (FlxG.keys.justPressed.F5 && Options.getData("developer"))
 			FlxG.resetState();
-
-		Application.current.window.title = MusicBeatState.windowNamePrefix + MusicBeatState.windowNameSuffix #if debug + ' (DEBUG)' #end;
 	}
 
 	public function updateCurStep():Void {
@@ -90,4 +72,8 @@ class MusicBeatSubstate extends FlxSubState {
 	public function beatHit():Void {
 		// do literally nothing dumbass
 	}
+
+	@:noCompletion
+	inline function get_controls():Controls
+		return PlayerSettings.player1.controls;
 }

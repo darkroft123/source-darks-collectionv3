@@ -16,7 +16,7 @@ class OptionsMenu extends MusicBeatState {
 
 	public var pages:Map<String, Array<Option>> = [
 		"Categories" => [
-			new PageOption("Mod Settings", "Mod Settings"),
+			new PageOption("Mod Options", "Mod Options"),
 			new PageOption("Gameplay", "Gameplay", "Test Description"),
 			new PageOption("Graphics", "Graphics"),
 			new PageOption("Misc", "Misc"),
@@ -148,10 +148,10 @@ class OptionsMenu extends MusicBeatState {
 			new PageOption("Back", "Categories"),
 			new BoolOption("Developer Mode", "developer")
 		],
-		"Mod Settings" => [
+		"Mod Options" => [
 			new PageOption("Back", "Categories"),
 			//new BoolOption("Mechanics", "mechanics"),
-			//new BoolOption("Modcharts", "modcharts"),
+			new BoolOption("Disclaimer", "showDisclaimer"),
 			new BoolOption("DarkHeader (WIP)", "darkHeader"),
 			new BoolOption("Shaders", "shaders"),
 			new BoolOption("Gradient TimeBar", "gradientTimeBar"),

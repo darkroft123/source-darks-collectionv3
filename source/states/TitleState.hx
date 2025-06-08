@@ -103,8 +103,13 @@ class TitleState extends MusicBeatState {
 			}
 			#end
 
-			if (Options.getData("flashingLights") == null)
+			if (Options.getData("flashingLights") == null) {
 				FlxG.switchState(() -> new FlashingLightsMenu());
+			} else if (Options.getData("showDisclaimer") == false) {
+				FlxG.switchState(() -> new DisclaimerMenu());
+			}
+
+			
 
 			curWacky = FlxG.random.getObject(getIntroTextShit());
 
@@ -158,6 +163,7 @@ class TitleState extends MusicBeatState {
 
 			transIn = FlxTransitionableState.defaultTransIn;
 			transOut = FlxTransitionableState.defaultTransOut;
+			
 
 			playTitleMusic();
 			Conductor.changeBPM(102);

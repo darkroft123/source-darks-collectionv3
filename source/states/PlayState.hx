@@ -3100,7 +3100,11 @@ class PlayState extends MusicBeatState {
 
 	function finishSongStuffs() {
 		AwardManager.onBeatSong(this);
-		AwardManager.addStars(this);
+		
+
+		//AwardManager.checkStarBasedAwards(SongLoader.songs);
+
+
 		AwardManager.checkMultiClears(this);
 		// AwardManager.checkStarAwards(this);
 
@@ -3163,7 +3167,6 @@ class PlayState extends MusicBeatState {
 			}
 		} else {
 			switchedStates = true;
-            // AwardManager.onBeatWiik(this);
 			if (vocals != null && vocals.active)
 				vocals.stop();
 			if (FlxG.sound.music != null && FlxG.sound.music.active)
@@ -4111,17 +4114,17 @@ class PlayState extends MusicBeatState {
 				+ (ratingArray[1] > 0
 					&& PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
 		} else {
-			return ((marvelousRatings ? "Marvelous: " + Std.string(ratingArray[0]) + "\n" : "")
-				+ "Sick: "
+			return ((marvelousRatings ? "Glorious: " + Std.string(ratingArray[0]) + "\n" : "")
+				+ "Great: "
 				+ Std.string(ratingArray[1])
 				+ "\n"
-				+ "Good: "
+				+ "Nice: "
 				+ Std.string(ratingArray[2])
 				+ "\n"
-				+ "Bad: "
+				+ "Auful: "
 				+ Std.string(ratingArray[3])
 				+ "\n"
-				+ "Shit: "
+				+ "Rusty: "
 				+ Std.string(ratingArray[4])
 				+ "\n"
 				+ "Misses: "

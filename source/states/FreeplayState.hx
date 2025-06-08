@@ -206,7 +206,7 @@ class FreeplayState extends MusicBeatState {
 				var song = listArray[0];
 
 				var diffsStr = listArray[3];
-				var diffs = ["easy", "normal", "hard","voiid","standard"];
+				var diffs = ["Dont Press"];
 
 				var color = listArray[4];
 				var actualColor:Null<FlxColor> = null;
@@ -864,8 +864,17 @@ class FreeplayState extends MusicBeatState {
 		if (grpSongs.length <= 0) return;
 
 		var previousSelected = curSelected;
+		 if (change != 0) {
+     		var tries = 0;
+			do {
+				previousSelected = FlxMath.wrap(previousSelected + change, 0, grpSongs.length - 1);
+				tries++;
+				if (previousSelected == curSelected) break;
+			} while (songs[previousSelected].songName.indexOf("---") != -1 && tries < grpSongs.length);
 
-		curSelected = FlxMath.wrap(curSelected + change, 0, grpSongs.length - 1);
+			curSelected = previousSelected;
+		}
+		//curSelected = FlxMath.wrap(curSelected + change, 0, grpSongs.length - 1);
 		if (songs.length > 0 && iconArray.length > 0 && previousSelected < iconArray.length) {
 			var prevBaseIcon = songs[previousSelected].songCharacter;
 			iconArray[previousSelected].setupIcon(prevBaseIcon);
@@ -896,39 +905,6 @@ class FreeplayState extends MusicBeatState {
 
 		if (songs.length != 0) {
 
-			/*var difficulties = ["voiid", "standard", "sported out", "corrupted", "god", "godly", "double god", "canon", "old", "easier", "100%", "goodles 100%", "infinite",
-			"voiid god", "nogod","double god 8k", "godly 6k", "godly 9k","hard","paper","unt0ld","food styles","4k mania","double infinite", "wtf","infinite 10","new infinite 10k",
-		    "unknown","8k god","double godly","swole","triple god","triple god no modchart","god new","god new 9k","remix"];
-			for (i in 1...22) {
-				difficulties.push(i + "k");
-			}
-			for (i in 1...22) {
-				difficulties.push("god " + i + "k");
-			}
-			var highestScore = 0;
-			var bestRank = "";
-				
-				for (diff in difficulties) {
-					var score = Highscore.getScore(songs[curSelected].songName, diff);
-					var accuracy = Highscore.getSongAccuracy(songs[curSelected].songName, diff);  
-
-					if (score > highestScore) {
-						highestScore = score;
-						bestRank = Highscore.getSongRank(songs[curSelected].songName, diff);
-						bestAccuracy = accuracy;
-					}
-
-					if (accuracy >= 95) {
-						totalGoldStars++;
-						totalBlueStars++;
-						totalRoseStars++;
-					} else if (accuracy >= 90) {
-						totalBlueStars++;
-						totalRoseStars++;
-					} else if (accuracy >= 80) {
-						totalRoseStars++;
-					}
-				}*/
 				var difficulties = ["voiid", "standard", "sported out", "corrupted", "god", "godly", "double god", "canon", "old", "easier", "100%", "goodles 100%", "infinite",
 				"voiid god", "nogod","double god 8k", "godly 6k", "godly 9k","hard","paper","unt0ld","food styles","4k mania","double infinite", "wtf","infinite 10","new infinite 10k",
 				"unknown","8k god","double godly","swole","triple god","triple god no modchart","god new","god new 9k","remix"];
@@ -1010,14 +986,16 @@ class FreeplayState extends MusicBeatState {
 			}
 		}
 
-		for (item in grpSongs.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
+		for (i in 0...grpSongs.length) {
+			var item = grpSongs.members[i];
+			item.targetY = i - curSelected;
 
-			item.alpha = 0.5;
+			var songName = songs[i].songName.toLowerCase();
 
-			if (item.targetY == 0) {
+			if (item.targetY == 0 || songName.indexOf("---") != -1) {
 				item.alpha = 1;
+			} else {
+				item.alpha = 0.5;
 			}
 		}
 

@@ -2,42 +2,30 @@ package states;
 
 import modding.scripts.ExecuteOn;
 import modding.scripts.languages.HScript;
-import flixel.FlxState;
-import flixel.math.FlxMath;
 import flixel.input.FlxInput.FlxInputState;
-import flixel.FlxSprite;
-import flixel.FlxBasic;
-import lime.app.Application;
 import game.Conductor;
 import utilities.PlayerSettings;
 import game.Conductor.BPMChangeEvent;
 import utilities.Controls;
 import flixel.FlxG;
-import flixel.sound.FlxSound;
 
 /**
  * The backend state all states will extend from.
  */
 class MusicBeatState extends #if MODCHARTING_TOOLS modcharting.ModchartMusicBeatState #else flixel.addons.ui.FlxUIState #end {
-	public var lastBeat:Float = 0;
-	public var lastStep:Float = 0;
-
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
 
 	private var controls(get, never):Controls;
 
-	public static var windowNameSuffix:String = "";
-	public static var windowNamePrefix:String = "Leather Engine";
+	public static var windowNameSuffix(default, set):String = "";
+	public static var windowNamePrefix(default, set):String = "Leather Engine";
 
 	public static var fullscreenBind:String = "F11";
 
 	#if HSCRIPT_ALLOWED
 	public var stateScript:HScript;
 	#end
-
-	inline function get_controls():Controls
-		return PlayerSettings.player1.controls;
 
 	override public function create() {
 		super.create();
@@ -81,7 +69,6 @@ class MusicBeatState extends #if MODCHARTING_TOOLS modcharting.ModchartMusicBeat
 			FlxG.resetState();
 
 		FlxG.autoPause = Options.getData("autoPause");
-		Application.current.window.title = windowNamePrefix + windowNameSuffix #if debug + ' (DEBUG)' #end;
 	}
 
 	public function updateBeat():Void {
@@ -134,4 +121,28 @@ class MusicBeatState extends #if MODCHARTING_TOOLS modcharting.ModchartMusicBeat
 	}
 
 	public function beatHit():Void {/* do literally nothing dumbass */}
+
+	@:noCompletion
+	inline static function set_windowNameSuffix(value:String):String {
+		windowNameSuffix = value;
+		_refreshWindowName();
+		return value;
+	}
+	
+	@:noCompletion
+	inline static function set_windowNamePrefix(value:String):String {
+		windowNamePrefix = value;
+		_refreshWindowName();
+		return value;
+	}
+
+	@:noCompletion
+	inline function get_controls():Controls
+		return PlayerSettings.player1.controls;
+
+
+	@:noCompletion
+	inline static function _refreshWindowName():Void{
+		FlxG.stage.window.title = windowNamePrefix + windowNameSuffix #if debug + ' (DEBUG)' #end;
+	}
 }
