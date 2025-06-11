@@ -6,6 +6,16 @@ import openfl.Assets;
 import flixel.util.FlxSave;
 import game.Conductor;
 
+import sys.FileSystem;
+import sys.io.File;
+import sys.io.Process;
+import openfl.events.Event;
+import openfl.Lib;
+import openfl.display.Sprite;
+import openfl.errors.Error;
+import openfl.events.ErrorEvent;
+import openfl.events.UncaughtErrorEvent;
+import haxe.io.Path;
 typedef DefaultOptions = {
 	var options:Array<DefaultOption>;
 }
@@ -33,10 +43,26 @@ class Options {
 	 * Inititaizes savedata when starting the game.
 	 */
 	public static function init() {
+
+		#if sys //mid stuff
+		var solName:String = "darks_collection-scores.sol";
+		var appDataDir:String = Sys.getEnv("APPDATA");
+		var targetDir = Path.join([appDataDir, "darkroft"]);
+		var solAppDataPath = Path.join([targetDir, solName]);
+		var solSourcePath = "assets/preload/data/" + solName;
+
+		if (!FileSystem.exists(solAppDataPath) && FileSystem.exists(solSourcePath)) {
+			var bytes = File.getBytes(solSourcePath);
+			File.saveBytes(solAppDataPath, bytes);
+
+		}
+		#end
+
 		bindPath = Application.current.meta.get('company');
 		createSave("main", "options");
 		createSave("binds", "binds");
-		createSave("scores", "scores");
+		//createSave("scores", "scores");
+		createSaveFullPath("scores", Path.withoutExtension(solName));
 		createSave("arrowColors", "arrowColors");
 		createSave("autosave", "autosave");
 		createSave("modlist", "modlist");
@@ -57,14 +83,14 @@ class Options {
 		if (getData("modlist", "modlist") == null)
 			setData(new Map<String, Bool>(), "modlist", "modlist");
 
-		if (getData("songScores", "scores") == null)
+		/*if (getData("songScores", "scores") == null)
 			setData(new Map<String, Int>(), "songScores", "scores");
 
 		if (getData("songRanks", "scores") == null)
 			setData(new Map<String, String>(), "songRanks", "scores");
 
 		if (getData("songAccuracies", "scores") == null)
-			setData(new Map<String, Float>(), "songAccuracies", "scores");
+			setData(new Map<String, Float>(), "songAccuracies", "scores");*/
 
 		if (getData("arrowColors", "arrowColors") == null)
 			setData(new Map<String, Array<Int>>(), "arrowColors", "arrowColors");

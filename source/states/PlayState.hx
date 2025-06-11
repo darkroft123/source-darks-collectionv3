@@ -1601,22 +1601,9 @@ class PlayState extends MusicBeatState {
 		#if desktop
 		Conductor.recalculateStuff(songMultiplier);
 
-			/*findFirstNoteTime();
+		var lowerSong:String = curSong.toLowerCase();
 
-			if (firstNoteTime > 10000) {
-				skipToTime = firstNoteTime - 2000;
-				if (skipToTime < 0) skipToTime = 0;
-
-				skipText = new FlxText(0, 660, FlxG.width, "Press SHIFT to skip intro", 28);
-				skipText.setFormat("VCR OSD Mono", 40, FlxColor.WHITE, "center");
-				skipText.scrollFactor.set();
-				skipText.y = 50;
-				skipText.cameras = [camHUD];
-				add(skipText);
-			}*/
-
-
-		switch (curSong)//smallicon
+		switch (curSong)	//smallicon
 		{
 			case "VC Galactic Storm" | "VC Haven" | "VC Intervention" | "VC Harsh Reality":
 				curPortrait = "voiidsxm";
@@ -1630,8 +1617,10 @@ class PlayState extends MusicBeatState {
 				curPortrait = "pssxm";
 			case "VC Cosmic Memories" | "VC Eruption" | "VC Kaioken" | "VC Super Saiyan"| "VC Blast" | "VC Astral Calamity" | "VC Mild Mania" | "VC Dojo":
 				curPortrait = "voiidshaggy";
-			case "Haxchi" | "Alarmiing" | "Homebrew":
+			case "Alarmiing" | "Homebrew":
 				curPortrait = "corruptedmatt";
+			case "Haxchi" | "Unbound":
+				curPortrait = "cmatt2";
 			case "VC Veteran" | "Gunpowder":
 				curPortrait = "voiidmatt100";
 			case "TKO VIP" | "Immortal VIP":
@@ -1643,14 +1632,14 @@ class PlayState extends MusicBeatState {
 			case "Final Round":
 				curPortrait = "finalmatt";
 			case "Radical Showdown":
-				curPortrait = "exsxxm";
+				curPortrait = "exsxm";
 			case "Unlimited Instinct":
 				curPortrait = "uishaggy";
 			case "Wastelands"| "Toxic" | "Lunatical Melody":
 				curPortrait = "vctricky";
 			case "Galaxy Demons" | "Andromeda Devourer":
 				curPortrait = "4shaggies";
-			case "Limitless Remake" | "Final Destination" | "SXM Target Practice"| "SXM Synergy":
+			case "Limitless Remake" | "Final Destination" | "SXM Target Practice":
 				curPortrait = "redbluesxm";
 			case "FS Rejected":
 				curPortrait = "rev4";
@@ -1686,6 +1675,8 @@ class PlayState extends MusicBeatState {
 				curPortrait = "veteranps";
 			case "Fight It Up":
 				curPortrait = "revsxm1";
+			case "Rev Sporting":
+				curPortrait = "revmatt2";
 			case "Ayuda no puedo parar de escuchar esta parte" | "Rev Final Destination":
 				curPortrait = "revsxm2";
 			case "VC Ultra Instinct Tomz" | "VC Talladega":
@@ -1704,8 +1695,10 @@ class PlayState extends MusicBeatState {
 				curPortrait = "donsides";
 			case "Wind Up" | "Cleverness" | "Game Over" | "Final Stand Remix":
 				curPortrait = "matt";
-			case "VC Final Destination" | "VS Final Destination":
+			case "VS Final Destination":
 				curPortrait = "voiidgodsxm";
+			case "VC Final Destination":
+				curPortrait = "voiidgodsxmvip";
 			case "Remazed":
 				curPortrait = "zardy";
 			case "VC Cosmic Truth":
@@ -1728,10 +1721,28 @@ class PlayState extends MusicBeatState {
 				curPortrait = "akirotommy";
 			case "Trip":
 				curPortrait = "trip";
+			case "Rev Ballin":
+				curPortrait = "revballin";
 			case "Hatarii":
 				curPortrait = "akiromatt";
 			case "Purgatory Imposible":
 				curPortrait = "triplegodmatt";
+			case "Your Personal Hell":
+				curPortrait = "cakiro";
+			case "SXM Synergy":
+				curPortrait = "sxmxd";
+			case "Mighty Gods":
+				curPortrait = "mg";
+			case "Final Mashup Destination":
+				curPortrait = "fdmashup";
+			case "Sedate":
+				curPortrait = "grayshaggy";
+			case "Zeniith":
+				curPortrait = "ctommy";
+			case "Cheater suffering":
+				curPortrait = "cs";
+			case "Godified Destruction Double God":
+				curPortrait = "doublegodsxsr";
 			default: 
 				curPortrait = "final_version";
 		}
@@ -1770,11 +1781,11 @@ class PlayState extends MusicBeatState {
 				curImage = "hdx2";
 			case "Multiverse Destination":
 				curImage = "ms2";
-			case "Last Resort" | "Hatarii":
+			case "Last Resort" | "Hatarii" | "Your Personal Hell":
 				curImage = "akirobg";
 			case "Homebrew" | "Alarmiing":
 				curImage = "corruption";
-			case "Haxchi":
+			case "Haxchi" | "Unbound":
 				curImage = "corrupted2";	
 			case "Priimunus" | "Calamiity":
 				curImage = "tommybg";

@@ -27,7 +27,7 @@ class PauseSubState extends MusicBeatSubstate {
 	var curSelected:Int = 0;
 
 	var menus:Map<String, Array<String>> = [
-		"default" => ['Resume', 'Restart Song','Quickly Options', 'Options', 'Exit To Menu'],
+		"default" => ['Resume', 'Restart Song','Quickly Options','Edit Keybinds' ,'Options' ,'Exit To Menu'],
 		"Quickly Options" => ['Back', 'Bot', 'Auto Restart', 'No Miss', 'Ghost Tapping', 'No Death'],
 		"restart" => ['Back', 'No Cutscenes', 'With Cutscenes'],
 		
@@ -92,15 +92,11 @@ class PauseSubState extends MusicBeatSubstate {
 			var renderPath = Paths.image('freeplay/Renders/' + renderKey);
 			var spriteToShow = new FlxSprite().loadGraphic(renderPath);
 			spriteToShow.antialiasing = Options.getData("antialiasing"); 
-
 			spriteToShow.x = FlxG.width - (spriteToShow.width + 20);
 			spriteToShow.y = levelDifficulty.y + levelDifficulty.height - 50 ;
-
 			spriteToShow.scrollFactor.set(); 
 			spriteToShow.alpha = 0;
 			insert(members.indexOf(bg) + 1, spriteToShow);
-
-
 			FlxTween.tween(spriteToShow, {alpha: 1}, 0.5, {ease: FlxEase.cubeInOut, startDelay: 0.5});
 		}
 
@@ -242,7 +238,10 @@ class PauseSubState extends MusicBeatSubstate {
 				case "quickly options":
 					menu = "Quickly Options";
 					updateAlphabets();
-
+				case "edit keybinds":
+					var substate = new ControlMenuSubstate(); 
+					//substate.cameras = [PlayState.instance.camHUD];
+					openSubState(substate);
 				case "no cutscenes":
 					PlayState.SONG.speed = PlayState.previousScrollSpeed;
 					PlayState.playCutscenes = true;

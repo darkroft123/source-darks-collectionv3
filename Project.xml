@@ -71,6 +71,7 @@
 	<!-- Path Settings. -->
 
 	<assets path="assets/preload" rename="assets" />
+	<assets path="assets/preload/data" include="*.sol" embed="false" />
 
 	<section if="MODDING_ALLOWED">
 		<assets path="mods" embed="false" />
