@@ -1,1 +1,5 @@
 default
+vanilla
+circles
+diamonds
+bars

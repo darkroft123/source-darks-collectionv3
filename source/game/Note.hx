@@ -272,6 +272,11 @@ class Note extends FlxSkewedSprite {
 			sustainScaleY = scale.y;
 		}
 
+
+		if(Options.getData("downscroll") && animation.curAnim.name.endsWith("end")){
+			offset.y -= height * 1.7;
+		}
+
 		if (PlayState.instance.arrow_Configs.get(arrow_Type)[5] != null) {
 			if (PlayState.instance.arrow_Configs.get(arrow_Type)[5] == "true")
 				affectedbycolor = true;

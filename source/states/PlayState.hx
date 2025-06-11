@@ -756,7 +756,7 @@ class PlayState extends MusicBeatState {
 			SONG.ui_Skin = "default";
 
 		// yo poggars
-		if (SONG.ui_Skin == "default")
+		if (Options.getData("uiSkin") != "default")
 			SONG.ui_Skin = Options.getData("uiSkin");
 
 		// bull shit
@@ -1977,10 +1977,7 @@ class PlayState extends MusicBeatState {
 
 	function generateStaticArrows(pos:Float, ?isPlayer:Bool = false, ?showReminders:Bool = true):Void {
 		call("generateStaticArrows", [pos, isPlayer, showReminders]);
-		var usedKeyCount:Int = SONG.keyCount;
-
-		if (isPlayer)
-			usedKeyCount = SONG.playerKeyCount;
+		var usedKeyCount:Int = isPlayer ? PlayState.SONG.playerKeyCount : PlayState.SONG.keyCount;
 
 		for (i in 0...usedKeyCount) {
 			var babyArrow:StrumNote = new StrumNote(0, strumLine.y, i, null, null, null, usedKeyCount, pos);
@@ -2490,7 +2487,7 @@ class PlayState extends MusicBeatState {
 					// TODO: make this not... this
 					if (Options.getData("downscroll")) {
 						swagRect.height = (coolStrum.y + (coolStrum.width / 2) - note.y) / note.scale.y;
-						swagRect.y = note.frameHeight - swagRect.height - (note.animation.curAnim.name.endsWith("end") ? note.offset.y * 2 : 0);
+						swagRect.y = note.frameHeight - swagRect.height + (note.animation.curAnim.name.endsWith("end") ? note.height * 1.7: 0);
 					} else {
 						// swagRect.width = note.width / note.scale.x;
 						// swagRect.height = note.height / note.scale.y;

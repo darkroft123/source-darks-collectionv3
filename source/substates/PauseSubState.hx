@@ -247,6 +247,10 @@ class PauseSubState extends MusicBeatSubstate {
 					PlayState.playCutscenes = true;
 					PlayState.SONG.keyCount = PlayState.instance.ogKeyCount;
 					PlayState.SONG.playerKeyCount = PlayState.instance.ogPlayerKeyCount;
+					
+					PlayState.botUsed = false;
+					PlayState.noDeathUsed = false;
+					PlayState.SONG.validScore = true;
 
 					pauseMusic.stop();
 					pauseMusic.destroy();
@@ -259,6 +263,10 @@ class PauseSubState extends MusicBeatSubstate {
 
 					PlayState.SONG.keyCount = PlayState.instance.ogKeyCount;
 					PlayState.SONG.playerKeyCount = PlayState.instance.ogPlayerKeyCount;
+					
+					PlayState.botUsed = false;
+					PlayState.noDeathUsed = false;
+					PlayState.SONG.validScore = true;
 
 					pauseMusic.stop();
 					pauseMusic.destroy();
