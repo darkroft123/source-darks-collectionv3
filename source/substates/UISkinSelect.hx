@@ -27,6 +27,8 @@ class UISkinSelect extends MusicBeatSubstate
     public var mania_offset:Array<String>;
 
     public var currentSkin:FlxText;
+    public var selectedSkin:FlxText;
+    public var defaultText:FlxText;
     public var bg:FlxSprite;
 
     public var leaving:Bool = false;
@@ -42,10 +44,21 @@ class UISkinSelect extends MusicBeatSubstate
         bg.scrollFactor.set();
         add(bg);
 
-        currentSkin = new FlxText(0, 50, 0, "", 32, true);
+        currentSkin = new FlxText(0, 0, 0, "", 32, true);
         currentSkin.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-        currentSkin.screenCenter(X);
+        // selectedSkin.screenCenter(X);
         add(currentSkin);
+
+        selectedSkin = new FlxText(0, 75, 0, "", 32, true);
+        selectedSkin.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+        // selectedSkin.screenCenter(X);
+        add(selectedSkin);
+
+        defaultText = new FlxText(0, 150, 0, "Noteskin will change depending on song.", 32, true);
+        defaultText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.YELLOW, CENTER, OUTLINE, FlxColor.BLACK);
+        defaultText.screenCenter(X);
+        defaultText.alpha = 1;
+        add(defaultText);
 
         FlxTween.tween(bg, {alpha: 0.5}, 1, {ease: FlxEase.circOut, startDelay: 0});
 
@@ -55,7 +68,11 @@ class UISkinSelect extends MusicBeatSubstate
             ui_Skin = "default";
         }
 
-        currentSkin.text = "Selected Skin: > " + ui_Skin + " <";
+        currentSkin.text = "Current Skin: [ " + Options.getData("uiSkin") + " ]";
+        currentSkin.screenCenter(X);
+
+        selectedSkin.text = "Selected Skin:\n> " + ui_Skin + " <";
+        selectedSkin.screenCenter(X);
 
         #if PRELOAD_ALL
         create_Arrows();
@@ -98,9 +115,11 @@ class UISkinSelect extends MusicBeatSubstate
                     }
 
                     currentSkin.alpha = bg.alpha;
+                    selectedSkin.alpha = bg.alpha;
+                    defaultText.alpha = 0;
                 },
                 onComplete: function(tween:FlxTween) {
-                    FlxG.state.closeSubState();
+                    close();
                 }
             });
         }
@@ -122,11 +141,16 @@ class UISkinSelect extends MusicBeatSubstate
 
             create_Arrows();
 
-            currentSkin.text = "Selected Skin: > " + ui_Skin + " <";
+            selectedSkin.text = "Selected Skin:\n> " + ui_Skin + " <";
+            selectedSkin.screenCenter(X);
         }
+
+        defaultText.alpha = (ui_Skin == "default") ? 1 : 0;
 
         if(accepted && !leaving)
             Options.setData(ui_Skin, "uiSkin");
+            currentSkin.text = "Current Skin: [ " + Options.getData("uiSkin") + " ]";
+            currentSkin.screenCenter(X);
     }
 
     function create_Arrows(?new_keyCount = 4)

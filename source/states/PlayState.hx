@@ -514,6 +514,11 @@ class PlayState extends MusicBeatState {
 	 */
 	static var invalidJudgements:Bool = false;
 
+	/**
+	 * Are player judgements too high?
+	 */
+	static var ogSkin:String = "default";
+
 
 	/**
 		Current character you are playing as stored as an `Int`.
@@ -750,6 +755,7 @@ class PlayState extends MusicBeatState {
 		if (SONG.stage == null) {
 			SONG.stage = 'stage';
 		}
+		ogSkin = SONG.ui_Skin;
 
 		// null ui skin
 		if (SONG.ui_Skin == null)
@@ -758,6 +764,8 @@ class PlayState extends MusicBeatState {
 		// yo poggars
 		if (Options.getData("uiSkin") != "default")
 			SONG.ui_Skin = Options.getData("uiSkin");
+		else
+			SONG.ui_Skin = ogSkin;
 
 		// bull shit
 		ui_settings = CoolUtil.coolTextFile(Paths.txt("ui skins/" + SONG.ui_Skin + "/config"));

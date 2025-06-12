@@ -27,9 +27,8 @@ class PauseSubState extends MusicBeatSubstate {
 	var curSelected:Int = 0;
 
 	var menus:Map<String, Array<String>> = [
-		"default" => ['Resume', 'Restart Song','Quickly Options','Edit Keybinds' ,'Options' ,'Exit To Menu'],
+		"default" => ['Resume', 'Restart Song','Quickly Options','Edit Keybinds' ,'Change Noteskin', 'Options' ,'Exit To Menu'],
 		"Quickly Options" => ['Back', 'Bot', 'Auto Restart', 'No Miss', 'Ghost Tapping', 'No Death'],
-		"restart" => ['Back', 'No Cutscenes', 'With Cutscenes'],
 		
 	];
 
@@ -233,47 +232,32 @@ class PauseSubState extends MusicBeatSubstate {
 					PlayState.instance.call("onResume", []);
 					close();
 				case "restart song":
-					menu = "restart";
-					updateAlphabets();
+					PlayState.SONG.speed = PlayState.previousScrollSpeed;
+
+					PlayState.SONG.keyCount = PlayState.instance.ogKeyCount;
+					PlayState.SONG.playerKeyCount = PlayState.instance.ogPlayerKeyCount;
+					
+					PlayState.botUsed = false;
+					PlayState.noDeathUsed = false;
+					PlayState.SONG.validScore = true;
+
+					pauseMusic.stop();
+					pauseMusic.destroy();
+					FlxG.sound.list.remove(pauseMusic);
+					FlxG.cameras.remove(pauseCamera);
+
+					FlxG.resetState();
 				case "quickly options":
 					menu = "Quickly Options";
 					updateAlphabets();
 				case "edit keybinds":
 					var substate = new ControlMenuSubstate(); 
-					//substate.cameras = [PlayState.instance.camHUD];
+					substate.cameras = [pauseCamera];
 					openSubState(substate);
-				case "no cutscenes":
-					PlayState.SONG.speed = PlayState.previousScrollSpeed;
-					PlayState.playCutscenes = true;
-					PlayState.SONG.keyCount = PlayState.instance.ogKeyCount;
-					PlayState.SONG.playerKeyCount = PlayState.instance.ogPlayerKeyCount;
-					
-					PlayState.botUsed = false;
-					PlayState.noDeathUsed = false;
-					PlayState.SONG.validScore = true;
-
-					pauseMusic.stop();
-					pauseMusic.destroy();
-					FlxG.sound.list.remove(pauseMusic);
-					FlxG.cameras.remove(pauseCamera);
-
-					FlxG.resetState();
-				case "with cutscenes":
-					PlayState.SONG.speed = PlayState.previousScrollSpeed;
-
-					PlayState.SONG.keyCount = PlayState.instance.ogKeyCount;
-					PlayState.SONG.playerKeyCount = PlayState.instance.ogPlayerKeyCount;
-					
-					PlayState.botUsed = false;
-					PlayState.noDeathUsed = false;
-					PlayState.SONG.validScore = true;
-
-					pauseMusic.stop();
-					pauseMusic.destroy();
-					FlxG.sound.list.remove(pauseMusic);
-					FlxG.cameras.remove(pauseCamera);
-
-					FlxG.resetState();
+				case "change noteskin":
+					var substate = new UISkinSelect(); 
+					substate.cameras = [pauseCamera];
+					openSubState(substate);
 				case "bot":
 					utilities.Options.setData(!utilities.Options.getData("botplay"), "botplay");
 

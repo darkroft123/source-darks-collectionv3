@@ -2,6 +2,7 @@ package substates;
 
 import game.StrumNote;
 import utilities.PlayerSettings;
+import flixel.FlxCamera;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import utilities.NoteVariables;
@@ -174,35 +175,35 @@ class ControlMenuSubstate extends MusicBeatSubstate
                 PlayerSettings.player1.controls.loadKeyBinds();
     
                 FlxG.mouse.visible = false;
-                FlxG.state.closeSubState();
+                close();
             }
     
-            if(FlxG.mouse.overlaps(fullscreenKey) && FlxG.mouse.justPressed && !selectingStuff)
+            if(FlxG.mouse.overlaps(fullscreenKey, this.camera) && FlxG.mouse.justPressed && !selectingStuff)
             {
                 selectedControl = -1;
                 selectingStuff = true;
             }
-            else if(FlxG.mouse.overlaps(fullscreenKey))
+            else if(FlxG.mouse.overlaps(fullscreenKey, this.camera))
                 fullscreenKey.color = FlxColor.GRAY;
             else
                 fullscreenKey.color = FlxColor.WHITE;
     
-            if(FlxG.mouse.overlaps(killKey) && FlxG.mouse.justPressed && !selectingStuff)
+            if(FlxG.mouse.overlaps(killKey, this.camera) && FlxG.mouse.justPressed && !selectingStuff)
             {
                 selectedControl = -2;
                 selectingStuff = true;
             }
-            else if(FlxG.mouse.overlaps(killKey))
+            else if(FlxG.mouse.overlaps(killKey, this.camera))
                 killKey.color = FlxColor.GRAY;
             else
                 killKey.color = FlxColor.WHITE;
 
-            if(FlxG.mouse.overlaps(pauseKey) && FlxG.mouse.justPressed && !selectingStuff)
+            if(FlxG.mouse.overlaps(pauseKey, this.camera) && FlxG.mouse.justPressed && !selectingStuff)
             {
                 selectedControl = -3;
                 selectingStuff = true;
             }
-            else if(FlxG.mouse.overlaps(pauseKey))
+            else if(FlxG.mouse.overlaps(pauseKey, this.camera))
                 pauseKey.color = FlxColor.GRAY;
             else
                 pauseKey.color = FlxColor.WHITE;
@@ -210,13 +211,13 @@ class ControlMenuSubstate extends MusicBeatSubstate
     
             for(x in strumGroup)
             {
-                if(FlxG.mouse.overlaps(x) && FlxG.mouse.justPressed && !selectingStuff)
+                if(FlxG.mouse.overlaps(x, this.camera) && FlxG.mouse.justPressed && !selectingStuff)
                 {
                     selectedControl = x.ID;
                     selectingStuff = true;
                 }
     
-                if(FlxG.mouse.overlaps(x) || x.ID == selectedControl && selectingStuff)
+                if(FlxG.mouse.overlaps(x, this.camera) || x.ID == selectedControl && selectingStuff)
                     x.color = FlxColor.GRAY;
                 else
                     x.color = FlxColor.WHITE;
