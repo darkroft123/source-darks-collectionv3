@@ -202,7 +202,7 @@ class MainMenuState extends MusicBeatState {
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FlxText = new FlxText(0, FlxG.height - 18, 0, TitleState.version + " - Dark's Collection V3 ", 16);
+		var versionShit:FlxText = new FlxText(0, FlxG.height - 18, 0," Leather Engine V0.5.0 pre - Dark's Collection V3 ", 16);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(versionShit);

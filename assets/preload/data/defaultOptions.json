@@ -9,6 +9,10 @@
       "value": true
     },
     {
+      "option": "showDisclaimer",
+      "value": false
+    },
+    {
       "option": "memoryCounter",
       "value": true
     },

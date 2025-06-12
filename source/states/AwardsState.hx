@@ -4,8 +4,8 @@ import ui.Alphabet;
 import flixel.math.FlxMath;
 import game.Conductor;
 import flixel.FlxObject;
-#if discord_rpc
-import utilities.Discord.DiscordClient;
+#if DISCORD_ALLOWED
+import utilities.DiscordClient;
 #end
 import shaders.Shaders.GreyscaleEffect;
 import flixel.util.FlxColor;
@@ -27,32 +27,58 @@ typedef Award = {
 
 class AwardManager {
     public static final awards:Array<Award> = [
-        { name: "First Gold", desc: "Earn at least 1 gold star", saveData: "get_1_gold_star", awardImage: "Gold Star Total" },
-        { name: "Blue Collection", desc: "Earn at least 3 blue stars", saveData: "get_3_blue_star", awardImage: "Blue Star Total" },
-        { name: "Pinky Rose", desc: "Earn at least 5 rose stars", saveData: "get_5_rose_star", awardImage: "Rose Star Total" },
-        { name: "Gold Fan", desc: "Earn 10 gold stars", saveData: "get_10_gold_star", awardImage: "Gold Star Total" },
-        { name: "Blue Fan", desc: "Earn 15 blue stars", saveData: "get_15_blue_star", awardImage: "Blue Star Total" },
-        { name: "Rose Fan2", desc: "Earn 20 rose stars", saveData: "beat_pandemonium", awardImage: "Rose Star Total" },
-        { name: "Rose Fan3", desc: "Earn 20 rose stars", saveData: "beat_pandemonium,beat_king hit ps", awardImage: "Rose Star Total" },
-         { name: "Rose Fan", desc: "Earn 20 rose stars", saveData: "beat_vc galactic storm,beat_frenetic", awardImage: "Rose Star Total" },
+        //godmodes or songs longs
+        {name: "Rejected VIP", desc: "Clear Rejected VIP", saveData: "beat_rejected vip", awardImage: "RejectedVIP"},
         {name: "PURGATORY TRIPLE GOD", desc: "Clear Purgatory Imposible", saveData: "beat_purgatory imposible", awardImage: "Purgatory"},
+        {name: "MULTIVERSE", desc: "Clear Multiverse Destination", saveData: "beat_multiverse destination", awardImage: "Multiverse"},
         {name: "DIVINE PARADOX?!?", desc: "Clear Divine Paradox God Mode", saveData: "beat_divine paradox", awardImage: "Divine"},
-        {name: "AKWR V3", desc: "Clear AKWR FD God Mode", saveData: "beat_ak wr fd", awardImage: "AKWR"},
+        {name: "AKWR V3", desc: "Clear AKWR FD God Mode", saveData: "beat_ak and wr fd", awardImage: "AKWR"},
         {name: "FD SIGMA", desc: "Clear Evolved Final Destination", saveData: "beat_evolved final destination end mix", awardImage: "Evolved"},
+        {name: "UI OMG", desc: "Clear Unlimited Instinct Infinite Mode", saveData: "beat_unlimited instinct", awardImage: "UI"},
+        //composers
+        {name: "Antarkh", desc: "Clear All Antarkh Songs", saveData: "beat_harsh reality", awardImage: "Antarkh"},
+        {name: "Armando", desc: "Clear All Armando The Anima Songs", saveData: "beat_god fury", awardImage: "Armando"},
+        {name: "Aura", desc: "Clear All Kat Songs", saveData: "beat_hell usurper,beat_irreverence", awardImage: "Aura"},
+        {name: "Bruhitscc", desc: "Clear All Bruhitscc Songs", saveData: "beat_galaxy demons", awardImage: "Bruhitscc"},
+        {name: "Dex", desc: "Clear All Dex Songs", saveData: "beat_limitless remake,beat_final stand remix", awardImage: "Dex"},
+        {name: "Dredre", desc: "Clear All Dredre Songs", saveData: "beat_vc intervention,beat_vc haven", awardImage: "Dre"},
+        {name: "Feak", desc: "Clear All Feak Songs", saveData: "beat_haven,beat_divine paradox,beat_trip", awardImage: "Feak"},
+        {name: "FerX", desc: "Clear All FerX Songs", saveData: "beat_reconciled", awardImage: "FerX"},
+        {name: "Goofy", desc: "Clear All Goofy Goobert Songs", saveData: "beat_ds final destination", awardImage: "Goofy"},
+        {name: "Invalid", desc: "Clear All Invalid Bruh Songs", saveData: "beat_dance party,beat_alarmiing,beat_priimunus,beat_mattpurgation", awardImage: "Invalid"},
+        {name: "Paper", desc: "Clear All Paper Songs", saveData: "beat_veteran,beat_warriors,beat_old vc sporting,beat_king hit ps,beat_alter ego ps,beat_rejected ps,beat_final destination ps,beat_ak and wr fd", awardImage: "Paper"},
         {name: "Ivano", desc: "Clear All Ivano Drako Songs", saveData: "beat_vc veteran,beat_fs rejected", awardImage: "Ivano"},
-        {name: "VC Clears", desc: "Clear All Songs That Begin With VC", saveData: "beat_zagreus,beat_wastelands", awardImage: "VC"},
-        {name: "PS Clears", desc: "Clear All Songs That Begin With PS", saveData: "beat_zagreus,beat_wastelands", awardImage: "VC"},
-
+        {name: "Leader", desc: "Clear All Leader Songs", saveData: "beat_super saiyan 3", awardImage: "Leader"},
+        {name: "LordNudes", desc: "Clear All Lordv***d Songs", saveData: "beat_rejected vip,beat_wastelands,beat_zagreus,beat_remazed,beat_pandemonium,beat_defamation of reality,beat_final timeout,beat_radical showdown,beat_tko vip,beat_alter ego vip,beat_vc champion,beat_vc last combat,beat_vc disadvantage,beat_total bravery,beat_vc rejected,beat_vc cosmic memories,beat_vc galactic storm", awardImage: "Rejected"},
+        {name: "LumiOff", desc: "Clear All LumiOff Songs", saveData: "beat_evolved destination end mix,beat_final destination,beat_unlimited instinct,beat_godified destruction double god,beat_andromeda devourer,beat_vc ultra instinct tomz,beat_vs final destination,beat_cheater suffering", awardImage: "Lumi"},
+        {name: "Nerdy", desc: "Clear All Nerdy Songs", saveData: "beat_galactic conqueror,beat_mystery terrors", awardImage: "Nerdy"},
+        {name: "NK", desc: "Clear All NK Songs", saveData: "beat_final round,beat_final boss,beat_wind up,beat_haxchi", awardImage: "NK"},
+        {name: "OmarJotaro", desc: "Clear All OmarJotaro Songs", saveData: "beat_god mode instinct", awardImage: "Nerdy"},
+        {name: "Dodo", desc: "Clear All Real Dodo Songs", saveData: "beat_frenetic,beat_cleverness,beat_gunpowder,beat_vc harsh reality,beat_vc eruption,beat_vc kaioken,beat_vc dojo,beat_vc blast,beat_vc astral calamity,beat_vc mild mania,beat_vc ahp", awardImage: "Dodo"},
+        {name: "Rev", desc: "Clear All Revilo Songs", saveData: "beat_rev sporting,beat_fight it up,beat_rev ballin,beat_calamiity", awardImage: "Rev"},
+        {name: "ShaggyFan23", desc: "Clear All ShaggyFan23 Songs", saveData: "beat_spiral dismay", awardImage: "Shaggy"},
+        {name: "Simpie", desc: "Clear All Simpie Songs", saveData: "beat_zeniith,beat_vc cosmic truth,beat_sedate,beat_above and beyond", awardImage: "Simpie"},
+        {name: "Tbizzle", desc: "Clear All TB Songs", saveData: "beat_colsfoot catastrophe,beat_final mashup destination,beat_hyper destination 3,beat_hyper destination x,beat_immortaly hatred,beat_mighty gods,beat_universe invaders", awardImage: "TB"},
+        {name: "TheViDuelty", desc: "Clear All TheViDuelty Songs", saveData: "beat_sxm target practice,beat_sxm synergy,beat_multiverse destination", awardImage: "TVD"},
+        {name: "Tomz", desc: "Clear All Tomz Songs", saveData: "beat_game over", awardImage: "Tomz"},
+        {name: "Delta", desc: "Clear All Delta Songs", saveData: "beat_your personal hell,beat_hatarii,beat_last resort,beat_final destination moai", awardImage: "Delta"},
+        {name: "EXTRAS?!?", desc: "Clear All Extras Songs", saveData: "beat_vc final destination,beat_ayuda no puedo parar de escuchar esta parte", awardImage: "Extras"},
+        // logos clears
+        {name: "VC Clears", desc: "Clear All Voiid Chronicles Songs", saveData: "beat_vc final destination,beat_vc rejected,beat_vc cosmic memories,beat_vc galactic storm,beat_vc disadvantage,beat_vc champion,beat_vc last combat,beat_alter ego vip,beat_tko vip,beat_radical showdown,beat_defamation of reality,beat_rejected vip,beat_vc veteran,beat_old vc sporting,beat_mattpurgation,beat_wastelands", awardImage: "VC"},
+        {name: "PS Clears", desc: "Clear All Paper Stories Songs", saveData: "beat_king hit ps,beat_alter ego ps,beat_rejected ps,beat_final destination ps", awardImage: "PS"},
+        {name: "Rev Clears", desc: "Clear Rev Mixed Songs", saveData: "beat_rev sporting,beat_fight it up,beat_rev ballin", awardImage: "Rev"},
+        {name: "Corruption Clears", desc: "Clear Corruption Reborn Songs", saveData: "beat_alarmiing,beat_haxchi,beat_your personal hell,beat_zeniith,beat_calamiity,beat_hatarii,beat_last resort", awardImage: "CR"},
+        {name: "Shaggy's Story", desc: "Clear Shaggys's Story Songs", saveData: "beat_vc eruption,beat_vc kaioken,beat_vc dojo,beat_vc blast,beat_vc astral calamity,beat_vc mild mania,beat_vc ahp", awardImage: "ShaggyVC"},
+        // fcs
+        {name: "Mattpurgation FC", desc: "", saveData: "fc_mattpurgation", awardImage: "GodMatt"},
         {name: "Godly Rejected FC", desc: "", saveData: "fc_vc rejected", awardImage: "Rejected"},
         {name: "Rejected UNT0LD FC", desc: "", saveData: "fc_rejected ps", awardImage: "Unt0ld"},
         {name: "FS Rejected FC", desc: "", saveData: "fc_fs rejected", awardImage: "FS Rejected"},
-
+        {name: "The Best FD", desc: "Make FC VC Final Destination", saveData: "fc_vc final destination", awardImage: "fdgodvip"},
         {name: "Rejected VIP PROS", desc: "Make FC Rejected VIP", saveData: "fc_rejected vip", awardImage: "RejectedVIP"},
         {name: "Alter Ego VIP PROS", desc: "Make FC Alter Ego VIP", saveData: "fc_alter ego vip", awardImage: "Wiik2"},
         {name: "TKO VIP PROS", desc: "Make FC TKO VIP", saveData: "fc_tko vip", awardImage: "Wiik3"},
 
-        {name: "LordNudes", desc: "Clear All Lordv***d Songs", saveData: "beat_rejected vip,beat_wastelands,beat_zagreus,beat_remazed,beat_pandemonium,beat_defamation of reality,beat_final timeout,beat_radical showdown,beat_tko vip,beat_alter ego vip,beat_vc champion,beat_vc last combat,beat_vc disadvantage,beat_total bravery,beat_vc rejected,beat_vc cosmic memories,beat_vc galactic storm", awardImage: "Rejected"},
-        {name: "EXTRAS?!?", desc: "Clear All Extras Songs", saveData: "beat_vc final destination,beat_ayuda no puedo parar de escuchar esta parte", awardImage: "Rejected"},
     ];
 
    public static function onBeatWiik(instance:PlayState) {
@@ -267,9 +293,9 @@ class AwardsState extends MusicBeatState
     public var VCRSHADER:VCR;
     override public function create()
     {
-        #if discord_rpc
+        #if DISCORD_ALLOWED
         // Updating Discord Rich Presence
-        MusicBeatState.windowNameSuffix = "Awards Menu";
+        MusicBeatState.windowNameSuffix = " Awards Menu";
         DiscordClient.changePresence("In the Awards Menu", null);
         #end
         if (FlxG.sound.music == null || FlxG.sound.music.playing != true)
@@ -305,8 +331,9 @@ class AwardsState extends MusicBeatState
 
             add(display);
             awardDisplays.push(display);
-            listHeight += 200;
+             
 
+            listHeight = Math.max(listHeight, display.y);
             if (AwardManager.isUnlocked(AwardManager.awards[i]))
                 unlockedCount++;
         }

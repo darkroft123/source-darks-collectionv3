@@ -1654,7 +1654,7 @@ class PlayState extends MusicBeatState {
 			case "Rejected PS":
 				curPortrait = "godpapermatt";
 			case "Mattpurgation":
-				curPortrait = "voiidgodmatt";
+				curPortrait = "voiidgodmattvip";
 			case "Defamation Of Reality":
 				curPortrait = "magsxm";
 			case "Irreverence":

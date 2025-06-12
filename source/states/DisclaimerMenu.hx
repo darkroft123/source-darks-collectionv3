@@ -38,8 +38,8 @@ class DisclaimerMenu extends MusicBeatState {
         add(text1);
 
         text2 = new FlxText(0, 0, 0,
-            'Pressing "E" in Freeplay will scan and detect all songs at once.\n' +
-            'This will take a few minutes or seconds only the first time,\n but then the lag will be gone ggez.',
+               'If you find any bugs related to the added content in the menu,\n' +
+               'please report them to Darkroft on Discord.\n',
             24);
         text2.font = Paths.font('vcr.ttf');
         text2.alignment = CENTER;
