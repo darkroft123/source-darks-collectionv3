@@ -29,6 +29,7 @@ class UISkinSelect extends MusicBeatSubstate
     public var currentSkin:FlxText;
     public var selectedSkin:FlxText;
     public var defaultText:FlxText;
+    public var notMultiText:FlxText;
     public var bg:FlxSprite;
 
     public var leaving:Bool = false;
@@ -54,11 +55,17 @@ class UISkinSelect extends MusicBeatSubstate
         // selectedSkin.screenCenter(X);
         add(selectedSkin);
 
-        defaultText = new FlxText(0, 150, 0, "Noteskin will change depending on song.", 32, true);
+        defaultText = new FlxText(0, 150, 0, "Noteskin will change depending on song.\nMust exit and re-enter song to take effect.", 32, true);
         defaultText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.YELLOW, CENTER, OUTLINE, FlxColor.BLACK);
         defaultText.screenCenter(X);
         defaultText.alpha = 1;
         add(defaultText);
+
+        notMultiText = new FlxText(0, 150, 0, "This noteskin does NOT support multikey!\nOnly designed for 4K charts!", 32, true);
+        notMultiText.setFormat(Paths.font("vcr.ttf"), 24, 0xFF6183, CENTER, OUTLINE, FlxColor.BLACK);
+        notMultiText.screenCenter(X);
+        notMultiText.alpha = 1;
+        add(notMultiText);
 
         FlxTween.tween(bg, {alpha: 0.5}, 1, {ease: FlxEase.circOut, startDelay: 0});
 
@@ -146,6 +153,7 @@ class UISkinSelect extends MusicBeatSubstate
         }
 
         defaultText.alpha = (ui_Skin == "default") ? 1 : 0;
+        notMultiText.alpha = (ui_Skin == "Corrupted") ? 1 : 0;
 
         if(accepted && !leaving)
             Options.setData(ui_Skin, "uiSkin");
