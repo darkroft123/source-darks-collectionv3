@@ -1651,6 +1651,8 @@ class PlayState extends MusicBeatState {
 				curPortrait = "redbluesxm";
 			case "FS Rejected":
 				curPortrait = "rev4";
+			case "VC Rejected":
+				curPortrait = "vcrejected";
 			case "Rejected PS":
 				curPortrait = "godpapermatt";
 			case "Mattpurgation":
@@ -1669,9 +1671,11 @@ class PlayState extends MusicBeatState {
 				curPortrait = "demonmatt";
 			case "Hyper Destination X":
 				curPortrait = "hdx";
+			case "Warriors":
+				curPortrait = "guerreros";
 			case "VC AHP":
 				curPortrait = "ahpvc";
-			case "God Mode Instinct":
+			case "GOD MODE INSTINCT":
 				curPortrait = "gmi";
 			case "Spiral Dismay":
 				curPortrait = "multishaggy";
@@ -1685,7 +1689,7 @@ class PlayState extends MusicBeatState {
 				curPortrait = "revsxm1";
 			case "Rev Sporting":
 				curPortrait = "revmatt2";
-			case "Ayuda no puedo parar de escuchar esta parte" | "Rev Final Destination":
+			case "ayuda no puedo parar de escuchar esta parte" | "Rev Final Destination":
 				curPortrait = "revsxm2";
 			case "VC Ultra Instinct Tomz" | "VC Talladega":
 				curPortrait = "voiidgodshaggy";
@@ -1713,7 +1717,7 @@ class PlayState extends MusicBeatState {
 				curPortrait = "voiidrevsxm";
 			case "Rejected VIP"| "Old Enemies" | "IDR Rejected":
 				curPortrait = "rejectedvip";
-			case "Evolved Destination End Mix":
+			case "Evolved Destination END Mix":
 				curPortrait = "godzephsxm";
 			case "Immortaly Hatred":
 				curPortrait = "orangexpurple";
@@ -1729,6 +1733,14 @@ class PlayState extends MusicBeatState {
 				curPortrait = "akirotommy";
 			case "Trip":
 				curPortrait = "trip";
+			case "AK and WR FD":
+				curPortrait = "qperroxd";
+			case "Super Saiyan 3":
+				curPortrait = "ssj";
+			case "Final Timeout":
+				curPortrait = "martgod";
+			case "Pandemonium"| "Total Bravery" :
+				curPortrait = "pandemia";
 			case "Rev Ballin":
 				curPortrait = "revballin";
 			case "Hatarii":
@@ -1747,7 +1759,7 @@ class PlayState extends MusicBeatState {
 				curPortrait = "grayshaggy";
 			case "Zeniith":
 				curPortrait = "ctommy";
-			case "Cheater suffering":
+			case "Cheater Suffering":
 				curPortrait = "cs";
 			case "Godified Destruction Double God":
 				curPortrait = "doublegodsxsr";
@@ -1779,7 +1791,7 @@ class PlayState extends MusicBeatState {
 				curImage = "rejectedfs";
 			case "Wastelands"| "Toxic" | "Lunatical Melody":
 				curImage = "tricky";
-			case "Rejected" | "Rejected VIP":
+			case "VC Rejected" | "Rejected VIP":
 				curImage = "rejected";
 			case "VC Veteran" | "Gunpowder":
 				curImage = "vc100";

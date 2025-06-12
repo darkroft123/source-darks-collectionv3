@@ -1,6 +1,10 @@
 {
   "options": [
     {
+      "option": "cameraTracksDirections",
+      "value": true
+    },
+    {
       "option": "enemyStrumsGlow",
       "value": true
     },
