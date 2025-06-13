@@ -1710,7 +1710,7 @@ class PlayState extends MusicBeatState {
 			case "VS Final Destination":
 				curPortrait = "voiidgodsxm";
 			case "VC Final Destination":
-				curPortrait = "voiidgodsxmvip";
+				curPortrait = "voiidsxmgodvip";
 			case "Remazed":
 				curPortrait = "zardy";
 			case "VC Cosmic Truth":
