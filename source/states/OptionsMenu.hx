@@ -171,7 +171,7 @@ class OptionsMenu extends MusicBeatState {
 
 	public override function create():Void {
 
-		MusicBeatState.windowNameSuffix = "";
+		MusicBeatState.windowNameSuffix = " Options";
 		instance = this;
 
 

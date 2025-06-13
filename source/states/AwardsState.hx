@@ -246,9 +246,9 @@ class AwardDisplay extends FlxTypedSpriteGroup<FlxSprite> {
         border.push(borderDown);
 
         var name = new FlxText(5, 5, w - 10, award.name);
-        name.setFormat(Paths.font("Contb___.ttf"), 32, FlxColor.WHITE, LEFT);
+        name.setFormat(Paths.font("freeplaytext.ttf"), 32, FlxColor.WHITE, LEFT);
         var desc = new FlxText(5, 45, w - 100, award.desc);
-        desc.setFormat(Paths.font("Contb___.ttf"), 16, FlxColor.WHITE, LEFT);
+        desc.setFormat(Paths.font("freeplaytext.ttf"), 16, FlxColor.WHITE, LEFT);
 
         var imagePath = Paths.image("awards/" + AwardManager.getAwardImageName(award));
         if (!lime.utils.Assets.exists(imagePath))
@@ -355,7 +355,7 @@ class AwardsState extends MusicBeatState
 
         var percentage = new FlxText(0, 0,0, perc+"% ("+unlockedCount+"/"+AwardManager.awards.length+")");
         percentage.x = 10;
-        percentage.setFormat(Paths.font("Contb___.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        percentage.setFormat(Paths.font("freeplaytext.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
         percentage.y = FlxG.height-percentage.height;
         percentage.scrollFactor.set();
         add(percentage);

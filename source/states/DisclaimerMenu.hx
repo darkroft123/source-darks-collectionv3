@@ -27,10 +27,11 @@ class DisclaimerMenu extends MusicBeatState {
         atencion.updateHitbox();
         add(atencion);
 
-        text1 = new FlxText(0, 0, 0,
-            'The first time you enter Freeplay, there may be lag while scrolling.\n' +
-            'This is normal, your PC / Mobile is fine! The stars are being calculated per song.',
-            24);
+       text1 = new FlxText(0, 0, 0,
+        'If you notice that arrows be have strangely in songs that use the Modchart Editor,\n' +
+        'please restart the song. At some point I will solve it.',
+        24);
+
         text1.font = Paths.font('vcr.ttf');
         text1.alignment = CENTER;
         text1.screenCenter(X);

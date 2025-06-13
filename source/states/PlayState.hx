@@ -4136,12 +4136,30 @@ class PlayState extends MusicBeatState {
 				+ "Misses: "
 				+ Std.string(misses)
 				+ "\n"
-				+ (marvelousRatings
-					&& ratingArray[0] > 0
-					&& MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
-				+ (ratingArray[1] > 0
-					&& PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
-		} else {
+				+ (marvelousRatings && ratingArray[0] > 0 && MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
+				+ (ratingArray[1] > 0 && PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
+		}
+		else if (SONG.ui_Skin == "Corrupted") {
+			return ((marvelousRatings ? "Marvelous: " + Std.string(ratingArray[0]) + "\n" : "")
+				+ "Sick: "
+				+ Std.string(ratingArray[1])
+				+ "\n"
+				+ "Good: "
+				+ Std.string(ratingArray[2])
+				+ "\n"
+				+ "Okey: "
+				+ Std.string(ratingArray[3])
+				+ "\n"
+				+ "Bad: "
+				+ Std.string(ratingArray[4])
+				+ "\n"
+				+ "Misses: "
+				+ Std.string(misses)
+				+ "\n"
+				+ (marvelousRatings && ratingArray[0] > 0 && MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
+				+ (ratingArray[1] > 0 && PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
+		}
+		else {
 			return ((marvelousRatings ? "Glorious: " + Std.string(ratingArray[0]) + "\n" : "")
 				+ "Great: "
 				+ Std.string(ratingArray[1])
@@ -4158,12 +4176,10 @@ class PlayState extends MusicBeatState {
 				+ "Misses: "
 				+ Std.string(misses)
 				+ "\n"
-				+ (marvelousRatings
-					&& ratingArray[0] > 0
-					&& MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
-				+ (ratingArray[1] > 0
-					&& PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
-				}
+				+ (marvelousRatings && ratingArray[0] > 0 && MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
+				+ (ratingArray[1] > 0 && PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
+		}
+
 	}
 
 	static function getCharFromEvent(eventVal:String):Character {

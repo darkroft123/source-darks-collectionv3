@@ -86,6 +86,8 @@ class MainMenuState extends MusicBeatState {
 
 		if (Options.getData("developer"))
 			optionShit.push('TOOLBOX');
+	    else
+   			 optionShit.push('???');
 
 		call("buttonsAdded");
 
@@ -130,13 +132,14 @@ class MainMenuState extends MusicBeatState {
 		add(BG2);
 
 
-		var barraarriba = new FlxSprite(0, 0).makeGraphic(FlxG.width, 50, 0xB0000000); 
+		var barraarriba = new FlxSprite(0, 0).makeGraphic(FlxG.width, 50, 0xFF000000); 
 		barraarriba.scrollFactor.set(0, 0);
 		add(barraarriba);
-		
-		var barraabajo = new FlxSprite(0, FlxG.height - 50).makeGraphic(FlxG.width, 50, 0xB0000000); 
+
+		var barraabajo = new FlxSprite(0, FlxG.height - 50).makeGraphic(FlxG.width, 50, 0xFF000000); 
 		barraabajo.scrollFactor.set(0, 0);
 		add(barraabajo);
+
 		
 
 
@@ -179,15 +182,23 @@ class MainMenuState extends MusicBeatState {
 			bfsItems.push(bfs);
 			menuItems.add(bfs);
 			*/
+
+			if (optionShit[i] == "???") {
+				offsetTextX += 100; 
+			}
 		
 			var menuItem:FlxText = new FlxText(posX + offsetTextX, posY + offsetText, 0, optionShit[i], 48);
-			menuItem.setFormat(Paths.font("EurostileExtendedBlack.ttf"), 64, FlxColor.BLACK, LEFT);
+			menuItem.setFormat(Paths.font("freeplaytext.ttf"), 72, FlxColor.BLACK, LEFT);
 			menuItem.borderStyle = FlxTextBorderStyle.OUTLINE;
 			menuItem.borderColor = FlxColor.WHITE;
 			menuItem.borderSize = 2;
 			menuItem.ID = i;
 			textItems.add(menuItem);
 			menuItem.scrollFactor.set(0, 0);
+
+
+			
+
 		}
 		
 		
@@ -202,7 +213,7 @@ class MainMenuState extends MusicBeatState {
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FlxText = new FlxText(0, FlxG.height - 18, 0," Leather Engine V0.5.0 pre - Dark's Collection V3 ", 16);
+		var versionShit:FlxText = new FlxText(0, FlxG.height - 18, 0,"Leather Engine V0.5.0 pre - Dark's Collection V3 ", 16);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(versionShit);
@@ -354,6 +365,8 @@ class MainMenuState extends MusicBeatState {
 				FlxG.switchState(() -> new CreditsState());
 			case 'AWARDS':
 				FlxG.switchState(() -> new AwardsState());
+			case '???':
+				FlxG.switchState(() -> new LolState());
 			case 'TOOLBOX':
 				FlxG.switchState(() -> new toolbox.ToolboxState());
 		}

@@ -20,4 +20,8 @@ class MusicUtilities
 	{
 		return Paths.music('optionsMenu');
 	}
+	public static inline function getLolMusic():String
+	{
+		return Paths.music('lol');
+	}
 }
