@@ -45,7 +45,7 @@ class MainMenuState extends MusicBeatState {
 	public var textItems:FlxTypedGroup<FlxText>;  
 	public var BG2:FlxSprite; 
 	public var ajedrez:FlxBackdrop;
-	public var optionShit:Array<String> = ['FREEPLAY', 'OPTIONS', 'CREDITS','AWARDS','MODS'];
+	public var optionShit:Array<String> = ['FREEPLAY', 'OPTIONS', 'CREDITS','AWARDS'];
 
 	public var bfsItems:Array<FlxSprite> = []; 
 	public var selectedImage:FlxSprite;
