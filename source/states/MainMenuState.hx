@@ -45,7 +45,7 @@ class MainMenuState extends MusicBeatState {
 	public var textItems:FlxTypedGroup<FlxText>;  
 	public var BG2:FlxSprite; 
 	public var ajedrez:FlxBackdrop;
-	public var optionShit:Array<String> = ['FREEPLAY', 'OPTIONS', 'CREDITS','AWARDS'];
+	public var optionShit:Array<String> = ['FREEPLAY', 'OPTIONS', 'CREDITS','AWARDS','MODS'];
 
 	public var bfsItems:Array<FlxSprite> = []; 
 	public var selectedImage:FlxSprite;
@@ -169,7 +169,7 @@ class MainMenuState extends MusicBeatState {
 			var offsetX = - (i * 30); 
 		
 			var posX = baseX + offsetX; 
-			var posY = 100 + (i * 90); 
+			var posY = 80 + (i * 90); 
 			var offsetText = 20;
 			var offsetTextX = 100;
 		
@@ -183,9 +183,13 @@ class MainMenuState extends MusicBeatState {
 			menuItems.add(bfs);
 			*/
 
-			if (optionShit[i] == "???") {
-				offsetTextX += 100; 
-			}
+		if (optionShit[i] == "???") {
+			offsetTextX += 100; 
+		}
+		else if (optionShit[i]== "MODS") {
+			offsetTextX += 50;
+		}
+
 		
 			var menuItem:FlxText = new FlxText(posX + offsetTextX, posY + offsetText, 0, optionShit[i], 48);
 			menuItem.setFormat(Paths.font("freeplaytext.ttf"), 72, FlxColor.BLACK, LEFT);
