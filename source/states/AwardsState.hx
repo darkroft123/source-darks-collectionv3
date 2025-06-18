@@ -89,7 +89,7 @@ class AwardManager {
 
 
    public static function onBeatSong(instance:PlayState) {
-        if (!PlayState.SONG.validScore) {
+        if (PlayState.SONG.validScore) {
             var saveStr = 'beat_' + PlayState.SONG.song.toLowerCase();
             onUnlock(saveStr);
             Options.setData(true, saveStr, "progress");
@@ -105,7 +105,7 @@ class AwardManager {
 
 
     public static function addStars(instance:PlayState) {
-        if (!PlayState.SONG.validScore) {
+        if (PlayState.SONG.validScore) {
             if (instance.accuracy >= 95) {
                 var roseStr = 'rose_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.storyDifficultyStr.toLowerCase();
                 var blueStr = 'blue_' + PlayState.SONG.song.toLowerCase() + "_" + PlayState.storyDifficultyStr.toLowerCase();
