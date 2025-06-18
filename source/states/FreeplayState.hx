@@ -36,7 +36,7 @@ import utilities.Ratings;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import openfl.display.BlendMode;
-
+import substates.RejectedVipSubState;
 
 using StringTools;
 using utilities.BackgroundUtil;
@@ -693,8 +693,15 @@ class FreeplayState extends MusicBeatState {
 			}
 
 			if (FlxG.keys.justPressed.ENTER && canEnterSong) {
-				playSong(songs[curSelected].songName, curDiffString);
+				var selectedSong = songs[curSelected].songName.toLowerCase();
+
+				if (selectedSong == "rejected vip") {
+					openSubState(new RejectedVipSubState(this, selectedSong, curDiffString));
+				} else {
+					playSong(selectedSong, curDiffString);
+				}
 			}
+
 		}
 		call("updatePost", [elapsed]);
 	}
