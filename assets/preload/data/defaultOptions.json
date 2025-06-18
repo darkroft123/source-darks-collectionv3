@@ -14,7 +14,7 @@
     },
     {
       "option": "showDisclaimer",
-      "value": false
+      "value": true
     },
     {
       "option": "memoryCounter",

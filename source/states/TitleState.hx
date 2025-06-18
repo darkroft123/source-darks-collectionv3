@@ -105,8 +105,7 @@ class TitleState extends MusicBeatState {
 
 			if (Options.getData("flashingLights") == null) {
 				FlxG.switchState(() -> new FlashingLightsMenu());
-			} 
-		     if (Options.getData("showDisclaimer") == false) {
+			} else if (Options.getData("showDisclaimer")) {
 				FlxG.switchState(() -> new DisclaimerMenu());
 			}
 

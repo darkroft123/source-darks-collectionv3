@@ -948,6 +948,9 @@ class PlayState extends MusicBeatState {
 		enemyStrums = new FlxTypedGroup<StrumNote>();
 
 		#if (MODCHARTING_TOOLS)
+		NoteMovement.keyCount = SONG.keyCount;
+		NoteMovement.playerKeyCount = SONG.playerKeyCount;
+		NoteMovement.totalKeyCount  =  SONG.keyCount +  SONG.playerKeyCount;
 		if (SONG.modchartingTools
 			|| Assets.exists(Paths.json("song data/" + SONG.song.toLowerCase() + "/modchart"))
 			|| Assets.exists(Paths.json("song data/" + SONG.song.toLowerCase() + "/modchart-" + storyDifficultyStr.toLowerCase()))) {
