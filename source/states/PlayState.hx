@@ -625,6 +625,7 @@ class PlayState extends MusicBeatState {
 	var skipToTime:Float = 0;
 	var removeAtTime:Float = 11000;
 	var firstNoteTime:Float = -1;*/
+	public var didDie:Bool = false;
 
 	override function create() {
 		// set instance because duh
@@ -689,7 +690,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		// check for invalid settings
-		if (tooSlow ||Options.getData("botplay") || Options.getData("noDeath") || invalidJudgements || characterPlayingAs != 0 || PlayState.chartingMode || PlayState.modchartingMode) {
+		if (tooSlow ||Options.getData("botplay") || didDie || invalidJudgements || characterPlayingAs != 0 || PlayState.chartingMode || PlayState.modchartingMode) {
 			SONG.validScore = false;
 		}
 
@@ -2269,6 +2270,12 @@ class PlayState extends MusicBeatState {
 
 		accText.alpha = scoreTxt.alpha;
 		ratingSuffix.alpha = scoreTxt.alpha;
+
+		if (Options.getData("noDeath") && health <= 0 && !didDie) {
+			didDie = true;
+			SONG.validScore = false;
+		}
+
 		
 		if (discordUpdateTimer >= 5.0) {
 
@@ -4503,20 +4510,32 @@ class PlayState extends MusicBeatState {
 		if (seconds < 0)
 			seconds = 0;
 
+		var diedText = (didDie ? " (DIED)" : "");
+
 		switch (funnyTimeBarStyle.toLowerCase()) {
-			default: // includes 'leather engine'
+			default: // 'leather engine'
 				timeBar.text.text = SONG.song + " ~ " + storyDifficultyStr + ' (${FlxStringUtil.formatTime(seconds, false)})'
-					+ (Options.getData("botplay") ? " (BOT)" : "") + (Options.getData("noDeath") ? " (NO DEATH)" : "");
+					+ (Options.getData("botplay") ? " (BOT)" : "")
+					+ (Options.getData("noDeath") ? " (NO DEATH)" : "")
+					+ diedText;
 				timeBar.text.screenCenter(X);
+
 			case "psych engine":
-				timeBar.text.text = '${FlxStringUtil.formatTime(seconds, false)}' + (Options.getData("botplay") ? " (BOT)" : "")
-					+ (Options.getData("noDeath") ? " (NO DEATH)" : "");
+				timeBar.text.text = '${FlxStringUtil.formatTime(seconds, false)}'
+					+ (Options.getData("botplay") ? " (BOT)" : "")
+					+ (Options.getData("noDeath") ? " (NO DEATH)" : "")
+					+ diedText;
 				timeBar.text.screenCenter(X);
+
 			case "old kade engine":
-				timeBar.text.text = SONG.song + (Options.getData("botplay") ? " (BOT)" : "") + (Options.getData("noDeath") ? " (NO DEATH)" : "");
+				timeBar.text.text = SONG.song
+					+ (Options.getData("botplay") ? " (BOT)" : "")
+					+ (Options.getData("noDeath") ? " (NO DEATH)" : "")
+					+ diedText;
 				timeBar.text.screenCenter(X);
 		}
 	}
+
 
 	inline function set(name:String, data:Any, ?executeOn:ExecuteOn = BOTH) {
 		for (script in scripts) {

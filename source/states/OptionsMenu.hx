@@ -61,7 +61,7 @@ class OptionsMenu extends MusicBeatState {
 			new BoolOption("Discord RPC", "discordRPC"),
 			#end
 			new StringSaveOption("Cutscenes Play On", ["story", "freeplay", "both"], "cutscenePlaysOn"),
-			new StringSaveOption("Play As", ["bf", "opponent"], "playAs"),
+			//new StringSaveOption("Play As", ["bf", "opponent"], "playAs"),
 			new BoolOption("Disable Debug Menus", "disableDebugMenus"),
 			new BoolOption("Invisible Notes", "invisibleNotes"),
 			new BoolOption("Auto Pause", "autoPause"),
@@ -175,7 +175,7 @@ class OptionsMenu extends MusicBeatState {
 		instance = this;
 
 
-		menuBG = new FlxSprite().makeBackground(0xFFea71fd);
+		menuBG = new FlxSprite().makeBackground(0xFF71fdea);
 		menuBG.scale.set(1.1, 1.1);
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
@@ -184,6 +184,15 @@ class OptionsMenu extends MusicBeatState {
 		super.create();
 
 		add(page);
+
+		var barraarriba = new FlxSprite(0, 0).makeGraphic(FlxG.width, 50, 0xFF000000); 
+		barraarriba.scrollFactor.set(0, 0);
+		add(barraarriba);
+
+		var barraabajo = new FlxSprite(0, FlxG.height - 50).makeGraphic(FlxG.width, 50, 0xFF000000); 
+		barraabajo.scrollFactor.set(0, 0);
+		add(barraabajo);
+
 
 		loadPage("Categories");
 
@@ -228,7 +237,7 @@ class OptionsMenu extends MusicBeatState {
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-
+        
 		if (FlxG.sound.music.volume < 0.8)
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 
@@ -262,11 +271,12 @@ class OptionsMenu extends MusicBeatState {
 			curSelected = 0;
 
 		var bruh = 0;
-
 		for (x in page.members) {
 			x.alphabetText.targetY = bruh - curSelected;
+	
 			bruh++;
 		}
+
 
 		for (x in page.members) {
 			if (x.alphabetText.targetY != 0) {

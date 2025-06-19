@@ -278,7 +278,7 @@ class HUDAdjustment extends MusicBeatState {
 			- (iconP2.width - 26)
 			- iconP2.offsetX;
 
-		timeBar = new TimeBar(SongLoader.loadFromJson('normal', 'bopeebo'), 'NORMAL');
+		timeBar = new TimeBar(SongLoader.loadFromJson('chart', 'tutorial'), 'NORMAL');
 		timeBar.camera = hud;
 		timeBar.bar.color = dad.barColor;
 		add(timeBar);

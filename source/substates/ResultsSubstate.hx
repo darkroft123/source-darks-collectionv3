@@ -96,7 +96,7 @@ class ResultsSubstate extends MusicBeatSubstate {
 			clearedText.text = "Score saved!";
 		} else {
 			clearedText.setFormat(Paths.font("vcr.ttf"), 24, 0xFF6183, LEFT, OUTLINE, FlxColor.BLACK);
-			clearedText.text = 'Score NOT saved\n${PlayState.tooSlow ? '• Song Speed is less than 1x\n' : ''}${PlayState.botUsed ? '• Botplay was enabled\n' : ''}${PlayState.noDeathUsed ? '• No Death was enabled\n' : ''}${PlayState.invalidJudgements ? '• Judgement Timings are invalid\n' : ''}${PlayState.characterPlayingAs != 0 ? '• Opponent Play was enabled\n' : ''}${PlayState.chartingMode ? '• Chart Editor was used\n' : ''}${PlayState.modchartingMode ? '• Modchart Editor was used\n' : ''}';
+			clearedText.text = 'Score NOT saved\n${PlayState.tooSlow ? '• Song Speed is less than 1x\n' : ''}${PlayState.botUsed ? '• Botplay was enabled\n' : ''}${PlayState.noDeathUsed ? '• You Died in No Death mode\n' : ''}${PlayState.invalidJudgements ? '• Judgement Timings are invalid\n' : ''}${PlayState.characterPlayingAs != 0 ? '• Opponent Play was enabled\n' : ''}${PlayState.chartingMode ? '• Chart Editor was used\n' : ''}${PlayState.modchartingMode ? '• Modchart Editor was used\n' : ''}';
 		}
 		add(clearedText);
 		add(new NoteGraph(PlayState.instance, FlxG.width - 550, 75)); 
