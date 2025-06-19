@@ -348,6 +348,8 @@ class PlayState extends MusicBeatState {
 		Current text under the health bar (displays score and other stats).
 	**/
 	var scoreTxt:FlxText;
+	var accText:FlxText;
+	var ratingSuffix:FlxText;
 
 	/**
 		Total notes interacted with. (Includes missing and hitting)
@@ -1097,11 +1099,29 @@ class PlayState extends MusicBeatState {
 			FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 
+		// Texto dinámico que solo muestra "xx.xx%"
+		accText = new FlxText(0, healthBarBG.y + 45, 0, "", 20);
+		accText.screenCenter(X);
+		accText.setFormat(Paths.font("vcr.ttf"), Options.getData("biggerScoreInfo") ? 20 : 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+		accText.scrollFactor.set();
+
+		// Texto final: " ~ Sick!" (ratingStr)
+		ratingSuffix = new FlxText(0, healthBarBG.y + 45, 0, "", 20);
+		ratingSuffix.screenCenter(X);
+		ratingSuffix.setFormat(Paths.font("vcr.ttf"), Options.getData("biggerScoreInfo") ? 20 : 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+		ratingSuffix.scrollFactor.set();
+
+		accText.alpha = scoreTxt.alpha;
+		ratingSuffix.alpha = scoreTxt.alpha;
 		// settings again
 		if (Options.getData("biggerScoreInfo"))
 			scoreTxt.borderSize = 1.25;
+			accText.borderSize = 1.25;
+			ratingSuffix.borderSize = 1.25;
 
 		add(scoreTxt);
+		add(accText);
+		add(ratingSuffix);
 
 		timeBar = new TimeBar(SONG, storyDifficultyStr);
 		timeBar.cameras = [camHUD];
@@ -1131,6 +1151,8 @@ class PlayState extends MusicBeatState {
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
+		accText.cameras = [camHUD];
+		ratingSuffix.cameras = [camHUD];
 		noteTimer = new NoteTimer(this);  
     	noteTimer.cameras = [camHUD]; 
     	add(noteTimer);
@@ -2245,6 +2267,8 @@ class PlayState extends MusicBeatState {
 
 	 	 discordUpdateTimer += elapsed;
 
+		accText.alpha = scoreTxt.alpha;
+		ratingSuffix.alpha = scoreTxt.alpha;
 		
 		if (discordUpdateTimer >= 5.0) {
 
@@ -3422,8 +3446,46 @@ class PlayState extends MusicBeatState {
 	}
 
 	function updateScoreText() {
-		scoreTxt.text = '<  ${Options.getData('showScore') ? 'Score:${songScore} • ' : ''}Misses:${misses} • Accuracy:${accuracy}% • ${ratingStr}  >';
+		// scoreTxt.text = '<  ${Options.getData('showScore') ? 'Score:${songScore} • ' : ''}Misses:${misses} • Accuracy:${accuracy}% • ${ratingStr}  >';
+		// scoreTxt.screenCenter(X);
+
+		// Texto base (thanks UC)
+		scoreTxt.text = '<  ' + 
+			(Options.getData("showScore") ? 'Score:' + songScore + ' ~ ' : '') +
+			'Misses:' + misses + ' ~ Accuracy:';
+
+		// Texto final
+		ratingSuffix.text = ' ~ ' + ratingStr + '  >';
+
+		// Formatear el texto de Accuracy
+		accText.text = '${accuracy}%';
+
+		// 2. Calcula color dinámico interpolado
+		var accColor:Int;
+		if (accuracy <= 25) {
+			// Rojo → Naranja
+			var t = accuracy / 25.0;
+			accColor = FlxColor.interpolate(FlxColor.RED, FlxColor.ORANGE, t);
+		} else if (accuracy <= 75) {
+			// Naranja → Amarillo
+			var t = (accuracy - 25.0) / 50.0;
+			accColor = FlxColor.interpolate(FlxColor.ORANGE, FlxColor.YELLOW, t);
+		} else {
+			// Amarillo → Verde
+			var t = (accuracy - 75.0) / 25.0;
+			accColor = FlxColor.interpolate(FlxColor.YELLOW, FlxColor.LIME, t);
+		}
+		accText.color = accColor;
+
+		// Centrado compuesto
 		scoreTxt.screenCenter(X);
+		scoreTxt.x -= 100;
+		accText.x = scoreTxt.x + scoreTxt.width;
+		ratingSuffix.x = accText.x + accText.width;
+
+		// Alineación vertical opcional
+		accText.y = scoreTxt.y;
+		ratingSuffix.y = scoreTxt.y;
 	}
 
 	function toggleBotplay(){
@@ -3986,11 +4048,11 @@ class PlayState extends MusicBeatState {
 			notes.sort(FlxSort.byY, (Options.getData("downscroll") ? FlxSort.ASCENDING : FlxSort.DESCENDING));
 
 		if (SONG.notes[Math.floor(curStep / Conductor.stepsPerSection)] != null) {
-			if (funnyTimeBarStyle == 'leather engine'
-				&& Math.floor(curStep / Conductor.stepsPerSection) != Math.floor((curStep - 1) / Conductor.stepsPerSection)) {
-				var target:FlxColor = SONG.notes[Math.floor(curStep / Conductor.stepsPerSection)].mustHitSection ? boyfriend.barColor : dad.barColor;
-				FlxTween.color(timeBar.bar, Conductor.crochet * 0.002, timeBar.bar.color, target);
-			}
+			// if (funnyTimeBarStyle == 'leather engine'
+			// 	&& Math.floor(curStep / Conductor.stepsPerSection) != Math.floor((curStep - 1) / Conductor.stepsPerSection)) {
+			// 	var target:FlxColor = SONG.notes[Math.floor(curStep / Conductor.stepsPerSection)].mustHitSection ? boyfriend.barColor : dad.barColor;
+			// 	FlxTween.color(timeBar.bar, Conductor.crochet * 0.002, timeBar.bar.color, target);
+			// }
 
 			if (SONG.notes[Math.floor(curStep / Conductor.stepsPerSection)].changeBPM){
 				Conductor.changeBPM(SONG.notes[Math.floor(curStep / Conductor.stepsPerSection)].bpm, songMultiplier);
