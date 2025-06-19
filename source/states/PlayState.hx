@@ -4230,8 +4230,29 @@ class PlayState extends MusicBeatState {
 				+ "\n"
 				+ (marvelousRatings && ratingArray[0] > 0 && MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
 				+ (ratingArray[1] > 0 && PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
-		}
-		else {
+		} else if (SONG.ui_Skin == "scalable cel") {
+			return ((marvelousRatings ? "Marvelous: " + Std.string(ratingArray[0]) + "\n" : "")
+				+ "Perfect: "
+				+ Std.string(ratingArray[1])
+				+ "\n"
+				+ "Great: "
+				+ Std.string(ratingArray[2])
+				+ "\n"
+				+ "Good: "
+				+ Std.string(ratingArray[3])
+				+ "\n"
+				+ "Bad: "
+				+ Std.string(ratingArray[4])
+				+ "\n"
+				+ "Misses: "
+				+ Std.string(misses)
+				+ "\n"
+				+ (marvelousRatings
+					&& ratingArray[0] > 0
+					&& MA > 0 ? "MA: " + Std.string(FlxMath.roundDecimal(ratingArray[0] / MA, 2)) + "\n" : "")
+				+ (ratingArray[1] > 0
+					&& PA > 0 ? "PA: " + Std.string(FlxMath.roundDecimal((ratingArray[1] + ratingArray[0]) / PA, 2)) + "\n" : ""));
+		} else {
 			return ((marvelousRatings ? "Glorious: " + Std.string(ratingArray[0]) + "\n" : "")
 				+ "Great: "
 				+ Std.string(ratingArray[1])

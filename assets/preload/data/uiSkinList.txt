@@ -3,3 +3,5 @@ vanilla
 circles
 diamonds
 bars
+lines
+scalable cel
