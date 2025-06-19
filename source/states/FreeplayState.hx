@@ -59,6 +59,7 @@ class FreeplayState extends MusicBeatState {
 	public var speedText:FlxText;
 	public var lerpScore:Int = 0;
 	public var intendedScore:Int = 0;
+	public var lastRenderSong:String = "";
 
 	public var grpSongs:FlxTypedGroup<FreeplayTxt>;
 	public var curPlaying:Bool = false;
@@ -393,8 +394,16 @@ class FreeplayState extends MusicBeatState {
 			}
 
 			if (listArray[6] != null) {
-				songRender.set(q, listArray[6]);
+				var renderName = listArray[6];
+
+				if (q == "REJECTED VIP") {
+					renderName = FlxG.random.bool(50) ? "REJECTED VIP" : "REJECTED VIP 2";
+				}
+
+				songRender.set(q, renderName);
 			}
+
+			
 		}
 
 		up = new FlxSprite().loadGraphic(Paths.gpuBitmap('freeplay/Up_Arrow'));
@@ -489,20 +498,22 @@ class FreeplayState extends MusicBeatState {
 
 		VCRSHADER.time += elapsed;
 
-		if (songs.length > 0) { 
+		if (songs.length > 0) {
 			var songName = songs[FreeplayState.curSelected].songName.toLowerCase(); 
 			var songKey = songs[FreeplayState.curSelected].songName;
 			var curDiff = curDiffString;
+           
 
+			if (songKey == "REJECTED VIP" && lastRenderSong != songKey) {
+				lastRenderSong = songKey;
+				songRender.set("REJECTED VIP", FlxG.random.bool(50) ? "REJECTED VIP" : "REJECTED VIP 2");
+			}
 			for (portName in ports.keys()) {
 				var port = ports.get(portName);
 				var alp = 0;
 				if (songPortMap.exists(songKey) && songPortMap.get(songKey) == portName) {
 					alp = 1;
 				}
-				//if (songName == "final destination" && curDiff.indexOf("VOIID GOD") != -1) {
-				//	alp = (portName == "Wiik_SxM-GodMode") ? 1 : 0;
-				//}
 				port.alpha = FlxMath.lerp(port.alpha, alp, elapsed * 8);
 			}
 
