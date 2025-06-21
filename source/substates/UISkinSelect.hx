@@ -61,8 +61,8 @@ class UISkinSelect extends MusicBeatSubstate
         defaultText.alpha = 1;
         add(defaultText);
 
-        notMultiText = new FlxText(0, 150, 0, "This noteskin does NOT support multikey!\nOnly designed for 4K charts!", 32, true);
-        notMultiText.setFormat(Paths.font("vcr.ttf"), 24, 0xFF6183, CENTER, OUTLINE, FlxColor.BLACK);
+        notMultiText = new FlxText(0, 150, 0, "This noteskin was originally made only for 4K.\nMutlikey may look weird but will still work!", 32, true);
+        notMultiText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.YELLOW, CENTER, OUTLINE, FlxColor.BLACK);
         notMultiText.screenCenter(X);
         notMultiText.alpha = 1;
         add(notMultiText);
@@ -153,7 +153,7 @@ class UISkinSelect extends MusicBeatSubstate
         }
 
         defaultText.alpha = (ui_Skin == "default") ? 1 : 0;
-        notMultiText.alpha = (ui_Skin == "Corrupted") ? 1 : 0;
+        notMultiText.alpha = (ui_Skin == "Corrupted" || ui_Skin == "scalable cel") ? 1 : 0;
 
         if(accepted && !leaving)
             Options.setData(ui_Skin, "uiSkin");
