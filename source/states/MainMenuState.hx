@@ -225,7 +225,7 @@ class MainMenuState extends MusicBeatState {
 		#if MODDING_ALLOWED
 		var switchInfo:FlxText = new FlxText(0, versionShit.y - versionShit.height, 0, 'Hit TAB to switch mods.', 16);
 		switchInfo.scrollFactor.set();
-		switchInfo.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+		switchInfo.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.LIME, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(switchInfo);
 
 		var modInfo:FlxText = new FlxText(0, switchInfo.y - switchInfo.height, 0,

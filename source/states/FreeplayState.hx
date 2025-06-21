@@ -457,14 +457,14 @@ class FreeplayState extends MusicBeatState {
 		add(topText);
 
 		#if PRELOAD_ALL
-		var leText:String = "Press RESET to reset song score and rank ~ Press SPACE to play Song Audio ~ Shift + LEFT and RIGHT to change song speed";
+		var leText:String = "Press R to reset song score and rank ~ Press SPACE to play Song Audio ~ Shift + LEFT and RIGHT to change song speed";
 		#else
-		var leText:String = "Press RESET to reset song score ~ Shift + LEFT and RIGHT to change song speed";
+		var leText:String = "Press R to reset song score ~ Shift + LEFT and RIGHT to change song speed";
 		#end
 
 	
 		infoText = new FlxText(textBG.x - 1, textBG.y + 4, FlxG.width, leText, 18);
-		infoText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
+		infoText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.ORANGE, CENTER);
 		infoText.scrollFactor.set();
 		infoText.screenCenter(X);
 		add(infoText);
