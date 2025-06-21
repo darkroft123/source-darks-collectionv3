@@ -185,14 +185,7 @@ class OptionsMenu extends MusicBeatState {
 
 		add(page);
 
-		var barraarriba = new FlxSprite(0, 0).makeGraphic(FlxG.width, 50, 0xFF000000); 
-		barraarriba.scrollFactor.set(0, 0);
-		add(barraarriba);
-
-		var barraabajo = new FlxSprite(0, FlxG.height - 50).makeGraphic(FlxG.width, 50, 0xFF000000); 
-		barraabajo.scrollFactor.set(0, 0);
-		add(barraabajo);
-
+	
 
 		loadPage("Categories");
 

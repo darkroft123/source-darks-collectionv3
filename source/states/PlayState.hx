@@ -679,9 +679,9 @@ class PlayState extends MusicBeatState {
 			botUsed = true;
 		}
 
-		if (Options.getData("noDeath")) {
-			noDeathUsed = true;
-		}
+		//if (Options.getData("noDeath")) {
+		//	noDeathUsed = true;
+		//}
 
 		var timings:Array<Float> = utilities.Options.getData("judgementTimings");
 
@@ -690,7 +690,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		// check for invalid settings
-		if (tooSlow ||Options.getData("botplay") || didDie || invalidJudgements || characterPlayingAs != 0 || PlayState.chartingMode || PlayState.modchartingMode) {
+		if (tooSlow ||Options.getData("botplay") || invalidJudgements || characterPlayingAs != 0 || PlayState.chartingMode || PlayState.modchartingMode) {
 			SONG.validScore = false;
 		}
 
@@ -2273,6 +2273,7 @@ class PlayState extends MusicBeatState {
 
 		if (Options.getData("noDeath") && health <= 0 && !didDie) {
 			didDie = true;
+			noDeathUsed = true;
 			SONG.validScore = false;
 		}
 
@@ -4531,7 +4532,7 @@ class PlayState extends MusicBeatState {
 		if (seconds < 0)
 			seconds = 0;
 
-		var diedText = (didDie ? " (DIED)" : "");
+		var diedText = (didDie ? '(DIED)' : "");
 
 		switch (funnyTimeBarStyle.toLowerCase()) {
 			default: // 'leather engine'

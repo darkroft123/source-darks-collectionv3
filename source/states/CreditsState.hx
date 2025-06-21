@@ -57,7 +57,7 @@ class CreditsState extends MusicBeatState {
         else
             creditsList = CoolUtil.coolTextFile(Paths.txt("creditsList"));
 
-        menuBG = new FlxSprite().makeBackground(0xFFea71fd);
+        menuBG = new FlxSprite().makeBackground(0xFF71fdea);
         menuBG.scale.set(1.1, 1.1);
         menuBG.updateHitbox();
         menuBG.screenCenter();

@@ -59,7 +59,7 @@ class StarInfoSubState extends MusicBeatSubstate {
         mark.updateHitbox();
         add(mark);
 
-       var markCounterText = new FlxText(mark.x - 10, mark.y + 200, 0, totals.marks + " / " + (totalSongs + totals.totalDifficulties), 24);
+       var markCounterText = new FlxText(mark.x - 10, mark.y + 200, 0, totals.marks + " / " + (totalSongs + totals.totalDifficulties - 32), 24);
         markCounterText.setFormat(Paths.font("vcr.ttf"), 48, FlxColor.WHITE, LEFT);
         markCounterText.scrollFactor.set();
         trace(totalSongs);

@@ -105,9 +105,7 @@ class TitleState extends MusicBeatState {
 
 			if (Options.getData("flashingLights") == null) {
 				FlxG.switchState(() -> new FlashingLightsMenu());
-			} else if (Options.getData("showDisclaimer")) {
-				FlxG.switchState(() -> new DisclaimerMenu());
-			}
+			} 
 
 			
 
@@ -330,14 +328,22 @@ class TitleState extends MusicBeatState {
 							Main.display.version += ' - UPDATE AVALIABLE (${data.trim()})';
 							FlxG.switchState(() -> new OutdatedSubState(data.trim()));
 						} else {
+							if (Options.getData("showDisclaimer")) {
+								FlxG.switchState(() -> new DisclaimerMenu());
+							} else {
+								FlxG.switchState(() -> new MainMenuState());
+							}
+						}
+					}
+					http.onError = (error:String) -> {
+						trace('$error', ERROR);
+						if (Options.getData("showDisclaimer")) {
+							FlxG.switchState(() -> new DisclaimerMenu());
+						} else {
 							FlxG.switchState(() -> new MainMenuState());
 						}
 					}
 
-					http.onError = (error:String) -> {
-						trace('$error', ERROR);
-						FlxG.switchState(() -> new MainMenuState()); // fail so we go anyway
-					}
 
 					http.request();
 				});

@@ -28,8 +28,7 @@ class DisclaimerMenu extends MusicBeatState {
         add(atencion);
 
        text1 = new FlxText(0, 0, 0,
-        'If you notice that arrows be have strangely in songs that use the Modchart Editor,\n' +
-        'please restart the song. At some point I will solve it.',
+        'There was no time to port and fix the awards,\n they may be broken but other awards will continue to work.',
         24);
 
         text1.font = Paths.font('vcr.ttf');
@@ -40,7 +39,7 @@ class DisclaimerMenu extends MusicBeatState {
 
         text2 = new FlxText(0, 0, 0,
                'If you find any bugs related to the added content in the menu,\n' +
-               'please report them to Darkroft on Discord.\n',
+               'please report them to darkroft on Discord.\n',
             24);
         text2.font = Paths.font('vcr.ttf');
         text2.alignment = CENTER;
@@ -91,14 +90,13 @@ class DisclaimerMenu extends MusicBeatState {
         if (FlxG.keys.justPressed.ENTER) {
             FlxG.sound.play(Paths.sound('confirmMenu'));
 
-            Options.setData(false, 'showDisclaimer');
             FlxTween.tween(atencion, {alpha: 0}, 2.0, {ease: FlxEase.cubeInOut});
             FlxTween.tween(perroxd,  {alpha: 0}, 2.0, {ease: FlxEase.cubeInOut});
             FlxTween.tween(text1,    {alpha: 0}, 2.0, {ease: FlxEase.cubeInOut});
             FlxTween.tween(text2,    {alpha: 0}, 2.0, {ease: FlxEase.cubeInOut});
             FlxTween.tween(text3,    {alpha: 0}, 2.0, {
                 ease: FlxEase.cubeInOut,
-                onComplete: (_) -> FlxG.switchState(() -> new TitleState())
+                onComplete: (_) -> FlxG.switchState(() -> new MainMenuState())
             });
 
             canInput = false;

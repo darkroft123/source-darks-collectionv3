@@ -39,24 +39,25 @@ class AwardManager {
         {name: "Antarkh", desc: "Clear All Antarkh Songs", saveData: "beat_harsh reality", awardImage: "Antarkh"},
         {name: "Armando", desc: "Clear All Armando The Anima Songs", saveData: "beat_god fury", awardImage: "Armando"},
         {name: "Aura", desc: "Clear All Kat Songs", saveData: "beat_hell usurper,beat_irreverence", awardImage: "Aura"},
-        {name: "Bruhitscc", desc: "Clear All Bruhitscc Songs", saveData: "beat_galaxy demons", awardImage: "Bruhitscc"},
+        {name: "Bruhitscc", desc: "Clear All Bruhitscc Songs", saveData: "beat_galaxy demons", awardImage: "Bruhhit"},
         {name: "Dex", desc: "Clear All Dex Songs", saveData: "beat_limitless remake,beat_final stand remix", awardImage: "Dex"},
-        {name: "Dredre", desc: "Clear All Dredre Songs", saveData: "beat_vc intervention,beat_vc haven", awardImage: "Dre"},
+        {name: "Dredre", desc: "Clear All Dredre Songs", saveData: "beat_vc intervention,beat_vc haven", awardImage: "Dredre"},
         {name: "Feak", desc: "Clear All Feak Songs", saveData: "beat_haven,beat_divine paradox,beat_trip", awardImage: "Feak"},
-        {name: "FerX", desc: "Clear All FerX Songs", saveData: "beat_reconciled", awardImage: "FerX"},
+        {name: "FerX", desc: "Clear All FerX Songs", saveData: "beat_reconciled", awardImage: "Ferx"},
         {name: "Goofy", desc: "Clear All Goofy Goobert Songs", saveData: "beat_ds final destination", awardImage: "Goofy"},
         {name: "Invalid", desc: "Clear All Invalid Bruh Songs", saveData: "beat_dance party,beat_alarmiing,beat_priimunus,beat_mattpurgation", awardImage: "Invalid"},
-        {name: "Paper", desc: "Clear All Paper Songs", saveData: "beat_veteran,beat_warriors,beat_old vc sporting,beat_king hit ps,beat_alter ego ps,beat_rejected ps,beat_final destination ps,beat_ak and wr fd", awardImage: "Paper"},
+        {name: "Paper", desc: "Clear All Paper Songs", saveData: "beat_veteran,beat_warriors,beat_old vc sporting,beat_king hit ps,beat_alter ego ps,beat_rejected ps,beat_final destination ps,beat_ak and wr fd", awardImage: "paper"},
         {name: "Ivano", desc: "Clear All Ivano Drako Songs", saveData: "beat_vc veteran,beat_fs rejected", awardImage: "Ivano"},
         {name: "Leader", desc: "Clear All Leader Songs", saveData: "beat_super saiyan 3", awardImage: "Leader"},
         {name: "LordNudes", desc: "Clear All Lordv***d Songs", saveData: "beat_rejected vip,beat_wastelands,beat_zagreus,beat_remazed,beat_pandemonium,beat_defamation of reality,beat_final timeout,beat_radical showdown,beat_tko vip,beat_alter ego vip,beat_vc champion,beat_vc last combat,beat_vc disadvantage,beat_total bravery,beat_vc rejected,beat_vc cosmic memories,beat_vc galactic storm", awardImage: "Rejected"},
         {name: "LumiOff", desc: "Clear All LumiOff Songs", saveData: "beat_evolved destination end mix,beat_final destination,beat_unlimited instinct,beat_godified destruction double god,beat_andromeda devourer,beat_vc ultra instinct tomz,beat_vs final destination,beat_cheater suffering", awardImage: "Lumi"},
         {name: "Nerdy", desc: "Clear All Nerdy Songs", saveData: "beat_galactic conqueror,beat_mystery terrors", awardImage: "Nerdy"},
         {name: "NK", desc: "Clear All NK Songs", saveData: "beat_final round,beat_final boss,beat_wind up,beat_haxchi", awardImage: "NK"},
-        {name: "OmarJotaro", desc: "Clear All OmarJotaro Songs", saveData: "beat_god mode instinct", awardImage: "Nerdy"},
+        {name: "OmarJotaro", desc: "Clear All OmarJotaro Songs", saveData: "beat_god mode instinct", awardImage: "Omar"},
         {name: "Dodo", desc: "Clear All Real Dodo Songs", saveData: "beat_frenetic,beat_cleverness,beat_gunpowder,beat_vc harsh reality,beat_vc eruption,beat_vc kaioken,beat_vc dojo,beat_vc blast,beat_vc astral calamity,beat_vc mild mania,beat_vc ahp", awardImage: "Dodo"},
         {name: "Rev", desc: "Clear All Revilo Songs", saveData: "beat_rev sporting,beat_fight it up,beat_rev ballin,beat_calamiity", awardImage: "Rev"},
-        {name: "ShaggyFan23", desc: "Clear All ShaggyFan23 Songs", saveData: "beat_spiral dismay", awardImage: "Shaggy"},
+        {name: "Scratch", desc: "Clear All Scratch Songs", saveData: "beat_unleashed", awardImage: "Scratch"},
+        {name: "ShaggyFan23", desc: "Clear All ShaggyFan23 Songs", saveData: "beat_spiral dismay", awardImage: "23"},
         {name: "Simpie", desc: "Clear All Simpie Songs", saveData: "beat_zeniith,beat_vc cosmic truth,beat_sedate,beat_above and beyond", awardImage: "Simpie"},
         {name: "Tbizzle", desc: "Clear All TB Songs", saveData: "beat_colsfoot catastrophe,beat_final mashup destination,beat_hyper destination 3,beat_hyper destination x,beat_immortaly hatred,beat_mighty gods,beat_universe invaders", awardImage: "TB"},
         {name: "TheViDuelty", desc: "Clear All TheViDuelty Songs", saveData: "beat_sxm target practice,beat_sxm synergy,beat_multiverse destination", awardImage: "TVD"},
@@ -141,15 +142,8 @@ class AwardManager {
                 for (s in saves) {
                     var save = s.trim();
                     var cleared = Options.getData(save, "progress");
-                   // if (cleared) {
-                        //trace('Completado: ' + save);
-                    //} else {
-                        //trace('Faltante: ' + save);
-                        //allCleared = false;
-                    //}
                 }
                 if (allCleared && !isUnlocked(award)) {
-                    //trace('Premio desbloqueado: ' + award.name);
                     Options.setData(true, "award_" + award.name, "progress");
                     onUnlock(award.saveData);
                 } //else if (allCleared) {
