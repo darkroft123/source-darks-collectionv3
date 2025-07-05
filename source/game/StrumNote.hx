@@ -16,7 +16,7 @@ using StringTools;
 /*
 	credit to psych engine devs (sorry idk who made this originally, all ik is that srperez modified it for shaggy and then i got it from there)
  */
-class StrumNote extends FlxSkewedSprite {
+class StrumNote extends #if MODCHARTING_TOOLS modcharting.FlxSprite3D #else FlxSkewedSprite #end {
 	public var resetAnim:Float = 0;
 
 	private var noteData:Int = 0;

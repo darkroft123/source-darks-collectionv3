@@ -41,6 +41,7 @@ import flixel.text.FlxText;
 import haxe.Json;
 import flixel.util.FlxStringUtil;
 import openfl.display.ShaderParameter;
+import modcharting.FlxSprite3D;
 
 using StringTools;
 
@@ -223,9 +224,9 @@ class LuaScript extends Script {
 
 		set("curStep", 0);
 		set("curBeat", 0);
-		set("stepCrochet", Conductor.stepCrochet);
+		set("stepCrochet", Conductor.stepCrochet / PlayState.songMultiplier);
 		set("crochetUnscaled", Conductor.stepCrochet);
-		set("crochet", Conductor.crochet);
+		set("crochet", Conductor.crochet / PlayState.songMultiplier);
 		set("safeZoneOffset", Conductor.safeZoneOffset);
 
 		set("hudZoom", PlayState.instance.camHUD.zoom);
@@ -788,8 +789,26 @@ class LuaScript extends Script {
 				CoolUtil.coolError("Sprite " + id + " already exists! Choose a different name!", "Leather Engine Modcharts");
 		});
 
+		setFunction("makeSprite3D", function(id:String, filename:String, x:Float, y:Float, size:Float = 1, ?sizeY:Float = null) {
+			if (!lua_Sprites.exists(id)) {
+				var Sprite:FlxSprite3D = new FlxSprite3D(x, y);
+
+				if (filename != null && filename.length > 0)
+					Sprite.loadGraphic(Paths.gpuBitmap(filename));
+
+				Sprite.scale.set(size, sizeY == null ? size : sizeY);
+
+				Sprite.updateHitbox();
+
+				lua_Sprites.set(id, Sprite);
+
+				PlayState.instance.add(Sprite);
+			} else
+				CoolUtil.coolError("Sprite " + id + " already exists! Choose a different name!", "Leather Engine Modcharts");
+		});
+
 		setFunction("makeSpriteCopy", function(id:String, targetID:String) {
-			var actor:FlxSprite = null;
+			var actor:FlxSprite3D = null;
 			if (getCharacterByName(targetID) != null) {
 				var character = getCharacterByName(targetID);
 				if (character.otherCharacters != null && character.otherCharacters.length > 0) {
@@ -800,7 +819,7 @@ class LuaScript extends Script {
 				actor = getActorByName(targetID);
 
 			if (!lua_Sprites.exists(id) && actor != null) {
-				var Sprite:FlxSprite = new FlxSprite(actor.x, actor.y);
+				var Sprite:FlxSprite3D = new FlxSprite3D(actor.x, actor.y);
 
 				Sprite.loadGraphicFromSprite(actor);
 
@@ -1003,6 +1022,14 @@ class LuaScript extends Script {
 			PlayState.instance.reorderCameras(newCam);
 			lua_Cameras.set(camStr, {cam: newCam, shaders: [], shaderNames: []});
 			PlayState.instance.usedLuaCameras = true;
+		});
+
+		setFunction("addCameraAboveHUD", function(camStr:String) {
+			var newCam:FlxCamera = new FlxCamera();
+			newCam.bgColor.alpha = 0;
+			lua_Cameras.set(camStr, {cam: newCam, shaders: [], shaderNames: []});
+			PlayState.instance.usedLuaCameras = true;
+			FlxG.cameras.add(newCam, false);
 		});
 
 		setFunction("setNoteCameras", function(camStr:String) {
@@ -2612,6 +2639,21 @@ class LuaScript extends Script {
 			}
 		});
 
+		// setFunction("tweenAngle3DX", function(id:String, toAngle:Float, duration:Float, ease:String = "linear", ?startDelay:Float = 0.0, ?onComplete:Dynamic) {
+		// 	if (id != null) {
+		// 		FlxTween.tween(id + ".angle3D", {x: toAngle}, duration, {
+		// 			ease: easeFromString(ease),
+		// 			onComplete: function(twn) {
+		// 				if (onComplete != null)
+		// 					onComplete();
+		// 			},
+		// 			startDelay: startDelay,
+		// 		});
+		// 	} else {
+		// 		trace('Object named $id doesn\'t exist!', ERROR);
+		// 	}
+		// });
+
 		setFunction("setActorProperty", function(id:String, prop:String, value:Dynamic) {
 			var actor = getActorByName(id);
 			if (actor != null && Reflect.getProperty(actor, prop) != null) {
@@ -2914,8 +2956,6 @@ class LuaScript extends Script {
 		// shader bullshit
 
 		setFunction("setActor3DShader", function(id:String, ?speed:Float = 3, ?frequency:Float = 10, ?amplitude:Float = 0.25) {
-			if (!Options.getData("shaders"))
-				return;
 			var actor = getActorByName(id);
 
 			if (actor != null) {
@@ -2930,8 +2970,6 @@ class LuaScript extends Script {
 		});
 
 		setFunction("setActorNoShader", function(id:String) {
-			if (!Options.getData("shaders"))
-				return;
 			var actor = getActorByName(id);
 
 			if (actor != null) {
@@ -2941,8 +2979,6 @@ class LuaScript extends Script {
 		});
 
 		setFunction("createCustomShader", function(id:String, frag:String, ?vert:String) {
-			if (!Options.getData("shaders"))
-				return;
 			var _vert:String = Assets.exists(Paths.vert(vert)) ? Assets.getText(Paths.vert(vert)) : null;
 			lua_Custom_Shaders.set(id, new CustomShader(Assets.getText(Paths.frag(frag)), _vert));
 		});
@@ -2968,8 +3004,6 @@ class LuaScript extends Script {
 		});
 
 		setFunction("setActorNoCustomShader", function(actor:String) {
-			if (!Options.getData("shaders"))
-				return;
 			getActorByName(actor).shader = null;
 		});
 
@@ -3006,51 +3040,37 @@ class LuaScript extends Script {
 		});
 
 		setFunction("getCustomShaderBool", function(id:String, property:String) {
-			// if (!Options.getData("shaders"))
-			// 	return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			return funnyCustomShader.getBool(property);
 		});
 
 		setFunction("getCustomShaderInt", function(id:String, property:String) {
-			// if (!Options.getData("shaders"))
-			// 	return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			return funnyCustomShader.getInt(property);
 		});
 
 		setFunction("getCustomShaderFloat", function(id:String, property:String) {
-			// if (!Options.getData("shaders"))
-			// 	return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			return funnyCustomShader.getFloat(property);
 		});
 
 		setFunction("setCustomShaderBool", function(id:String, property:String, value:Bool) {
-			if (!Options.getData("shaders"))
-				return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			funnyCustomShader.setBool(property, value);
 		});
 
 		setFunction("setCustomShaderInt", function(id:String, property:String, value:Int) {
-			if (!Options.getData("shaders"))
-				return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			funnyCustomShader.setInt(property, value);
 		});
 
 		setFunction("setCustomShaderFloat", function(id:String, property:String, value:Float) {
-			if (!Options.getData("shaders"))
-				return;
 			var funnyCustomShader:CustomShader = lua_Custom_Shaders.get(id);
 			funnyCustomShader.setFloat(property, value);
 		});
 
 		setFunction("tweenShader",
 			function(id:String, property:String, value:Float, duration:Float, ease:String = "linear", startDelay:Float = 0.0, ?onComplete:Dynamic) {
-				if (!Options.getData("shaders"))
-					return;
 				var shader:CustomShader = lua_Custom_Shaders.get(id);
 				if (shader != null) {
 					shader.tween(property, value, duration, easeFromString(ease), startDelay, onComplete);
@@ -3061,8 +3081,6 @@ class LuaScript extends Script {
 
 		// dumb vc functions
 		setFunction("initShader", function(id:String, frag:String, ?vert:String) {
-			if (!Options.getData("shaders"))
-				return;
 			var _vert:String = Assets.exists(Paths.vert(vert)) ? Assets.getText(Paths.vert(vert)) : null;
 			lua_Custom_Shaders.set(id, new CustomShader(Assets.getText(Paths.frag(frag)), _vert));
 		});
@@ -3087,8 +3105,8 @@ class LuaScript extends Script {
 				if (actor != null && funnyCustomShader != null) {
 					actor.shader = funnyCustomShader;
 				}
-			} 
-			//	trace('Shader named $shaderName doesn\'t exist!', ERROR);
+			} else
+				trace('Shader named $shaderName doesn\'t exist!', ERROR);
 		});
 
 		setFunction("setCameraShader", function(camera:String, id:String) {

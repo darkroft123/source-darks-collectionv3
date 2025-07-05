@@ -149,6 +149,8 @@ class HScript extends Script {
 		#end
 		// function shits
 
+		set("NdllLoader", utilities.NdllLoader);
+
 		set("import", function(class_name:String) {
 			var classes = class_name.split(".");
 

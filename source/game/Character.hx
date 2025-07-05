@@ -14,11 +14,11 @@ import lime.utils.Assets;
 import modding.CharacterConfig;
 import modding.scripts.languages.HScript;
 import states.PlayState;
-
+import modcharting.FlxSprite3D;
 /**
  * The base character class.
  */
-class Character extends FlxSprite {
+class Character extends FlxSprite3D {
 	public var animOffsets:Map<String, Array<Dynamic>> = new Map<String, Array<Dynamic>>();
 	public var debugMode:Bool = false;
 

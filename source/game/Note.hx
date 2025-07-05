@@ -15,7 +15,7 @@ import flixel.math.FlxRect;
 
 using StringTools;
 
-class Note extends FlxSkewedSprite {
+class Note extends #if MODCHARTING_TOOLS modcharting.FlxSprite3D #else FlxSkewedSprite #end {
 	public var strumTime:Float = 0;
 
 	public var mustPress:Bool = false;

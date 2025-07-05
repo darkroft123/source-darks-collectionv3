@@ -609,15 +609,17 @@ class FreeplayState extends MusicBeatState {
 		var downP = controls.DOWN_P;
 
 		if (songsReady) {
-			if (-1 * Math.floor(FlxG.mouse.wheel) != 0 && !shift)
-				changeSelection(-1 * Math.floor(FlxG.mouse.wheel));
-			else if (-1 * (Math.floor(FlxG.mouse.wheel) / 10) != 0 && shift)
-				curSpeed += -1 * (Math.floor(FlxG.mouse.wheel) / 10);
+			if(songs.length > 1){
+				if (-1 * Math.floor(FlxG.mouse.wheel) != 0 && !shift)
+					changeSelection(-1 * Math.floor(FlxG.mouse.wheel));
+				else if (-1 * (Math.floor(FlxG.mouse.wheel) / 10) != 0 && shift)
+					curSpeed += -1 * (Math.floor(FlxG.mouse.wheel) / 10);
 
-			if (upP)
-				changeSelection(-1);
-			if (downP)
-				changeSelection(1);
+				if (upP)
+					changeSelection(-1);
+				if (downP)
+					changeSelection(1);
+			}
 
 			if (leftP && !shift)
 				changeDiff(-1);

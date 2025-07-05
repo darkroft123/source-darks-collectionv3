@@ -15,7 +15,8 @@ import flixel.FlxG;
 class MusicBeatState extends #if MODCHARTING_TOOLS modcharting.ModchartMusicBeatState #else flixel.addons.ui.FlxUIState #end {
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
-
+	public var curDecStep:Float = 0;
+	public var curDecBeat:Float = 0;
 	private var controls(get, never):Controls;
 
 	public static var windowNameSuffix(default, set):String = "";
@@ -72,7 +73,8 @@ class MusicBeatState extends #if MODCHARTING_TOOLS modcharting.ModchartMusicBeat
 	}
 
 	public function updateBeat():Void {
-		curBeat = Math.floor(curStep / Conductor.timeScale[1]);
+		curDecBeat = curStep / Conductor.timeScale[1];
+		curBeat = Math.floor(curDecBeat);
 	}
 
 	public function updateCurStep():Void {
@@ -110,8 +112,11 @@ class MusicBeatState extends #if MODCHARTING_TOOLS modcharting.ModchartMusicBeat
 
 		Conductor.recalculateStuff(multi);
 		
-		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
-
+		var value:Float = (Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet;
+		curDecStep = value;
+		curStep = Math.floor(curDecStep);
+		curStep += lastChange.stepTime;
+		curDecStep += lastChange.stepTime;
 		updateBeat();
 	}
 
