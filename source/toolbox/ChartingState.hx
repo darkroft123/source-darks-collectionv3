@@ -56,7 +56,7 @@ class ChartingState extends MusicBeatState
 	var _file:FileReference;
 
 	var UI_box:FlxUITabMenu;
-
+	var zoomLevel:Float = 1;
 	/**
 	 * Array of notes showing when each section STARTS in STEPS
 	 * Usually rounded up??
@@ -104,6 +104,9 @@ class ChartingState extends MusicBeatState
 
 	var vocals:FlxSound;
 
+	static var playerHitsounds:Bool = false;
+	static var enemyHitsounds:Bool = false;
+
 	var leftIcon:HealthIcon;
 	var rightIcon:HealthIcon;
 
@@ -125,7 +128,6 @@ class ChartingState extends MusicBeatState
 	var eventList:Array<String> = [];
 	var eventListData:Array<Array<String>> = [];
 
-	var zoom_level:Float = 1;
 
 	var min_zoom:Float = 0.5;
 	var max_zoom:Float = 16;
@@ -139,6 +141,12 @@ class ChartingState extends MusicBeatState
 	var gf:Character;
 	var colorQuantization:Bool;
 	var camFollow:FlxObject;
+
+		var lilBuddiesBox:FlxUICheckBox;
+
+	var lilStage:FlxSprite;
+	var lilBf:FlxSprite;
+	var lilOpp:FlxSprite;
 	function createStageAndCharacters()
 	{
 		stageCharGroup.clear();
@@ -307,6 +315,7 @@ class ChartingState extends MusicBeatState
 		add(leftIcon);
 		add(rightIcon);
 
+
 		leftIcon.setPosition(0, -45);
 		rightIcon.setPosition(gridBG.width / 2, -45);
 
@@ -315,6 +324,34 @@ class ChartingState extends MusicBeatState
 
 		gridEventBlackLine = new FlxSprite(gridBG.x + GRID_SIZE).makeGraphic(2, Std.int(gridBG.height), FlxColor.BLACK);
 		add(gridEventBlackLine);
+
+		lilStage = new FlxSprite(32, 650);
+		lilStage.loadGraphic(Paths.gpuBitmap("charter/lil_stage", "shared"));
+		lilStage.scrollFactor.set();
+		add(lilStage);
+
+		lilBf = new FlxSprite(185, 550);
+		lilBf.frames = Paths.getSparrowAtlas("charter/lil_bf", "shared");
+		lilBf.animation.addByPrefix("idle", "idle", 12, true);
+		lilBf.animation.play("idle", true);
+		lilBf.animation.onFinish.add(function(name:String) {
+			lilBf.animation.play(name, true, false, lilBf.animation.getByName(name).numFrames - 2);
+		});
+		lilBf.scrollFactor.set();
+		add(lilBf);
+
+		lilOpp = new FlxSprite(30, 545);
+		lilOpp.frames = Paths.getSparrowAtlas("charter/lil_opp", "shared");
+		lilOpp.animation.addByPrefix("idle", "idle", 12, true);
+		lilOpp.animation.play("idle", true);
+		lilOpp.animation.onFinish.add(function(name:String) {
+			lilOpp.animation.play(name, true, false, lilOpp.animation.getByName(name).numFrames - 2);
+		});
+		lilOpp.scrollFactor.set();
+		add(lilOpp);
+
+		// loadOffsetFile("lilBf");
+		// loadOffsetFile("lilOpp");
 
 		curRenderedNotes = new FlxTypedGroup<Note>();
 		curRenderedSustains = new FlxTypedGroup<FlxSprite>();
@@ -374,10 +411,12 @@ class ChartingState extends MusicBeatState
 		add(curRenderedEvents);
 
 		var tabs = [
-			{name: "Song", label: 'Song'},
-			{name: "Chart", label: 'Chart'},
+
 			{name: "Art", label: 'Art'},
-			{name: "Events", label: "Events"}
+			{name: "Chart", label: 'Chart'},
+			{name: "Events", label: "Events"},
+			{name: "Song", label: 'Song'}
+
 		];
 
 		var rawEventList = CoolUtil.coolTextFile(Paths.txt("eventList"));
@@ -440,17 +479,21 @@ class ChartingState extends MusicBeatState
 			trace('CHECKED!');
 		};
 
-		var hitsoundsBox = new FlxUICheckBox(check_voices.x + check_voices.width, check_voices.y, null, null, "Play hitsounds", 100);
-		hitsoundsBox.checked = hitsounds;
+		var playerHitsoundsBox:FlxUICheckBox = new FlxUICheckBox(check_voices.x + check_voices.width , check_voices.y, null, null, "Player\nHitsounds", 100);
+				playerHitsoundsBox.checked = playerHitsounds;
 
-		hitsoundsBox.callback = function()
-		{
-			hitsounds = hitsoundsBox.checked;
+				playerHitsoundsBox.callback = function() {
+					playerHitsounds = playerHitsoundsBox.checked;
 		};
 
-		var quantBox:FlxUICheckBox = new FlxUICheckBox(hitsoundsBox.x, hitsoundsBox.y + hitsoundsBox.height + 2, null, null, "Color Quants", 100);
-		colorQuantization = quantBox.checked = Options.getData("colorQuantization");
+		var enemyHitsoundsBox:FlxUICheckBox = new FlxUICheckBox(playerHitsoundsBox.x , playerHitsoundsBox.y + playerHitsoundsBox.height +2, null, null, "Enemy\nHitsounds", 100);
+		enemyHitsoundsBox.checked = enemyHitsounds;
 
+		enemyHitsoundsBox.callback = function() {
+			enemyHitsounds = enemyHitsoundsBox.checked;
+		};
+
+		var quantBox:FlxUICheckBox = new FlxUICheckBox(enemyHitsoundsBox.x + 25, enemyHitsoundsBox.y + enemyHitsoundsBox.height + 2, null, null, "Color Quants", 100);
 		quantBox.callback = function() {
 			colorQuantization = quantBox.checked;
 			updateGrid();
@@ -500,6 +543,14 @@ class ChartingState extends MusicBeatState
 		slider_playback_speed.nameLabel.text = 'Playback Speed';
 		slider_playback_speed.valueLabel.color = FlxColor.BLACK;
 		#end
+
+				lilBuddiesBox = new FlxUICheckBox(check_mute_inst.x, 90, null, null, "Lil' Buddies", 100);
+		lilBuddiesBox.checked = true;
+		lilBuddiesBox.callback = function() {
+			lilBf.visible = lilBuddiesBox.checked;
+			lilOpp.visible = lilBuddiesBox.checked;
+			lilStage.visible = lilBuddiesBox.checked;
+		};
 
 		var check_mute_voc = new FlxUICheckBox(check_mute_inst.x + check_mute_inst.width, 250 + stepperKeyCount.y + stepperKeyCount.height + 10, null, null, "Mute Vocals (in editor)", 100);
 		check_mute_voc.callback = function()
@@ -619,7 +670,8 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(UI_songTitle);
 		tab_group_song.add(UI_songDiff);
 		tab_group_song.add(check_voices);
-		tab_group_song.add(hitsoundsBox);
+		tab_group_song.add(playerHitsoundsBox);
+		tab_group_song.add(enemyHitsoundsBox);
 		tab_group_song.add(check_mute_inst);
 		tab_group_song.add(check_mute_voc);
 		tab_group_song.add(check_char_ids);
@@ -1400,86 +1452,80 @@ class ChartingState extends MusicBeatState
 		strumLine.y = getYfromStrum((Conductor.songPosition - sectionStartTime()) % (Conductor.stepCrochet * Conductor.stepsPerSection));
 		cameraShitThing.y = strumLine.y;
 
-		//if(hitsounds)
-		//{
-			curRenderedNotes.forEach(function(note:Note)
+		curRenderedNotes.forEach(function(note:Note)
+		{
+			if (FlxG.sound.music.playing)
 			{
-				if (FlxG.sound.music.playing)
+				if (!claps.contains(note) && note.shouldHit 
+					&& note.strumTime <= Conductor.songPosition 
+					&& note.strumTime >= Conductor.songPosition - Conductor.safeZoneOffset)
 				{
-					//FlxG.overlap(strumLine, note, function(_, _)
-					//{
-						if(!claps.contains(note) && note.shouldHit 
-							&& note.strumTime <= Conductor.songPosition && note.strumTime >= Conductor.songPosition - Conductor.safeZoneOffset) //check if should be hit
+					claps.push(note);
+
+					if (!note.isSustainNote || note.prevNote == note)
+					{
+						final isPlayerNote = note.rawNoteData % (_song.keyCount + _song.playerKeyCount) < _song.playerKeyCount && _song.notes[curSection].mustHitSection
+							|| note.rawNoteData % (_song.keyCount + _song.playerKeyCount) >= _song.keyCount && !_song.notes[curSection].mustHitSection;
+
+						if (isPlayerNote && playerHitsounds)
+							FlxG.sound.play(Paths.sound('CLAP'));
+						else if (!isPlayerNote && enemyHitsounds)
+							FlxG.sound.play(Paths.sound('SNAP'));
+					}
+
+					final isPlayer = note.rawNoteData % (_song.keyCount + _song.playerKeyCount) < _song.playerKeyCount && _song.notes[curSection].mustHitSection
+						|| note.rawNoteData % (_song.keyCount + _song.playerKeyCount) >= _song.keyCount && !_song.notes[curSection].mustHitSection;
+
+					final animList = isPlayer 
+						? NoteVariables.characterAnimations[_song.playerKeyCount - 1] 
+						: NoteVariables.characterAnimations[_song.keyCount - 1];
+					final animSuffix = isPlayer ? "" : altAnim;
+					final baseChar = isPlayer ? bf : dad;
+					final group = isPlayer ? bf.otherCharacters : dad.otherCharacters;
+
+					if (group == null || group.length - 1 < note.character)
+					{
+						baseChar.playAnim(animList[Std.int(Math.abs(note.noteData))] + animSuffix, true);
+						baseChar.holdTimer = -note.sustainLength * 0.001;
+					}
+					else
+					{
+						if (note.characters.length <= 1)
 						{
-							claps.push(note);
-							
-							if(note.rawNoteData % (_song.keyCount + _song.playerKeyCount) < _song.playerKeyCount && _song.notes[curSection].mustHitSection || note.rawNoteData % (_song.keyCount + _song.playerKeyCount) >= _song.keyCount && !_song.notes[curSection].mustHitSection)
-							{
-								if (hitsounds)
-									FlxG.sound.play(Paths.sound('CLAP', 'preload'));
-
-								if(bf.otherCharacters == null || bf.otherCharacters.length - 1 < note.character)
-								{
-									bf.playAnim(NoteVariables.characterAnimations[_song.playerKeyCount - 1][Std.int(Math.abs(note.noteData))], true);
-									bf.holdTimer = -note.sustainLength*0.001;
-								}
-								else
-								{
-									if(note.characters.length <= 1)
-									{
-										bf.otherCharacters[note.character].playAnim(NoteVariables.characterAnimations[_song.playerKeyCount - 1][Std.int(Math.abs(note.noteData))], true);
-										bf.otherCharacters[note.character].holdTimer = -note.sustainLength*0.001;
-									}
-									else
-									{
-										for(character in note.characters)
-										{
-											if(bf.otherCharacters.length - 1 >= character)
-											{
-												bf.otherCharacters[character].playAnim(NoteVariables.characterAnimations[_song.playerKeyCount - 1][Std.int(Math.abs(note.noteData))], true);
-												bf.otherCharacters[character].holdTimer = -note.sustainLength*0.001;
-											}
-												
-										}
-									}
-								}
-							}
-							else
-							{
-								if (hitsounds)
-									FlxG.sound.play(Paths.sound('SNAP', 'preload'));
-
-								if(dad.otherCharacters == null || dad.otherCharacters.length - 1 < note.character)
-								{
-									dad.playAnim(NoteVariables.characterAnimations[_song.keyCount - 1][Std.int(Math.abs(note.noteData))] + altAnim, true);
-									dad.holdTimer = -note.sustainLength*0.001;
-								}
-								else
-								{
-									if(note.characters.length <= 1)
-									{
-										dad.otherCharacters[note.character].playAnim(NoteVariables.characterAnimations[_song.keyCount - 1][Std.int(Math.abs(note.noteData))] + altAnim, true);
-										dad.otherCharacters[note.character].holdTimer = -note.sustainLength*0.001;
-									}
-									else
-									{
-										for(character in note.characters)
-										{
-											if(dad.otherCharacters.length - 1 >= character)
-											{
-												dad.otherCharacters[character].playAnim(NoteVariables.characterAnimations[_song.keyCount - 1][Std.int(Math.abs(note.noteData))] + altAnim, true);
-												dad.otherCharacters[character].holdTimer = -note.sustainLength*0.001;
-											}
-										}
-									}
-								}
-							}
-								
+							group[note.character].playAnim(animList[Std.int(Math.abs(note.noteData))] + animSuffix, true);
+							group[note.character].holdTimer = -note.sustainLength * 0.001;
 						}
-					//});
+						else
+						{
+							for (character in note.characters)
+							{
+								if (group.length - 1 >= character)
+								{
+									group[character].playAnim(animList[Std.int(Math.abs(note.noteData))] + animSuffix, true);
+									group[character].holdTimer = -note.sustainLength * 0.001;
+								}
+							}
+						}
+					}
 				}
-			});
-		//}
+			}
+		});
+
+				curRenderedNotes.forEach(function(note:Note) {
+			if (FlxG.sound.music.playing) {
+				FlxG.overlap(strumLine, note, function(_, _) {
+					if (note.rawNoteData % (_song.keyCount + _song.playerKeyCount) < _song.keyCount
+						&& _song.notes[curSection].mustHitSection
+						|| note.rawNoteData % (_song.keyCount + _song.playerKeyCount) >= _song.keyCount && !_song.notes[curSection].mustHitSection) {
+						lilBf.animation.play(NoteVariables.animationDirections[_song.keyCount - 1][note.noteData], true);
+					} else {
+						lilOpp.animation.play(NoteVariables.animationDirections[_song.keyCount - 1][note.noteData], true);
+					}
+				});
+			}
+		});
+
+
 
 		if (curBeat % Std.int(Conductor.stepsPerSection / Conductor.timeScale[1]) == 0 && curStep >= (Conductor.stepsPerSection * (curSection + 1)))
 		{
@@ -1551,7 +1597,7 @@ class ChartingState extends MusicBeatState
 		if (FlxG.mouse.x > gridBG.x
 			&& FlxG.mouse.x < gridBG.x + gridBG.width
 			&& FlxG.mouse.y > gridBG.y
-			&& FlxG.mouse.y < gridBG.y + (GRID_SIZE * (Conductor.stepsPerSection * zoom_level)))
+			&& FlxG.mouse.y < gridBG.y + (GRID_SIZE * (Conductor.stepsPerSection * zoomLevel)))
 		{
 			var snappedGridSize = (GRID_SIZE / (beatSnap / Conductor.stepsPerSection));
 
@@ -1583,20 +1629,18 @@ class ChartingState extends MusicBeatState
 				changeNoteSustain(-Conductor.stepCrochet);
 
 			if (FlxG.keys.justPressed.X)
-				zoom_level *= 2;
-			if (FlxG.keys.justPressed.Z)
-				zoom_level /= 2;
+							zoomLevel *= 2;
+						if (FlxG.keys.justPressed.Z)
+							zoomLevel /= 2;
 
-			if (FlxG.keys.justPressed.X || FlxG.keys.justPressed.Z)
-			{
-				if(zoom_level < min_zoom)
-					zoom_level = min_zoom;
-				if(zoom_level > max_zoom)
-					zoom_level = max_zoom;
+						if (FlxG.keys.justPressed.X || FlxG.keys.justPressed.Z) {
+							if (zoomLevel < min_zoom)
+								zoomLevel = min_zoom;
+							if (zoomLevel > max_zoom)
+								zoomLevel = max_zoom;
 
-				updateGrid();
+							updateGrid();
 			}
-
 			if (FlxG.keys.justPressed.TAB)
 			{
 				if (FlxG.keys.pressed.SHIFT)
@@ -1617,6 +1661,8 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.SPACE)
 			{
+				lilBf.animation.play("idle", true);
+				lilOpp.animation.play("idle", true);
 				if (FlxG.sound.music.playing)
 				{
 					FlxG.sound.music.pause();
@@ -1624,6 +1670,8 @@ class ChartingState extends MusicBeatState
 				}
 				else
 				{
+					lilBf.animation.play("idle", true);
+					lilOpp.animation.play("idle", true);
 					vocals.play();
 					FlxG.sound.music.play();
 				}
@@ -1679,6 +1727,8 @@ class ChartingState extends MusicBeatState
 			{
 				if (FlxG.keys.justPressed.W || FlxG.keys.justPressed.S)
 				{
+					lilBf.animation.play("idle", false);
+				lilOpp.animation.play("idle", false);
 					FlxG.sound.music.pause();
 					vocals.pause();
 
@@ -1793,8 +1843,7 @@ class ChartingState extends MusicBeatState
 		vocals.pitch = playbackSpeed;
 		#end
 
-		bpmTxt.text = (
-			"Time: "
+		bpmTxt.text = ("Time: "
 			+ Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
 			+ " / "
 			+ Std.string(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))
@@ -1806,19 +1855,28 @@ class ChartingState extends MusicBeatState
 			+ curStep
 			+ "\nCurBeat: "
 			+ curBeat
+			+ "\nCurDecStep: "
+			+ FlxMath.roundDecimal(curDecStep, 2)
+			+ "\nCurDecBeat: "
+			+  FlxMath.roundDecimal(curDecBeat, 2)
 			+ "\nNote Snap: "
-			+ beatSnap + (FlxG.keys.pressed.SHIFT ? "\n(DISABLED)" : "\n(CONTROL + ARROWS)")
+			+ beatSnap
+			+ (FlxG.keys.pressed.SHIFT ? "\n(DISABLED)" : "\n(CONTROL + ARROWS)")
 			+ "\nZoom Level: "
-			+ zoom_level
-			+ "\n"
-			+ (sectionIsBroken ? "SECTION HAS BROKEN NOTES!!!!" : "")
-			+ "\n"
-			+ (sectionIsBroken ? "Press 1 to try to fix it" : "")
-			+ "\n"
-		);
+			+ zoomLevel
+			+ "\n");
 
 		leftIcon.x = gridBG.x + GRID_SIZE;
 		rightIcon.x = gridBlackLine.x;
+
+		for (n in curRenderedNotes.members) {
+			if(n?.animation?.curAnim != null){
+				if (n.isSustainNote && !StringTools.endsWith(n.animation.curAnim.name, "end")) {
+					n.setGraphicSize(n.frameWidth * n.scale.x, zoomLevel * GRID_SIZE);
+					n.updateHitbox();
+				}
+			}
+		}
 
 		super.update(elapsed);
 	}
@@ -1871,6 +1929,10 @@ class ChartingState extends MusicBeatState
 
 		FlxG.sound.music.pause();
 		vocals.pause();
+
+		lilBf.animation.play("idle", true);
+		lilOpp.animation.play("idle", true);
+
 
 		// Basically old shit from changeSection???
 		FlxG.sound.music.time = sectionStartTime();
@@ -1931,6 +1993,9 @@ class ChartingState extends MusicBeatState
 						daNum++;
 				}*/
 
+					lilBf.animation.play("idle", true);
+				lilOpp.animation.play("idle", true);
+
 				FlxG.sound.music.time = sectionStartTime();
 				vocals.time = FlxG.sound.music.time;
 				updateCurStep();
@@ -1939,6 +2004,8 @@ class ChartingState extends MusicBeatState
 			updateGrid();
 			updateSectionUI();
 		}
+		lilBf.animation.play("idle", true);
+		lilOpp.animation.play("idle", true);
 	}
 
 	static var doFunnyNumbers:Bool = true;
@@ -2045,7 +2112,7 @@ class ChartingState extends MusicBeatState
 		gridBG.kill();
 		gridBG.destroy();
 
-		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * (_song.keyCount + _song.playerKeyCount + 1), Std.int((GRID_SIZE * Conductor.stepsPerSection) * zoom_level));
+		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * (_song.keyCount + _song.playerKeyCount + 1), Std.int((GRID_SIZE * Conductor.stepsPerSection) * zoomLevel));
 		add(gridBG);
 		gridBG.alpha = 0.6;
 
@@ -2141,6 +2208,10 @@ class ChartingState extends MusicBeatState
 				goodNoteInfo = daNoteInfo - _song.playerKeyCount;
 
 			var note:Note = new Note(daStrumTime, goodNoteInfo, null, false, 0, daType, _song, [0], mustPress, true);
+			lilBf.animation.addByPrefix(NoteVariables.animationDirections[_song.keyCount - 1][note.noteData],
+				NoteVariables.animationDirections[_song.keyCount - 1][note.noteData] + "0", 12);
+			lilOpp.animation.addByPrefix(NoteVariables.animationDirections[_song.keyCount - 1][note.noteData],
+				NoteVariables.animationDirections[_song.keyCount - 1][note.noteData] + "0", 12);
 			note.sustainLength = daSus;
 
 			note.setGraphicSize((Std.parseInt(PlayState.instance.arrow_Configs.get(daType)[4]) ?? Std.parseInt(PlayState.instance.arrow_Configs.get(daType)[4])),
@@ -2499,9 +2570,10 @@ class ChartingState extends MusicBeatState
 		return FlxMath.remapToRange(yPos, gridBG.y, gridBG.y + gridBG.height, 0, Conductor.stepsPerSection * Conductor.stepCrochet);
 	}
 
-	function getYfromStrum(strumTime:Float):Float
-	{
-		return FlxMath.remapToRange(strumTime * zoom_level, 0, (Conductor.stepsPerSection * zoom_level) * Conductor.stepCrochet, gridBG.y, gridBG.y + gridBG.height);
+
+	function getYfromStrum(strumTime:Float):Float {
+		return FlxMath.remapToRange(strumTime * zoomLevel, 0, (Conductor.stepsPerSection * zoomLevel) * Conductor.stepCrochet, gridBG.y,
+			gridBG.y + gridBG.height);
 	}
 
 	private var daSpacing:Float = 0.3;

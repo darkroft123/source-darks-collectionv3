@@ -308,7 +308,7 @@ class Note extends #if MODCHARTING_TOOLS modcharting.FlxSprite3D #else FlxSkewed
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		angle = modAngle + localAngle;
+		#if MODCHARTING_TOOLS angle3D.z #else angle #end = modAngle + localAngle;
 
 		calculateCanBeHit();
 

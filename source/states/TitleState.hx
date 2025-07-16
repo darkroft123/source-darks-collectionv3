@@ -318,37 +318,47 @@ class TitleState extends MusicBeatState {
 
 			call("checkForUpdate");
 			#if CHECK_FOR_UPDATES
-			if(Options.getData("checkForUpdates")){
-				new FlxTimer().start(2, (tmr:FlxTimer) -> {
-					var http:Http = new Http("https://raw.githubusercontent.com/Vortex2Oblivion/LeatherEngine/main/version.txt");
-					http.onData = (data:String) -> {
-						data = 'v' + data;
-						if (CoolUtil.getCurrentVersion() != data) {
-							trace('Outdated Version Detected! ' + data.trim() + ' != ' + CoolUtil.getCurrentVersion(), WARNING);
-							Main.display.version += ' - UPDATE AVALIABLE (${data.trim()})';
-							FlxG.switchState(() -> new OutdatedSubState(data.trim()));
-						} else {
+				if (Options.getData("checkForUpdates")) {
+					new FlxTimer().start(2, (tmr:FlxTimer) -> {
+						var http:Http = new Http("https://raw.githubusercontent.com/Vortex2Oblivion/LeatherEngine/main/version.txt");
+						http.onData = (data:String) -> {
+							data = 'v' + data;
+							if (CoolUtil.getCurrentVersion() != data) {
+								trace('Outdated Version Detected! ' + data.trim() + ' != ' + CoolUtil.getCurrentVersion(), WARNING);
+								FlxG.switchState(() -> new OutdatedSubState(data.trim()));
+							} else {
+								if (Options.getData("showDisclaimer")) {
+									FlxG.switchState(() -> new DisclaimerMenu());
+								} else {
+									FlxG.switchState(() -> new MainMenuState());
+								}
+							}
+						}
+						http.onError = (error:String) -> {
+							trace('$error', ERROR);
 							if (Options.getData("showDisclaimer")) {
 								FlxG.switchState(() -> new DisclaimerMenu());
 							} else {
 								FlxG.switchState(() -> new MainMenuState());
 							}
 						}
+						http.request();
+					});
+				} else {
+					if (Options.getData("showDisclaimer")) {
+						FlxG.switchState(() -> new DisclaimerMenu());
+					} else {
+						FlxG.switchState(() -> new MainMenuState());
 					}
-					http.onError = (error:String) -> {
-						trace('$error', ERROR);
-						if (Options.getData("showDisclaimer")) {
-							FlxG.switchState(() -> new DisclaimerMenu());
-						} else {
-							FlxG.switchState(() -> new MainMenuState());
-						}
-					}
-
-
-					http.request();
-				});
-			}
+				}
+			#else
+				if (Options.getData("showDisclaimer")) {
+					FlxG.switchState(() -> new DisclaimerMenu());
+				} else {
+					FlxG.switchState(() -> new MainMenuState());
+				}
 			#end
+
 		}
 
 		if (pressedEnter && !skippedIntro) {

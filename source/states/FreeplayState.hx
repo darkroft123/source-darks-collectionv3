@@ -366,7 +366,7 @@ class FreeplayState extends MusicBeatState {
 
 		for (portName in portList) {
 			if (Options.getData("renderBGs")) {
-				var port = new FlxSprite().loadGraphic(Paths.image('freeplay/ports/' + portName));
+				var port = new FlxSprite().loadGraphic(Paths.gpuBitmap('freeplay/ports/' + portName));
 				port.alpha = 0;
 				port.antialiasing = Options.getData("antialiasing");
 				insert(members.indexOf(bg) + 1, port);
@@ -376,7 +376,7 @@ class FreeplayState extends MusicBeatState {
 
 		for (images in imagesvip) {
 			if (Options.getData("renders")) {
-				var png = new FlxSprite().loadGraphic(Paths.image('freeplay/Renders/' + images));
+				var png = new FlxSprite().loadGraphic(Paths.gpuBitmap('freeplay/Renders/' + images));
 				png.alpha = 0;
 				png.antialiasing = Options.getData("antialiasing");
 				insert(members.indexOf(ajedrez) + 2, png);
@@ -609,17 +609,15 @@ class FreeplayState extends MusicBeatState {
 		var downP = controls.DOWN_P;
 
 		if (songsReady) {
-			if(songs.length > 1){
-				if (-1 * Math.floor(FlxG.mouse.wheel) != 0 && !shift)
-					changeSelection(-1 * Math.floor(FlxG.mouse.wheel));
-				else if (-1 * (Math.floor(FlxG.mouse.wheel) / 10) != 0 && shift)
-					curSpeed += -1 * (Math.floor(FlxG.mouse.wheel) / 10);
+			if (-1 * Math.floor(FlxG.mouse.wheel) != 0 && !shift)
+				changeSelection(-1 * Math.floor(FlxG.mouse.wheel));
+			else if (-1 * (Math.floor(FlxG.mouse.wheel) / 10) != 0 && shift)
+				curSpeed += -1 * (Math.floor(FlxG.mouse.wheel) / 10);
 
-				if (upP)
-					changeSelection(-1);
-				if (downP)
-					changeSelection(1);
-			}
+			if (upP)
+				changeSelection(-1);
+			if (downP)
+				changeSelection(1);
 
 			if (leftP && !shift)
 				changeDiff(-1);
@@ -785,9 +783,9 @@ class FreeplayState extends MusicBeatState {
 					currentSongIcon = null;
 				}
 
-				if (Assets.exists(Paths.image(iconName))) {
+				if (Assets.exists(Paths.gpuBitmap(iconName))) {
 					currentSongIcon = new FlxSprite(1025, -60);
-					currentSongIcon.loadGraphic(Paths.image(iconName));
+					currentSongIcon.loadGraphic(Paths.gpuBitmap(iconName));
 					currentSongIcon.scale.set(0.17, 0.17);
 					currentSongIcon.antialiasing = true;
 					add(currentSongIcon);
